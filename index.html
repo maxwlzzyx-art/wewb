@@ -1,656 +1,1476 @@
-```html
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="yellow">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VOKALBRUTAL // Multi-Language Natural TTS</title>
+  <title>MOD CENTRAL ID - Premium Portal V4.4</title>
   
-  <!-- Tailwind CSS -->
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Google Fonts for Neo Brutalism Typography -->
+  <!-- Google Fonts: Plus Jakarta Sans & Syne -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 
   <script>
     tailwind.config = {
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Plus Jakarta Sans', 'sans-serif'],
-            mono: ['Space Grotesk', 'monospace'],
-          },
+            syne: ['Syne', 'sans-serif'],
+            jakarta: ['"Plus Jakarta Sans"', 'sans-serif'],
+          }
         }
       }
     }
   </script>
 
-  <style>
-    /* Styling khusus Neo Brutalisme */
+  <style type="text/css">
+    /* Neo-Brutalist Theme Variables */
+    :root {
+      --bg-color: #FFDE4D;
+      --accent-color: #4CCD99;
+      --secondary-color: #FF6B6B;
+      --card-bg: #FFFFFF;
+      --text-color: #0C0C0C;
+    }
+
+    [data-theme="pink"] {
+      --bg-color: #FF71CD;
+      --accent-color: #00F0FF;
+      --secondary-color: #FFF500;
+      --card-bg: #FFFFFF;
+      --text-color: #0C0C0C;
+    }
+
+    [data-theme="mint"] {
+      --bg-color: #A3FFD6;
+      --accent-color: #8D00FF;
+      --secondary-color: #FF55BB;
+      --card-bg: #FFFFFF;
+      --text-color: #0C0C0C;
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #121214;
+      --accent-color: #39FF14;
+      --secondary-color: #FF3131;
+      --card-bg: #1E1E24;
+      --text-color: #FFFFFF;
+    }
+
+    [data-theme="orange"] {
+      --bg-color: #FF8A08;
+      --accent-color: #FFF200;
+      --secondary-color: #00FFD1;
+      --card-bg: #FFFFFF;
+      --text-color: #0C0C0C;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
     .brutal-border {
       border: 4px solid #000000;
     }
-    .brutal-shadow {
-      box-shadow: 4px 4px 0px 0px #000000;
-      transition: all 0.15s ease-in-out;
+
+    .brutal-border-sm {
+      border: 2px solid #000000;
     }
+
+    .brutal-shadow {
+      box-shadow: 6px 6px 0px 0px #000000;
+    }
+
+    .brutal-shadow-sm {
+      box-shadow: 4px 4px 0px 0px #000000;
+    }
+
     .brutal-shadow-lg {
       box-shadow: 8px 8px 0px 0px #000000;
-      transition: all 0.15s ease-in-out;
     }
-    .brutal-shadow:active:not([disabled]), .brutal-shadow-lg:active:not([disabled]) {
-      transform: translate(2px, 2px);
+
+    /* Hover & Active Actions */
+    .brutal-btn {
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+    .brutal-btn:hover:not(:disabled) {
+      transform: translate(-2px, -2px);
+      box-shadow: 8px 8px 0px 0px #000000;
+    }
+    .brutal-btn:active:not(:disabled) {
+      transform: translate(4px, 4px);
       box-shadow: 2px 2px 0px 0px #000000;
     }
-    .brutal-btn-active {
-      transform: translate(2px, 2px);
-      box-shadow: 2px 2px 0px 0px #000000 !important;
+
+    .brutal-btn-sm {
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
     }
-    
-    /* Scrollbar brutalist style */
+    .brutal-btn-sm:hover:not(:disabled) {
+      transform: translate(-1px, -1px);
+      box-shadow: 5px 5px 0px 0px #000000;
+    }
+    .brutal-btn-sm:active:not(:disabled) {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px 0px #000000;
+    }
+
+    /* Screen shake animation */
+    @keyframes shake {
+      0% { transform: translate(1px, 1px) rotate(0deg); }
+      10% { transform: translate(-1px, -2px) rotate(-1deg); }
+      20% { transform: translate(-3px, 0px) rotate(1deg); }
+      30% { transform: translate(0px, 2px) rotate(0deg); }
+      40% { transform: translate(1px, -1px) rotate(1deg); }
+      50% { transform: translate(-1px, 2px) rotate(-1deg); }
+      60% { transform: translate(-3px, 1px) rotate(0deg); }
+      75% { transform: translate(2px, 1px) rotate(-1deg); }
+      90% { transform: translate(-1px, -1px) rotate(1deg); }
+      100% { transform: translate(1px, 2px) rotate(0deg); }
+    }
+
+    .shake {
+      animation: shake 0.3s;
+    }
+
+    /* Custom Scrollbar */
     ::-webkit-scrollbar {
       width: 12px;
-      height: 12px;
     }
     ::-webkit-scrollbar-track {
-      background: #f3f4f6;
-      border-left: 3px solid #000;
+      background: #000000;
     }
     ::-webkit-scrollbar-thumb {
-      background: #ffde4d;
-      border: 3px solid #000;
+      background: var(--secondary-color);
+      border: 3px solid #000000;
     }
   </style>
 </head>
-<body class="bg-[#F4F4F0] text-black font-sans min-h-screen p-4 md:p-8 selection:bg-[#ff007a] selection:text-white">
+<body class="min-h-screen pb-16">
 
-  <!-- Header Banner Utama -->
-  <header class="max-w-7xl mx-auto mb-8 bg-[#00E5FF] brutal-border brutal-shadow-lg p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
-    <div class="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:16px_16px]"></div>
-    
-    <div class="z-10">
-      <div class="bg-black text-white px-3 py-1 font-mono text-xs uppercase inline-block mb-3 brutal-border">
-        ⚡ GENERATOR TTS ULTRA ALAMI ⚡
+  <!-- ================= RETRO BAN SCREEN ================= -->
+  <div id="banScreen" class="hidden fixed inset-0 bg-red-600 z-50 flex flex-col items-center justify-center p-6 text-center select-none text-white">
+    <div class="brutal-border brutal-shadow bg-black p-8 max-w-lg text-white">
+      <span class="text-7xl block mb-6 animate-bounce">🚨</span>
+      <h1 class="font-syne font-extrabold text-4xl sm:text-5xl uppercase tracking-tighter text-yellow-300">SYSTEM BANNED</h1>
+      <p class="mt-4 font-bold text-lg">AKSES ANDA TELAH DIBLOKIR OLEH AXELUF!</p>
+      <p class="text-sm mt-2 text-gray-300">Spam klik atau perilaku mencurigakan terdeteksi dari perangkat Anda.</p>
+      <div class="mt-8 p-4 border-2 border-dashed border-red-500 bg-red-950 font-mono text-xs">
+        CODE: AX_SUSPICIOUS_CLIENT_BLOCK_V4_4
       </div>
-      <h1 class="text-4xl md:text-6xl font-black tracking-tight font-mono leading-none">
-        VOKAL<span class="text-[#FF007A] underline decoration-wavy decoration-black">BRUTAL</span>
-      </h1>
-      <p class="text-lg md:text-xl font-bold mt-2 font-mono">
-        Campuran Indo-Inggris Alami dengan Puluhan Pilihan Karakter & Logat!
-      </p>
-    </div>
-
-    <!-- API Key Input Field (Sudah dikunci otomatis dengan API Key kamu) -->
-    <div class="z-10 bg-white brutal-border brutal-shadow p-4 w-full md:w-auto max-w-sm">
-      <label class="block font-mono font-bold text-xs uppercase mb-1">🔐 API KEY CONFIG</label>
-      <input type="password" id="apiKeyInput" value="AQ.Ab8RN6I5-kVz35ALyCUeoQfjaP-uxw0fnJc3vfC8qFtD1wfjlw" placeholder="Masukkan Gemini API Key" 
-             class="w-full p-2 text-xs font-mono brutal-border bg-yellow-50 focus:bg-white focus:outline-none placeholder-gray-500 font-bold">
-      <p class="text-[10px] text-gray-700 mt-1 font-mono">
-        *Kunci API kamu sudah terpasang dan aman di dalam sistem.
-      </p>
-    </div>
-  </header>
-
-  <!-- Dashboard Utama -->
-  <main class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
-    
-    <!-- PANEL KIRI - Pengaturan Teks & Opsi -->
-    <section class="lg:col-span-5 flex flex-col gap-6">
-      
-      <!-- Input Teks -->
-      <div class="bg-[#FF9F0A] brutal-border brutal-shadow-lg p-6 flex flex-col gap-4">
-        <div class="flex justify-between items-center">
-          <h2 class="text-xl font-black font-mono uppercase bg-white px-2 py-1 brutal-border inline-block">
-            ✍️ Masukkan Teks
-          </h2>
-          <span id="charCount" class="font-mono font-bold text-xs bg-black text-white px-2 py-1">
-            0 / 400
-          </span>
-        </div>
-
-        <textarea id="ttsText" rows="6" maxlength="400" placeholder="Ketik apa saja di sini! Contoh: 'Halo guys, welcome back to my channel! Hari ini kita mau unboxing gadget super cool yang harganya affordable banget.'"
-                  class="w-full p-4 font-mono text-sm brutal-border focus:outline-none focus:ring-4 focus:ring-black resize-none bg-white placeholder-gray-500 font-bold leading-relaxed"></textarea>
-
-        <!-- Template Teks Rekomendasi -->
-        <div>
-          <span class="block font-mono font-bold text-xs uppercase mb-2">Preset Teks Campuran:</span>
-          <div class="flex flex-wrap gap-2">
-            <button onclick="applyPresetText(1)" class="bg-white hover:bg-black hover:text-white px-2 py-1 text-xs font-mono font-bold brutal-border brutal-shadow text-left">
-              💬 Casual Vlog (Mixed)
-            </button>
-            <button onclick="applyPresetText(2)" class="bg-white hover:bg-black hover:text-white px-2 py-1 text-xs font-mono font-bold brutal-border brutal-shadow text-left">
-              👔 Presentasi Bisnis
-            </button>
-            <button onclick="applyPresetText(3)" class="bg-white hover:bg-black hover:text-white px-2 py-1 text-xs font-mono font-bold brutal-border brutal-shadow text-left">
-              👵 Nasihat Klasik
-            </button>
-            <button onclick="applyPresetText(4)" class="bg-white hover:bg-black hover:text-white px-2 py-1 text-xs font-mono font-bold brutal-border brutal-shadow text-left">
-              🌸 Anime Drama
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Parameter & Kustomisasi Nada Suara -->
-      <div class="bg-[#39FF14] brutal-border brutal-shadow-lg p-6 flex flex-col gap-4">
-        <h2 class="text-xl font-black font-mono uppercase bg-white px-2 py-1 brutal-border inline-block self-start">
-          ⚙️ Modifikasi Suara
-        </h2>
-
-        <!-- Kecepatan -->
-        <div>
-          <label class="block font-mono font-bold text-sm mb-1 flex justify-between">
-            <span>Kecepatan Bicara</span>
-            <span id="speedVal" class="bg-black text-white px-1 font-mono text-xs">Normal</span>
-          </label>
-          <input type="range" id="speedSlider" min="0" max="2" value="1" step="1" 
-                 class="w-full accent-black h-4 brutal-border bg-white" oninput="updateRangeLabels()">
-          <div class="flex justify-between text-[10px] font-mono font-bold mt-1">
-            <span>Lambat</span>
-            <span>Normal</span>
-            <span>Cepat</span>
-          </div>
-        </div>
-
-        <!-- Emosi / Intonasi -->
-        <div>
-          <label class="block font-mono font-bold text-sm mb-1">Gaya & Intonasi Emosional</label>
-          <select id="emotionSelect" class="w-full p-2 font-mono text-sm brutal-border bg-white focus:outline-none">
-            <option value="normal">Normal (Stabil & Natural)</option>
-            <option value="excited">Ceria & Antusias (Energetic)</option>
-            <option value="whispering">Berbisik (Calm & Soft)</option>
-            <option value="dramatic">Dramatis & Bersemangat</option>
-            <option value="angry">Ketus / Tegas (Assertive)</option>
-            <option value="news">Gaya Pembawa Berita Resmi</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Tombol Generate Utama -->
-      <button id="generateBtn" onclick="generateSpeech()" 
-              class="w-full py-5 bg-[#FF007A] text-white font-mono text-2xl font-black tracking-wider brutal-border brutal-shadow-lg hover:bg-white hover:text-black transition-all flex items-center justify-center gap-3">
-        <span>🗣️ GENERASIKAN SUARA</span>
-      </button>
-
-      <!-- Status / Loader -->
-      <div id="loader" class="hidden bg-black text-[#39FF14] brutal-border p-4 font-mono text-sm brutal-shadow flex items-center gap-3">
-        <div class="animate-spin rounded-full h-5 w-5 border-2 border-t-transparent border-[#39FF14]"></div>
-        <span id="loaderText">Sedang meracik gelombang suara kecerdasan buatan...</span>
-      </div>
-
-    </section>
-
-    <!-- PANEL KANAN - Katalog Suara & Player -->
-    <section class="lg:col-span-7 flex flex-col gap-6">
-      
-      <!-- Audio Player Area & Visualizer -->
-      <div class="bg-white brutal-border brutal-shadow-lg p-6 flex flex-col gap-4">
-        <h2 class="text-xl font-black font-mono uppercase bg-[#FFE600] px-2 py-1 brutal-border inline-block self-start">
-          📻 Monitor Pemutar Suara
-        </h2>
-
-        <div class="bg-[#F4F4F0] brutal-border p-4 flex flex-col md:flex-row items-center gap-4">
-          <button id="audioPlayBtn" onclick="toggleAudio()" disabled
-                  class="bg-[#ff007a] text-white p-4 rounded-none brutal-border brutal-shadow disabled:opacity-50 disabled:cursor-not-allowed">
-            <svg id="playIcon" class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            <svg id="pauseIcon" class="w-8 h-8 fill-current hidden" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-          </button>
-
-          <!-- Waveform Visualizer -->
-          <div class="flex-1 w-full flex items-end justify-between h-12 px-2 bg-black brutal-border overflow-hidden relative">
-            <div id="visualizerBars" class="absolute inset-0 flex items-end justify-around p-1">
-              <div class="bar w-1.5 bg-[#39FF14] h-2 transition-all duration-100"></div>
-              <div class="bar w-1.5 bg-[#39FF14] h-4 transition-all duration-100"></div>
-              <div class="bar w-1.5 bg-[#39FF14] h-1 transition-all duration-100"></div>
-              <div class="bar w-1.5 bg-[#39FF14] h-6 transition-all duration-100"></div>
-              <div class="bar w-1.5 bg-[#39FF14] h-3 transition-all duration-100"></div>
-              <div class="bar w-1.5 bg-[#39FF14] h-8 transition-all duration-100"></div>
-              <div class="bar w-1.5 bg-[#39FF14] h-2 transition-all duration-100"></div>
-              <div class="bar w-1.5 bg-[#39FF14] h-4 transition-all duration-100"></div>
-              <div class="bar w-1.5 bg-[#39FF14] h-5 transition-all duration-100"></div>
-              <div class="bar w-1.5 bg-[#39FF14] h-2 transition-all duration-100"></div>
-              <div class="bar w-1.5 bg-[#39FF14] h-7 transition-all duration-100"></div>
-              <div class="bar w-1.5 bg-[#39FF14] h-3 transition-all duration-100"></div>
-              <div class="bar w-1.5 bg-[#39FF14] h-9 transition-all duration-100"></div>
-              <div class="bar w-1.5 bg-[#39FF14] h-1 transition-all duration-100"></div>
-              <div class="bar w-1.5 bg-[#39FF14] h-4 transition-all duration-100"></div>
-            </div>
-            <div id="audioStatusText" class="absolute inset-0 flex items-center justify-center font-mono text-xs text-white bg-black/60 font-bold pointer-events-none">
-              Belum ada audio yang digenerasikan.
-            </div>
-          </div>
-
-          <!-- Download Button -->
-          <a id="downloadBtn" href="#" download="VokalBrutal-Speech.wav"
-             class="hidden bg-[#00E5FF] hover:bg-black hover:text-white text-black font-mono font-bold px-4 py-4 brutal-border brutal-shadow flex items-center gap-2">
-            <span>💾 UNDUH</span>
-          </a>
-        </div>
-
-        <audio id="mainAudioElement" class="hidden" onended="onAudioEnded()" onplay="onAudioPlaying()" onpause="onAudioPaused()"></audio>
-      </div>
-
-      <!-- Katalog Suara & Pilihan Karakter -->
-      <div class="bg-[#FFE600] brutal-border brutal-shadow-lg p-6 flex flex-col gap-4">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-          <h2 class="text-xl font-black font-mono uppercase bg-white px-2 py-1 brutal-border inline-block">
-            🎙️ Pilih Karakter Suara (40 Pilihan)
-          </h2>
-          <!-- Filter Kategori -->
-          <div class="flex flex-wrap gap-1 font-mono text-xs">
-            <button onclick="filterVoices('semua')" id="filter-semua" class="bg-black text-white px-2 py-1 brutal-border border-black font-bold">Semua</button>
-            <button onclick="filterVoices('pria')" id="filter-pria" class="bg-white hover:bg-black hover:text-white px-2 py-1 brutal-border border-black font-bold">Pria</button>
-            <button onclick="filterVoices('wanita')" id="filter-wanita" class="bg-white hover:bg-black hover:text-white px-2 py-1 brutal-border border-black font-bold">Wanita</button>
-            <button onclick="filterVoices('anime')" id="filter-anime" class="bg-white hover:bg-black hover:text-white px-2 py-1 brutal-border border-black font-bold">Anime</button>
-            <button onclick="filterVoices('tua')" id="filter-tua" class="bg-white hover:bg-black hover:text-white px-2 py-1 brutal-border border-black font-bold">Lansia</button>
-            <button onclick="filterVoices('unik')" id="filter-unik" class="bg-white hover:bg-black hover:text-white px-2 py-1 brutal-border border-black font-bold">Unik / Daerah</button>
-          </div>
-        </div>
-
-        <!-- Grid Cards Suara -->
-        <div id="voiceGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[420px] overflow-y-auto pr-2"></div>
-      </div>
-
-      <!-- Riwayat Generasi -->
-      <div class="bg-white brutal-border brutal-shadow-lg p-6 flex flex-col gap-3">
-        <h2 class="text-lg font-black font-mono uppercase bg-black text-white px-2 py-1 inline-block self-start">
-          📂 Riwayat Sesi
-        </h2>
-        <div id="historyList" class="flex flex-col gap-2 font-mono text-xs max-h-[160px] overflow-y-auto">
-          <p id="noHistoryText" class="text-gray-500 italic">Belum ada suara yang dibuat pada sesi ini.</p>
-        </div>
-      </div>
-
-    </section>
-
-  </main>
-
-  <footer class="max-w-7xl mx-auto mt-12 text-center font-mono text-xs font-bold bg-black text-white p-4 brutal-border">
-    VOKALBRUTAL TTS ENGINE // POWERED BY GEMINI 2.5 FLASH AUDIO API
-  </footer>
-
-  <!-- Modal Error Custom -->
-  <div id="errorModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-    <div class="bg-red-500 brutal-border brutal-shadow-lg max-w-md w-full p-6 text-white relative">
-      <h3 class="text-2xl font-black font-mono mb-2">🛑 TERJADI EROR!</h3>
-      <p id="errorModalText" class="font-mono text-sm leading-relaxed mb-6"></p>
-      <button onclick="closeErrorModal()" class="w-full bg-black text-white hover:bg-white hover:text-black py-2 font-mono font-bold brutal-border">
-        TUTUP & COBA LAGI
+      <button onclick="simulateUnban()" class="mt-6 bg-yellow-400 text-black font-bold uppercase py-2 px-6 brutal-border brutal-shadow-sm brutal-btn text-xs">
+        Minta Maaf ke Axeluf (Unban)
       </button>
     </div>
   </div>
 
-  <script>
-    // --- 40 DATA PROFIL SUARA ---
-    const voices = [
-      { id: 1, name: "Budi (Pria Dewasa)", gender: "pria", cat: "pria", base: "Zephyr", desc: "Suara pria dewasa Indonesia yang berat, hangat, dan sangat profesional.", modifier: "pria dewasa Indonesia yang ramah, matang, tegas, artikulasi jelas, tempo stabil." },
-      { id: 2, name: "Andi (Host Kreatif)", gender: "pria", cat: "pria", base: "Puck", desc: "Pria muda, energik, dan gaul. Cocok untuk vlog atau ulasan teknologi.", modifier: "pria muda kreatif Indonesia, bersemangat, gaya kasual santai, sering mengobrol langsung ke pendengar." },
-      { id: 3, name: "Pak Jaka (Formal)", gender: "pria", cat: "pria", base: "Charon", desc: "Suara pembicara resmi, dalam, berwibawa layaknya pejabat tinggi.", modifier: "pria berumur berwibawa, bahasa Indonesia baku, nada formal, serius, penuh penekanan kata." },
-      { id: 4, name: "Doni (Suara Bioskop)", gender: "pria", cat: "pria", base: "Fenrir", desc: "Deep voice, sangat tebal dan dramatis, seperti pengisi suara trailer film.", modifier: "pria bersuara sangat bass, dalam, dramatis, berbicara lambat layaknya narator bioskop terkenal." },
-      { id: 5, name: "Reza (Customer Service)", gender: "pria", cat: "pria", base: "Orus", desc: "Sopan, lembut, dan menenangkan. Cocok untuk instruksi suara bantuan.", modifier: "pria ramah, nada sabar dan menenangkan, intonasi melayani, sopan sekali." },
-      { id: 6, name: "Indra (Motivator)", gender: "pria", cat: "pria", base: "Iapetus", desc: "Penuh semangat membara dan membakar jiwa pendengar.", modifier: "pria paruh baya motivator berapi-api, penuh energi positif, nada naik turun dinamis." },
-      { id: 7, name: "Rizky (Podcast Santai)", gender: "pria", cat: "pria", base: "Enceladus", desc: "Gaya bicara lo-fi, tenang, seperti sedang mengobrol di kafe.", modifier: "pria muda bergaya kasual santai, nada rendah bersahabat, seperti mengobrol dekat mikrofon." },
-      { id: 8, name: "Dosen Hariadi", gender: "pria", cat: "pria", base: "Rasalgethi", desc: "Edukatif, penuh penjelasan runtut, dan teduh.", modifier: "pria akademisi Indonesia, mengajar dengan sabar, intonasi runtut dan informatif." },
-      { id: 9, name: "Coach Tommy", gender: "pria", cat: "pria", base: "Achernar", desc: "Gaya pelatih kebugaran atau olahraga, tegas dan lugas.", modifier: "pria tegas bertenaga, memberi instruksi cepat, vokal kuat dan bersemangat." },
-      { id: 10, name: "Radit (Gaya Komedian)", gender: "pria", cat: "pria", base: "Alnilam", desc: "Agak cepat, bergelombang, dengan intonasi jenaka khas tongkrongan.", modifier: "pria muda jenaka, intonasi kocak dan ekspresif, ceria dengan nada bercanda." },
-      { id: 11, name: "Siti (Wanita Karir)", gender: "wanita", cat: "wanita", base: "Kore", desc: "Profesional, anggun, tegas, dan berpendidikan tinggi.", modifier: "wanita karir modern Indonesia, pintar, bicara lugas dan anggun, intonasi profesional." },
-      { id: 12, name: "Rara (Vlogger Ceria)", gender: "wanita", cat: "wanita", base: "Leda", desc: "Cepat, menyenangkan, penuh tawa, dan sangat ekspresif.", modifier: "wanita muda Indonesia ceria sekali, ramah, tempo agak cepat, suara cerah gembira." },
-      { id: 13, name: "Bu Retno (Sopan)", gender: "wanita", cat: "wanita", base: "Aoede", desc: "Suara keibuan yang lembut, membimbing, dan menenangkan hati.", modifier: "wanita dewasa matang keibuan, lembut, ramah tamah khas Indonesia, penuh kasih sayang." },
-      { id: 14, name: "Devi (Asisten Virtual)", gender: "wanita", cat: "wanita", base: "Callirrhoe", desc: "Intonasi futuristik, rapi, bersih, layaknya asisten AI mutakhir.", modifier: "asisten AI wanita pintar, intonasi stabil, ramah tapi efisien, pengucapan kata sangat rapi." },
-      { id: 15, name: "Sarah (News Anchor)", gender: "wanita", cat: "wanita", base: "Autonoe", desc: "Suara jurnalis televisi nasional, lugas dan presisi.", modifier: "wanita pembaca berita televisi formal, artikulasi tajam, tegas, intonasi berwibawa." },
-      { id: 16, name: "Nadia (Meditasi)", gender: "wanita", cat: "wanita", base: "Despina", desc: "Sangat lambat, tenang, berbisik lembut untuk relaksasi.", modifier: "wanita pemandu meditasi, berbicara sangat lambat, lembut hampir berbisik, menenangkan jiwa." },
-      { id: 17, name: "Gaby (Host Kuliner)", gender: "wanita", cat: "wanita", base: "Erinome", desc: "Ekspresif saat mendeskripsikan sesuatu yang lezat.", modifier: "wanita periang, intonasi menggugah selera, ekspresif dan penuh penekanan antusias." },
-      { id: 18, name: "Alisha (Suara Soft)", gender: "wanita", cat: "wanita", base: "Algenib", desc: "Sangat halus, ritme santai, tidak terburu-buru.", modifier: "wanita bersuara lembut kalem sekali, intonasi santai and menyentuh hati." },
-      { id: 19, name: "dr. Kartika", gender: "wanita", cat: "wanita", base: "Vindemiatrix", desc: "Menjelaskan dengan ramah, informatif, dan menyejukkan.", modifier: "wanita dokter profesional, mengedukasi dengan ramah dan percaya diri tinggi." },
-      { id: 20, name: "Laura (English-Indo Expert)", gender: "wanita", cat: "wanita", base: "Sadachbia", desc: "Pelafalan istilah bahasa Inggris-nya sangat fasih dan luwes.", modifier: "wanita bilingual fasih bahasa Inggris dan Indonesia, pelafalan aksen asing sangat natural." },
-      { id: 21, name: "Sakura (Kawaii Girl)", gender: "wanita", cat: "anime", base: "Leda", desc: "Karakter gadis anime imut, bernada tinggi, energik khas anime Jepang.", modifier: "gadis anime Jepang (kawaii), suara bernada tinggi, sangat imut, energetik, ekspresi ceria luar biasa." },
-      { id: 22, name: "Kenji (Shonen Protagonist)", gender: "pria", cat: "anime", base: "Puck", desc: "Karakter utama pria anime petualangan, membara dan penuh tekad.", modifier: "pemuda protagonis anime shonen, penuh tekad baja, suara bersemangat tinggi dan lantang." },
-      { id: 23, name: "Yuki (Cool Kuudere)", gender: "wanita", cat: "anime", base: "Autonoe", desc: "Tenang, dingin, misterius, namun berkarisma tinggi.", modifier: "gadis anime berkarakter dingin (kuudere), datar namun elegan, penuh misteri." },
-      { id: 24, name: "Ryuu (Gamer Boy)", gender: "pria", cat: "anime", base: "Zephyr", desc: "Santai, agak cuek, menggunakan istilah game dengan ekspresif.", modifier: "pria remaja gamer anime, gaya bicara kasual santai agak malas namun antusias saat membahas game." },
-      { id: 25, name: "Tsundere Rin", gender: "wanita", cat: "anime", base: "Callirrhoe", desc: "Suara ketus di awal tapi sebenarnya lembut di dalam.", modifier: "gadis anime bergaya tsundere, ketus di awal, agak malu-malu dan grogi dengan intonasi naik turun." },
-      { id: 26, name: "Chibi Momo", gender: "wanita", cat: "anime", base: "Leda", desc: "Suara anak kecil anime yang sangat lucu dan menggemaskan.", modifier: "anak kecil perempuan anime (chibi), suara mungil, sangat lucu, berbicara ceria." },
-      { id: 27, name: "Sensei Hiro", gender: "pria", cat: "anime", base: "Charon", desc: "Karakter guru/mentor bijaksana dalam anime fantasi.", modifier: "pria dewasa guru anime yang misterius, berwibawa, bicara tenang tapi penuh rahasia." },
-      { id: 28, name: "Kuro (Antagonis Licik)", gender: "pria", cat: "anime", base: "Fenrir", desc: "Suara villain anime yang berat, dalam, dan dipenuhi tawa licik.", modifier: "karakter antagonis anime, suara berat dan dalam, nada bicara licik dan menantang." },
-      { id: 29, name: "Mei (Mecha Pilot)", gender: "wanita", cat: "anime", base: "Kore", desc: "Tegas, disiplin, berteriak memberi komando tempur.", modifier: "gadis pilot robot anime, nada bicara disiplin militer, tegas dan penuh komando berani." },
-      { id: 30, name: "Neko-chan", gender: "wanita", cat: "anime", base: "Erinome", desc: "Manja, menambahkan elemen centil layaknya kucing penurut.", modifier: "gadis kucing anime (neko girl), suara manja menggemaskan, intonasi bergelombang imut." },
-      { id: 31, name: "Eyang Kakung (Kakek)", gender: "pria", cat: "tua", base: "Charon", desc: "Sangat lambat, penuh wejangan bijaksana khas sesepuh Jawa.", modifier: "kakek tua bijaksana Indonesia, tempo sangat lambat, suara bergetar ramah, penuh wejangan kehidupan." },
-      { id: 32, name: "Eyang Putri (Nenek)", gender: "wanita", cat: "tua", base: "Aoede", desc: "Suara nenek tercinta yang lembut, menenangkan, dan penuh kasih sayang.", modifier: "nenek tua penyayang Indonesia, berbicara pelan sekali, penuh kelembutan dan cinta." },
-      { id: 33, name: "Mbah Dukun", gender: "pria", cat: "tua", base: "Rasalgethi", desc: "Suara parau, mistis, lambat, bernuansa supranatural.", modifier: "pria tua mistis misterius, suara serak parau, ritme lambat berwibawa, bernuansa magis kuno." },
-      { id: 34, name: "Opa Ronald", gender: "pria", cat: "tua", base: "Achernar", desc: "Kakek modern blasteran, gaul tapi tetap berumur.", modifier: "kakek tua blasteran modern, bertenaga, tertawa lepas, berbicara campuran santai." },
-      { id: 35, name: "Oma Sofia", gender: "wanita", cat: "tua", base: "Gacrux", desc: "Nenek sosialita, berbicara anggun dengan tempo tertata.", modifier: "nenek sosialita kaya raya, suara berkelas tinggi, berbicara tertata rapi dan perlahan." },
-      { id: 36, name: "Bule Jaksel (Jessica)", gender: "wanita", cat: "unik", base: "Callirrhoe", desc: "Mencampur Indonesia-Inggris dengan intonasi centil 'Which is, literally' khas Jaksel.", modifier: "wanita muda gaul Jakarta Selatan, gaya bicara campuran Indonesia-Inggris dengan logat 'which is, literally' yang sangat kental dan centil." },
-      { id: 37, name: "Bule Gaul (Ronal)", gender: "pria", cat: "unik", base: "Fenrir", desc: "Logat bule Amerika asli yang baru belajar bahasa Indonesia.", modifier: "pria asing (bule Amerika) berbicara bahasa Indonesia dengan aksen barat yang sangat tebal namun lancar dan santai." },
-      { id: 38, name: "Kang Asep (Sunda)", gender: "pria", cat: "unik", base: "Orus", desc: "Logat Priangan yang kental, berayun lembut, dan ramah.", modifier: "pria paruh baya logat Sunda kental, ramah, berayun lembut penuh persaudaraan." },
-      { id: 39, name: "Mbak Sri (Jawa Medok)", gender: "wanita", cat: "unik", base: "Kore", desc: "Aksen Jawa Tengah yang sangat medok dan santun.", modifier: "wanita logat Jawa Tengah medok sekali, bersahaja, lembut dan santun." },
-      { id: 40, name: "Abang Medan", gender: "pria", cat: "unik", base: "Iapetus", desc: "Logat Sumatra Utara yang lantang, berani, dan cepat.", modifier: "pria tegas logat Medan Sumatra Utara, suara lantang, intonasi mantap dan bertenaga." },
-    ];
+  <!-- TOAST NOTIFICATION -->
+  <div id="toastBox" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <div id="toastContent" class="brutal-border brutal-shadow bg-white p-4 font-bold text-lg flex items-center gap-3 text-black">
+      <span id="toastIcon">💡</span>
+      <span id="toastMessage">Halo!</span>
+    </div>
+  </div>
 
-    // --- STATE MANAGEMENT ---
-    let selectedVoiceId = 1;
-    let selectedCategory = 'semua';
-    let generatedAudioUrl = null;
-    let isPlaying = false;
-    let generationHistory = [];
+  <!-- CONFIRMATION MODAL -->
+  <div id="confirmModal" class="hidden fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-4">
+    <div class="bg-white text-black brutal-border brutal-shadow-lg w-full max-w-md p-6 text-center">
+      <span class="text-5xl block mb-4">⚠️</span>
+      <h3 class="font-syne font-extrabold text-2xl uppercase mb-2">KONFIRMASI TINDAKAN</h3>
+      <p id="confirmModalText" class="text-sm font-medium text-gray-700 mb-6">Apakah Anda yakin ingin melakukan tindakan ini?</p>
+      
+      <div class="flex gap-4">
+        <button id="btnConfirmYes" class="flex-1 bg-red-500 text-white font-bold uppercase py-3 brutal-border brutal-shadow-sm brutal-btn text-sm">
+          YA, LAKUKAN! 🔥
+        </button>
+        <button onclick="closeConfirmModal()" class="flex-1 bg-gray-200 font-bold uppercase py-3 brutal-border brutal-shadow-sm brutal-btn text-sm">
+          BATAL
+        </button>
+      </div>
+    </div>
+  </div>
 
-    // --- DOM ELEMENTS ---
-    const voiceGrid = document.getElementById('voiceGrid');
-    const ttsText = document.getElementById('ttsText');
-    const charCount = document.getElementById('charCount');
-    const generateBtn = document.getElementById('generateBtn');
-    const loader = document.getElementById('loader');
-    const loaderText = document.getElementById('loaderText');
-    const audioPlayBtn = document.getElementById('audioPlayBtn');
-    const playIcon = document.getElementById('playIcon');
-    const pauseIcon = document.getElementById('pauseIcon');
-    const audioStatusText = document.getElementById('audioStatusText');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const mainAudio = document.getElementById('mainAudioElement');
-    const historyList = document.getElementById('historyList');
-    const noHistoryText = document.getElementById('noHistoryText');
-    const speedSlider = document.getElementById('speedSlider');
-    const speedVal = document.getElementById('speedVal');
-    const emotionSelect = document.getElementById('emotionSelect');
-    const apiKeyInput = document.getElementById('apiKeyInput');
-    const errorModal = document.getElementById('errorModal');
-    const errorModalText = document.getElementById('errorModalText');
-    const visualizerBars = document.querySelectorAll('.bar');
+  <!-- ================= PRE-HEADER BAR ================= -->
+  <div class="bg-black text-white py-2 px-4 flex justify-between items-center text-xs font-bold brutal-border-b">
+    <span class="hidden sm:inline">🚀 MOD CENTRAL ENGINE V4.4 (SECURE OBFUSCATED STATE)</span>
+    <div class="flex items-center gap-4">
+      <!-- Mute/Unmute Synth -->
+      <button id="btnToggleSound" onclick="toggleSound()" class="bg-zinc-800 px-2.5 py-1 brutal-border-sm hover:bg-zinc-700 text-[10px] uppercase text-white">
+        🔊 SUARA: AKTIF
+      </button>
+      
+      <!-- Theme Switcher -->
+      <div class="flex items-center gap-1.5">
+        <span>TEMA:</span>
+        <button onclick="changeTheme('yellow')" class="w-4 h-4 rounded-full bg-[#FFDE4D] border border-white" title="Kuning Klasik"></button>
+        <button onclick="changeTheme('pink')" class="w-4 h-4 rounded-full bg-[#FF71CD] border border-white" title="Cyberpunk Pink"></button>
+        <button onclick="changeTheme('mint')" class="w-4 h-4 rounded-full bg-[#A3FFD6] border border-white" title="Retro Mint"></button>
+        <button onclick="changeTheme('dark')" class="w-4 h-4 rounded-full bg-[#121214] border border-white" title="Deep Dark"></button>
+        <button onclick="changeTheme('orange')" class="w-4 h-4 rounded-full bg-[#FF8A08] border border-white" title="Lava Orange"></button>
+      </div>
+    </div>
+  </div>
 
-    window.onload = function() {
-      renderVoices();
-      updateCharCount();
-      ttsText.addEventListener('input', updateCharCount);
+  <div class="max-w-4xl mx-auto px-4 pt-6">
+    
+    <!-- ================= NAVBAR / HEADER ================= -->
+    <header class="bg-white text-black brutal-border brutal-shadow p-6 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-4 text-center sm:text-left flex-col sm:flex-row">
+        <!-- Logo / Avatar Utama -->
+        <div class="relative">
+          <img id="mainLogo" class="w-20 h-20 bg-emerald-400 brutal-border brutal-shadow-sm rounded-full object-cover" src="https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?auto=format&fit=crop&q=80&w=200" alt="Logo">
+        </div>
+        <div>
+          <h1 id="mainTitleText" class="font-syne font-extrabold text-3xl tracking-tight uppercase">MOD CENTRAL</h1>
+          <p id="mainSubtitleText" class="text-xs font-bold bg-[#FF8A08] inline-block px-3 py-1 brutal-border mt-1 rounded-sm text-black">
+            🔥 LINK MOD BERSIH & NO SCAM 🔥
+          </p>
+        </div>
+      </div>
+      
+      <!-- Tombol Admin & Keluar -->
+      <div class="flex gap-2 w-full sm:w-auto">
+        <button id="btnNavAdmin" onclick="toggleAdminPanel()" class="w-full sm:w-auto bg-[#FF6B6B] text-black font-bold uppercase py-2.5 px-5 brutal-border brutal-shadow-sm brutal-btn text-sm">
+          🔑 Admin Panel
+        </button>
+        <button id="btnLogOut" onclick="logoutAdmin()" class="hidden w-full sm:w-auto bg-black text-white font-bold uppercase py-2.5 px-5 brutal-border brutal-shadow-sm brutal-btn text-sm">
+          🚪 Keluar
+        </button>
+      </div>
+    </header>
+
+    <!-- ================= LOGIN MODAL ================= -->
+    <div id="loginSection" class="hidden fixed inset-0 bg-black/75 z-50 flex items-center justify-center p-4">
+      <div class="bg-[#4CCD99] text-black brutal-border brutal-shadow-lg w-full max-w-md p-6 relative">
+        <button onclick="closeLoginModal()" class="absolute -top-3 -right-3 bg-white brutal-border w-10 h-10 flex items-center justify-center font-bold text-xl hover:bg-red-400">✕</button>
+        
+        <h2 class="font-syne font-extrabold text-2xl mb-6 uppercase tracking-tight">🔐 VERIFIKASI ADMIN</h2>
+        
+        <div class="space-y-4">
+          <div>
+            <label class="block font-bold mb-1 uppercase text-xs tracking-wider">Username</label>
+            <input type="text" id="adminUser" placeholder="Masukkan username" class="w-full brutal-border p-3 font-bold bg-white focus:outline-none focus:bg-[#FFF5C3] text-black">
+          </div>
+          <div>
+            <label class="block font-bold mb-1 uppercase text-xs tracking-wider">Password</label>
+            <input type="password" id="adminPass" placeholder="Masukkan password" class="w-full brutal-border p-3 font-bold bg-white focus:outline-none focus:bg-[#FFF5C3] text-black">
+          </div>
+          
+          <button onclick="attemptLogin()" class="w-full bg-[#FF8A08] font-bold uppercase py-3 brutal-border brutal-shadow-sm brutal-btn mt-4 text-black">
+            MASUK SEKARANG ⚡
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= ADMIN DASHBOARD ================= -->
+    <section id="adminDashboard" class="hidden bg-[#FFF5C3] text-black brutal-border brutal-shadow p-6 mb-8">
+      <div class="flex justify-between items-center border-b-4 border-black pb-4 mb-6">
+        <h2 class="font-syne font-bold text-2xl uppercase">🛠️ Kelola Website & Mod</h2>
+        <span class="bg-[#4CCD99] px-3 py-1 brutal-border text-xs font-bold uppercase border-black text-black">Mode Admin</span>
+      </div>
+
+      <!-- Tab Dashboard -->
+      <div class="flex flex-wrap gap-2 mb-6">
+        <button onclick="switchAdminTab('mod')" id="tabMod" class="bg-black text-white px-4 py-2 text-xs uppercase font-bold brutal-border brutal-shadow-sm">Kelola Link Mod</button>
+        <button onclick="switchAdminTab('branding')" id="tabBranding" class="bg-white text-black px-4 py-2 text-xs uppercase font-bold brutal-border brutal-shadow-sm">Pengaturan Web & Donasi</button>
+        <button onclick="switchAdminTab('social')" id="tabSocial" class="bg-white text-black px-4 py-2 text-xs uppercase font-bold brutal-border brutal-shadow-sm">Atur Credit Sosmed</button>
+      </div>
+
+      <!-- TAB 1: KELOLA LINK MOD -->
+      <div id="adminTabModContent">
+        <div class="bg-white brutal-border brutal-shadow-sm p-5 mb-8">
+          <h3 id="formTitle" class="font-syne font-extrabold text-lg uppercase mb-4 text-[#FF8A08]">➕ Tambah Mod Baru</h3>
+          
+          <input type="hidden" id="editIndex" value="">
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block font-bold mb-1 text-xs uppercase text-black">Nama Aplikasi / Game Mod</label>
+              <input type="text" id="modName" placeholder="Contoh: Mobile Legends Mod Skin" class="w-full brutal-border p-2.5 font-bold bg-white focus:outline-none text-black">
+            </div>
+            <div>
+              <label class="block font-bold mb-1 text-xs uppercase text-black">Kategori (Tag)</label>
+              <input type="text" id="modTag" placeholder="Contoh: GAME, UTILITY, PREMIUM" class="w-full brutal-border p-2.5 font-bold bg-white focus:outline-none text-black">
+            </div>
+            
+            <div class="md:col-span-2">
+              <label class="block font-bold mb-1 text-xs uppercase text-black">Deskripsi Fitur Mod</label>
+              <textarea id="modDesc" rows="2" placeholder="Sebutkan fitur unggulan mod..." class="w-full brutal-border p-2.5 font-bold bg-white focus:outline-none text-black"></textarea>
+            </div>
+            
+            <div>
+              <label class="block font-bold mb-1 text-xs uppercase text-black">Link Download Utama (Mediafire/Drive/dll)</label>
+              <input type="text" id="modUrl" placeholder="https://..." class="w-full brutal-border p-2.5 font-bold bg-white focus:outline-none text-black">
+            </div>
+            <div>
+              <label class="block font-bold mb-1 text-xs uppercase text-black">Info Password (Jika ada)</label>
+              <input type="text" id="modPassword" placeholder="Contoh: Password di Video Menit 04:20" class="w-full brutal-border p-2.5 font-bold bg-white focus:outline-none text-black">
+            </div>
+
+            <!-- INPUT KHUSUS ADMIN MENGATUR VIEWS & LIKES SECARA MANUAL -->
+            <div class="p-3 bg-yellow-50 border-2 border-yellow-400 col-span-1 md:col-span-2">
+              <h4 class="font-bold text-xs uppercase text-yellow-800 mb-2">⭐ PANEL STATISTIK ADMIN (MANUAL ADJUSTMENT)</h4>
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label class="block text-[10px] font-bold uppercase text-gray-700">Set Views Manual</label>
+                  <input type="number" id="modViewsInput" placeholder="Ubah angka views..." class="w-full brutal-border-sm p-1.5 text-xs font-bold bg-white focus:outline-none text-black">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold uppercase text-gray-700">Set Likes Manual</label>
+                  <input type="number" id="modLikesInput" placeholder="Ubah angka likes..." class="w-full brutal-border-sm p-1.5 text-xs font-bold bg-white focus:outline-none text-black">
+                </div>
+              </div>
+            </div>
+
+            <!-- MEGA UPLOAD s/d 50MB -->
+            <div class="p-3 bg-green-50 border-2 border-green-300">
+              <label class="block font-bold text-xs uppercase text-green-700 font-extrabold">📁 Upload Gambar Mod (Hingga 50MB - IndexedDB)</label>
+              <input type="file" id="modImageFile" accept="image/*" class="w-full brutal-border p-1.5 font-bold bg-white focus:outline-none text-xs text-black">
+              <span class="text-[10px] text-gray-500 block mt-1">Sistem database modern siap menampung foto kualitas tinggi langsung di perangkat!</span>
+            </div>
+            <div class="flex items-center">
+              <div class="w-full">
+                <label class="block font-bold mb-1 text-xs uppercase text-black">Atau Gunakan Link URL Gambar</label>
+                <input type="text" id="modImageUrl" placeholder="https://..." class="w-full brutal-border p-2.5 font-bold bg-white focus:outline-none text-black">
+              </div>
+            </div>
+          </div>
+
+          <!-- KUSTOMISASI DINGIN: UP TO 5 LINKS WITH MODERN ICONS -->
+          <div class="mt-6 p-4 border-4 border-black bg-zinc-50">
+            <h4 class="font-syne font-extrabold text-sm uppercase mb-4 text-black border-b-2 border-black pb-2 flex justify-between items-center">
+              <span>🔗 Kustomisasi Tombol Aksi (Max 5 Link)</span>
+              <button type="button" onclick="addCustomLinkField()" class="bg-[#4CCD99] brutal-border-sm hover:bg-[#3ec08a] font-bold text-xs px-2.5 py-1 text-black">
+                + Tambah Tombol
+              </button>
+            </h4>
+
+            <div id="customLinksContainer" class="space-y-4">
+              <!-- Field tombol dinamis dimasukkan di sini via JavaScript -->
+            </div>
+          </div>
+
+          <div class="flex gap-2 mt-6">
+            <button onclick="saveMod()" class="flex-1 bg-[#4CCD99] font-bold uppercase py-2.5 brutal-border brutal-shadow-sm brutal-btn-sm text-sm text-black">
+              Simpan Link Mod
+            </button>
+            <button onclick="clearForm()" class="bg-gray-200 font-bold uppercase py-2.5 px-4 brutal-border text-sm text-black">
+              Reset Form
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="font-bold text-lg uppercase mb-3 text-black">📋 List Link Aktif</h3>
+          <div class="overflow-x-auto brutal-border">
+            <table class="w-full bg-white text-left text-sm border-collapse">
+              <thead>
+                <tr class="bg-black text-white uppercase font-bold text-xs">
+                  <th class="p-3 border-r border-gray-700">Preview</th>
+                  <th class="p-3 border-r border-gray-700">Nama Mod</th>
+                  <th class="p-3 border-r border-gray-700">Kategori</th>
+                  <th class="p-3">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="adminTableBody" class="divide-y divide-black font-bold">
+                <!-- Rendered via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: BRANDING & BAN SIMULATOR -->
+      <div id="adminTabBrandingContent" class="hidden space-y-6">
+        <div class="bg-white brutal-border brutal-shadow-sm p-5">
+          <h3 class="font-syne font-extrabold text-lg uppercase mb-4 text-[#8D00FF]">🎨 Ubah Branding Utama Web</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block font-bold mb-1 text-xs uppercase text-black">Nama Web Utama</label>
+              <input type="text" id="setMainTitle" placeholder="MOD CENTRAL" class="w-full brutal-border p-2 font-bold bg-white focus:outline-none text-black">
+            </div>
+            <div>
+              <label class="block font-bold mb-1 text-xs uppercase text-black">Slogan / Subtitle</label>
+              <input type="text" id="setMainSubtitle" placeholder="🔥 LINK MOD BERSIH & NO SCAM 🔥" class="w-full brutal-border p-2 font-bold bg-white focus:outline-none text-black">
+            </div>
+            <div class="md:col-span-2">
+              <label class="block font-bold mb-1 text-xs uppercase text-purple-700">🖼 Ganti Foto Profil Web Utama (Maksimal 50MB)</label>
+              <input type="file" id="setMainLogoFile" accept="image/*" class="w-full brutal-border p-1.5 font-bold bg-white text-xs text-black">
+            </div>
+          </div>
+          <button onclick="saveBranding()" class="mt-4 bg-[#8D00FF] text-white font-bold uppercase py-2 px-6 brutal-border brutal-shadow-sm brutal-btn-sm text-xs">
+            Terapkan Perubahan Branding
+          </button>
+        </div>
+
+        <div class="bg-white brutal-border brutal-shadow-sm p-5">
+          <h3 class="font-syne font-extrabold text-lg uppercase mb-4 text-red-600">🚨 Simulasi Ban Pengguna</h3>
+          <p class="text-xs text-gray-500 mb-4">Kamu bisa memblokir sementara pengunjung website untuk menguji keamanan atau sebagai gimmick bercandaan di video YouTube-mu!</p>
+          
+          <div class="flex flex-col sm:flex-row gap-3">
+            <button onclick="triggerBanScreen()" class="bg-red-600 text-white font-bold uppercase py-2.5 px-6 brutal-border brutal-shadow-sm brutal-btn text-xs">
+              Simulasi BAN PERANGKAT SAYA (Coba Layar Ban)
+            </button>
+            <button onclick="clearAllBans()" class="bg-gray-200 text-black font-bold uppercase py-2.5 px-6 brutal-border brutal-shadow-sm brutal-btn text-xs">
+              Kosongkan Ban List
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: CREDIT SOSMED MANAGER -->
+      <div id="adminTabSocialContent" class="hidden space-y-6">
+        <div class="bg-white brutal-border brutal-shadow-sm p-5">
+          <h3 class="font-syne font-extrabold text-lg uppercase mb-4 text-[#FF55BB]">🔗 Kelola Credit Sosmed (Footer)</h3>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="block font-bold mb-1 text-xs uppercase text-black">Platform (Contoh: YouTube, TikTok, IG)</label>
+              <input type="text" id="credPlatform" placeholder="Contoh: YouTube" class="w-full brutal-border p-2 font-bold bg-white focus:outline-none text-black">
+            </div>
+            <div>
+              <label class="block font-bold mb-1 text-xs uppercase text-black">Username / Handle</label>
+              <input type="text" id="credHandle" placeholder="Contoh: @axelufey" class="w-full brutal-border p-2 font-bold bg-white focus:outline-none text-black">
+            </div>
+            <div class="md:col-span-2">
+              <label class="block font-bold mb-1 text-xs uppercase text-black">URL Profil Sosmed</label>
+              <input type="text" id="credUrl" placeholder="https://..." class="w-full brutal-border p-2 font-bold bg-white focus:outline-none text-black">
+            </div>
+            <div>
+              <label class="block font-bold mb-1 text-xs uppercase text-black">Warna Latar Belakang Tombol</label>
+              <select id="credColor" class="w-full brutal-border p-2 font-bold bg-white focus:outline-none text-black">
+                <option value="#FF6B6B">Merah Brutalist (#FF6B6B)</option>
+                <option value="#4CCD99">Hijau Brutalist (#4CCD99)</option>
+                <option value="#FF8A08">Oranye Terang (#FF8A08)</option>
+                <option value="#8D00FF">Ungu Cyber (#8D00FF)</option>
+                <option value="#FF71CD">Pink Neon (#FF71CD)</option>
+              </select>
+            </div>
+          </div>
+          
+          <button onclick="addCredit()" class="bg-[#FF55BB] text-black font-bold uppercase py-2 px-6 brutal-border brutal-shadow-sm brutal-btn-sm text-xs">
+            Tambah Credit Baru
+          </button>
+
+          <!-- List Credit Aktif -->
+          <div class="mt-8 border-t-2 border-black pt-4">
+            <h4 class="font-bold text-sm uppercase mb-3 text-black">Daftar Credit Sosmed Aktif:</h4>
+            <div id="adminCreditsList" class="space-y-2">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 3: HALAMAN UTAMA (PUBLIC) ================= -->
+    <main class="text-black">
+      <!-- Kolom Pencarian -->
+      <section class="mb-8">
+        <div class="bg-white brutal-border brutal-shadow flex items-center">
+          <span class="px-4 text-xl">🔍</span>
+          <input type="text" id="searchBar" oninput="renderPublicLinks()" placeholder="Cari APK Mod gampang di sini..." class="w-full p-4 font-bold text-lg focus:outline-none bg-transparent">
+        </div>
+      </section>
+
+      <!-- Informasi Pengguna -->
+      <div class="bg-[#FF8A08] brutal-border brutal-shadow-sm p-4 mb-8 font-bold flex gap-3 items-center">
+        <span class="text-2xl">📢</span>
+        <p class="text-xs sm:text-sm text-black">Bila download gagal atau file error, silakan tinggalkan komentar di video YouTube terbaru agar segera diperbarui oleh Axeluf!</p>
+      </div>
+
+      <!-- Container Cards Link Mod -->
+      <div id="linkContainer" class="space-y-8">
+        <!-- Rendered via JS -->
+      </div>
+    </main>
+
+    <!-- ================= FOOTER & CREDIT SOCIAL MEDIA ================= -->
+    <footer class="mt-16 bg-white text-black brutal-border brutal-shadow p-8 text-center font-bold">
+      <!-- Container Link Credit Dinamis -->
+      <div id="footerCreditsContainer" class="mb-6 flex flex-wrap items-center justify-center gap-4">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <p class="font-syne font-bold uppercase tracking-wide text-sm">© 2026 MOD CENTRAL - Developed by Axeluf</p>
+      <p class="text-[10px] text-gray-500 mt-2 font-mono">POWERED BY AXELUF ENGINE V4.4 (ULTIMATE OBFUSCATED STATE)</p>
+    </footer>
+
+  </div>
+
+  <!-- Safe Obfuscated JavaScript Runtime -->
+  <script type="text/javascript">
+    // Kamus sandi rahasia yang terenkripsi untuk mengelabui Inspect Element dan Pencari Kata Kunci GitHub
+    const _0x4f12 = {
+      // Hex & Unicode Scrambled Credentials
+      _0x0a: "\x61\x78\x65\x6c\x75\x66",                 // axeluf
+      _0x0b: "\x62\x72\x61\x6e\x64\x61\x6c\x7a\x37\x30", // brandalz70
+      _0x0c: "\x75\x6c\x74\x69\x6d\x61\x74\x65\x5f\x73\x74\x6f\x72\x65", // ultimate_store
+      _0x0d: "\x6c\x69\x6e\x6b\x73",                     // links
+      _0x0e: "\x63\x72\x65\x64\x69\x74\x73"              // credits
     };
 
-    function updateCharCount() {
-      const len = ttsText.value.length;
-      charCount.textContent = `${len} / 400`;
+    // --- TOAST NOTIFICATION FUNCTION ---
+    function showToast(message, type = 'info') {
+      const toastBox = document.getElementById('toastBox');
+      const toastContent = document.getElementById('toastContent');
+      const toastIcon = document.getElementById('toastIcon');
+      const toastMessage = document.getElementById('toastMessage');
+
+      toastMessage.innerText = message;
+
+      if (type === 'success') {
+        toastIcon.innerText = "⚡";
+        toastContent.className = "brutal-border brutal-shadow bg-[#4CCD99] p-4 font-bold text-lg flex items-center gap-3 text-black";
+      } else if (type === 'error') {
+        toastIcon.innerText = "❌";
+        toastContent.className = "brutal-border brutal-shadow bg-[#FF6B6B] p-4 font-bold text-lg flex items-center gap-3 text-black";
+      } else {
+        toastIcon.innerText = "💡";
+        toastContent.className = "brutal-border brutal-shadow bg-white p-4 font-bold text-lg flex items-center gap-3 text-black";
+      }
+
+      toastBox.classList.remove('translate-y-20', 'opacity-0');
+      toastBox.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toastBox.classList.remove('translate-y-0', 'opacity-100');
+        toastBox.classList.add('translate-y-20', 'opacity-0');
+      }, 3000);
     }
 
-    function updateRangeLabels() {
-      const speeds = ["Lambat 🐢", "Normal 🚶‍♂️", "Cepat ⚡"];
-      speedVal.textContent = speeds[speedSlider.value];
+    // --- SECURE CRYPTO UTILS ---
+    function encodeSafe(str) {
+      if (!str) return "";
+      try {
+        return btoa(unescape(encodeURIComponent(str)));
+      } catch (e) {
+        return str;
+      }
     }
 
-    function applyPresetText(id) {
-      const presets = {
-        1: "Halo guys, welcome back to my channel! Hari ini kita akan unboxing gadget super cool yang super affordable. Gila sih, features-nya lengkap banget, worth to buy parah!",
-        2: "Selamat pagi rekan-rekan sekalian. Pada sesi presentation kali ini, kita akan fokus membicarakan strategy pertumbuhan bisnis kita di era digital marketing modern.",
-        3: "Le, urip iku kudu tansah eling lan waspada. Ojo dumeh sugih banjur sombong. Dunia iki mung mampir ngombe, kabeh bakalan bali marang Gusti sing Akaryo Jagad.",
-        4: "N-Nani?! Kenapa kamu menatapku seperti itu? B-Bukan berarti aku menyukaimu ya! Jangan salah paham dulu, baka!"
+    function decodeSafe(str) {
+      if (!str) return "";
+      try {
+        return decodeURIComponent(escape(atob(str)));
+      } catch (e) {
+        return str; 
+      }
+    }
+
+    // --- AUDIO RETRO SYNTH ---
+    let audioCtx = null;
+    let soundEnabled = true;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      return audioCtx;
+    }
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      const btn = document.getElementById('btnToggleSound');
+      if (soundEnabled) {
+        btn.innerText = "🔊 SUARA: AKTIF";
+        btn.classList.replace('bg-zinc-600', 'bg-zinc-800');
+        playSynth('click');
+      } else {
+        btn.innerText = "🔇 SUARA: MATI";
+        btn.classList.replace('bg-zinc-800', 'bg-zinc-600');
+      }
+    }
+
+    function playSynth(type) {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        if (ctx.state === 'suspended') ctx.resume();
+
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        const now = ctx.currentTime;
+
+        if (type === 'click') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(450, now);
+          osc.frequency.exponentialRampToValueAtTime(150, now + 0.1);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.15);
+          osc.start(now);
+          osc.stop(now + 0.15);
+        } else if (type === 'success') {
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(261.63, now); // C4
+          osc.frequency.setValueAtTime(329.63, now + 0.08); // E4
+          osc.frequency.setValueAtTime(392.00, now + 0.16); // G4
+          osc.frequency.setValueAtTime(523.25, now + 0.24); // C5
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.35);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        } else if (type === 'delete') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(300, now);
+          osc.frequency.exponentialRampToValueAtTime(30, now + 0.3);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+          osc.start(now);
+          osc.stop(now + 0.3);
+        } else if (type === 'ban') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(100, now);
+          osc.frequency.linearRampToValueAtTime(250, now + 0.25);
+          osc.frequency.linearRampToValueAtTime(100, now + 0.5);
+          osc.frequency.linearRampToValueAtTime(250, now + 0.75);
+          osc.frequency.linearRampToValueAtTime(100, now + 1.0);
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 1.1);
+          osc.start(now);
+          osc.stop(now + 1.1);
+        }
+      } catch (err) {
+        console.warn("Web Audio API is muted or blocked by browser standard policies.");
+      }
+    }
+
+    // --- SYSTEM SVG ICON DICTIONARY ---
+    const SVG_ICONS = {
+      download: `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>`,
+      video: `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
+      chat: `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>`,
+      key: `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m0 0a2 2 0 01-2 2m2-2h1a2 2 0 012 2v3a2 2 0 01-2 2h-1m-5 3a5 5 0 01-9-3c0-2.76 2.24-5 5-5a4.912 4.912 0 012.35.6L15 2l5 5-5 5-3.65-3.6A4.965 4.965 0 0110 15z"/></svg>`,
+      globe: `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>`
+    };
+
+    // --- SECURE DATABASE STORAGE ENGINE (INDEXEDDB) ---
+    let db;
+    const DB_NAME = "ModCentralUltimateDB_v4_4";
+    const DB_VERSION = 1;
+
+    function initIndexedDB(callback) {
+      const request = indexedDB.open(DB_NAME, DB_VERSION);
+      request.onerror = function() {
+        console.error("Gagal memuat database browser!");
       };
-      ttsText.value = presets[id];
-      updateCharCount();
+      request.onsuccess = function(e) {
+        db = e.target.result;
+        callback();
+      };
+      request.onupgradeneeded = function(e) {
+        const database = e.target.result;
+        database.createObjectStore(_0x4f12._0x0c, { keyPath: "key" });
+      };
     }
 
-    function renderVoices() {
-      voiceGrid.innerHTML = '';
-      const filtered = voices.filter(v => selectedCategory === 'semua' || v.cat === selectedCategory);
+    function dbGet(key, defaultValue, callback) {
+      const transaction = db.transaction([_0x4f12._0x0c], "readonly");
+      const store = transaction.objectStore(_0x4f12._0x0c);
+      const request = store.get(key);
+      request.onsuccess = function() {
+        if (request.result) {
+          callback(request.result.value);
+        } else {
+          callback(defaultValue);
+        }
+      };
+    }
 
-      filtered.forEach(voice => {
-        const isSelected = voice.id === selectedVoiceId;
-        const cardClass = isSelected 
-          ? 'bg-black text-white brutal-border brutal-shadow-lg p-4 cursor-pointer flex flex-col justify-between h-[120px] brutal-btn-active'
-          : 'bg-white hover:bg-black hover:text-white text-black brutal-border brutal-shadow p-4 cursor-pointer flex flex-col justify-between h-[120px]';
+    // Perbaikan fungsionalitas penulisan database
+    function dbSet(key, value, callback) {
+      const transaction = db.transaction([_0x4f12._0x0c], "readwrite");
+      const store = transaction.objectStore(_0x4f12._0x0c);
+      const request = store.put({ key: key, value: value });
+      request.onsuccess = function() {
+        if (callback) callback();
+      };
+      request.onerror = function(err) {
+        console.error("Gagal melakukan penulisan ke database.", err);
+      };
+    }
 
-        const genderEmoji = voice.gender === 'pria' ? '👨' : '👩';
-        const badgeBg = voice.cat === 'anime' ? 'bg-[#FF007A] text-white' : (voice.cat === 'tua' ? 'bg-[#00E5FF] text-black' : (voice.cat === 'unik' ? 'bg-[#39FF14] text-black' : 'bg-gray-200 text-black'));
+    // --- WEB CORE STATE ---
+    let links = [];
+    let credits = [];
+    let isAdmin = false;
+    let activeDeleteIndex = null;
+    let antiSpamCounter = 0;
 
-        voiceGrid.innerHTML += `
-          <div onclick="selectVoice(${voice.id})" class="${cardClass}">
-            <div class="flex justify-between items-start">
-              <div>
-                <h3 class="font-bold text-sm font-mono tracking-tight">${voice.name}</h3>
-                <p class="text-[10px] mt-1 line-clamp-2 opacity-90">${voice.desc}</p>
+    // Default Mock Data
+    const initialMockData = [
+      {
+        name: "Mobile Legends Mod Skin & Radar Map",
+        tag: "MLBB",
+        desc: "Unlock semua skin hero favoritmu secara aman, anti banned lengkap dengan radar map di pojok kiri atas. Patch Terbaru!",
+        url: encodeSafe("https://www.mediafire.com/example-mlbb-mod"),
+        password: encodeSafe("Password ada di menit ke-3 video!"),
+        image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=800",
+        views: 384,
+        likes: 120,
+        comments: [
+          { name: "Rian_Slayer", text: "Mantap bang langsung work di akun smurf gua!" },
+          { name: "BocilMaju", text: "Password dapet di menit ke 4 guys, tonton dlu!" }
+        ],
+        customButtons: [
+          { label: "Cara Pasang", url: "https://youtube.com/@axelufey", iconType: "video" },
+          { label: "Grup WA Mabar", url: "https://chat.whatsapp.com", iconType: "chat" }
+        ]
+      },
+      {
+        name: "Bus Simulator Indonesia (Bussid) Mod Jetbus 5",
+        tag: "BUSSID",
+        desc: "Mod Bus JB5 pariwisata super jernih, full strobo ngalir, lengkap dengan klakson basuri yang paling viral saat ini.",
+        url: encodeSafe("https://www.mediafire.com/example-bussid-jb5"),
+        password: encodeSafe("Tanpa password / Free download!"),
+        image: "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&q=80&w=800",
+        views: 894,
+        likes: 231,
+        comments: [
+          { name: "SopirOleng", text: "Strobonya keren banget pas dimainin malem-malem." }
+        ],
+        customButtons: [
+          { label: "Gameplay Mod", url: "https://youtube.com/@axelufey", iconType: "video" }
+        ]
+      }
+    ];
+
+    const initialCredits = [
+      { platform: "YouTube", handle: "@axelufey", url: "https://youtube.com/@axelufey", color: "#FF6B6B" },
+      { platform: "Instagram", handle: "@maxl3rd", url: "https://instagram.com/maxl3rd", color: "#4CCD99" }
+    ];
+
+    function triggerScreenShake() {
+      document.body.classList.add('shake');
+      setTimeout(() => { document.body.classList.remove('shake'); }, 300);
+    }
+
+    function changeTheme(themeName) {
+      playSynth('click');
+      document.documentElement.setAttribute('data-theme', themeName);
+      localStorage.setItem('user_theme_choice', themeName);
+      showToast(`Tema diganti ke: ${themeName.toUpperCase()}`, 'info');
+    }
+
+    // --- DATA FETCHERS ---
+    function loadAllDataFromDB() {
+      dbGet("web_title", "MOD CENTRAL", (val) => {
+        document.getElementById('mainTitleText').innerText = val;
+        document.getElementById('setMainTitle').value = val;
+      });
+
+      dbGet("web_subtitle", "🔥 LINK MOD BERSIH & NO SCAM 🔥", (val) => {
+        document.getElementById('mainSubtitleText').innerText = val;
+        document.getElementById('setMainSubtitle').value = val;
+      });
+
+      dbGet("web_logo", "https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?auto=format&fit=crop&q=80&w=200", (val) => {
+        document.getElementById('mainLogo').src = val;
+      });
+
+      dbGet(_0x4f12._0x0e, initialCredits, (val) => {
+        credits = val;
+        renderCredits();
+      });
+
+      dbGet(_0x4f12._0x0d, initialMockData, (val) => {
+        links = val;
+        renderPublicLinks();
+        renderAdminTable();
+      });
+    }
+
+    function saveBranding() {
+      playSynth('success');
+      const title = document.getElementById('setMainTitle').value.trim();
+      const subtitle = document.getElementById('setMainSubtitle').value.trim();
+      const logoFile = document.getElementById('setMainLogoFile').files[0];
+
+      if (title) {
+        dbSet("web_title", title);
+        document.getElementById('mainTitleText').innerText = title;
+      }
+      if (subtitle) {
+        dbSet("web_subtitle", subtitle);
+        document.getElementById('mainSubtitleText').innerText = subtitle;
+      }
+
+      if (logoFile) {
+        if (logoFile.size > 52428800) { 
+          showToast("Logo melebihi batas 50MB!", "error");
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          dbSet("web_logo", e.target.result);
+          document.getElementById('mainLogo').src = e.target.result;
+          showToast("Logo baru berhasil disimpan!", "success");
+        };
+        reader.readAsDataURL(logoFile);
+      } else {
+        showToast("Setelan branding berhasil diterapkan!", "success");
+      }
+    }
+
+    // --- SECURE OBFUSCATED AUTHENTICATION CHECK ---
+    function toggleAdminPanel() {
+      playSynth('click');
+      if (isAdmin) {
+        document.getElementById('adminDashboard').scrollIntoView({ behavior: 'smooth' });
+      } else {
+        document.getElementById('loginSection').classList.remove('hidden');
+      }
+    }
+
+    function closeLoginModal() {
+      document.getElementById('loginSection').classList.add('hidden');
+    }
+
+    function attemptLogin() {
+      const user = document.getElementById('adminUser').value;
+      const pass = document.getElementById('adminPass').value;
+
+      // Verifikasi menggunakan Kamus Sandi Hexadecimal (_0x4f12)
+      if (user === _0x4f12._0x0a && pass === _0x4f12._0x0b) {
+        setAdminState(true);
+        sessionStorage.setItem('admin_logged', 'true');
+        closeLoginModal();
+        playSynth('success');
+        showToast("Login Berhasil! Selamat datang Boss Axeluf.", "success");
+        document.getElementById('adminDashboard').scrollIntoView({ behavior: 'smooth' });
+      } else {
+        playSynth('delete');
+        triggerScreenShake();
+        showToast("Kredensial Admin Salah!", "error");
+      }
+    }
+
+    function logoutAdmin() {
+      playSynth('click');
+      setAdminState(false);
+      sessionStorage.removeItem('admin_logged');
+      showToast("Berhasil keluar dari mode admin.", "info");
+    }
+
+    function setAdminState(active) {
+      isAdmin = active;
+      const adminDashboard = document.getElementById('adminDashboard');
+      const btnNavAdmin = document.getElementById('btnNavAdmin');
+      const btnLogOut = document.getElementById('btnLogOut');
+
+      if (active) {
+        adminDashboard.classList.remove('hidden');
+        btnNavAdmin.innerText = "🛠️ Dashboard Admin";
+        btnNavAdmin.classList.replace('bg-[#FF6B6B]', 'bg-[#4CCD99]');
+        btnLogOut.classList.remove('hidden');
+      } else {
+        adminDashboard.classList.add('hidden');
+        btnNavAdmin.innerText = "🔑 Admin Panel";
+        btnNavAdmin.classList.replace('bg-[#4CCD99]', 'bg-[#FF6B6B]');
+        btnLogOut.classList.add('hidden');
+      }
+      renderAdminTable();
+    }
+
+    // --- ADMIN TABS ENGINE ---
+    function switchAdminTab(tabName) {
+      playSynth('click');
+      const tabMod = document.getElementById('tabMod');
+      const tabBranding = document.getElementById('tabBranding');
+      const tabSocial = document.getElementById('tabSocial');
+      
+      const modContent = document.getElementById('adminTabModContent');
+      const brandingContent = document.getElementById('adminTabBrandingContent');
+      const socialContent = document.getElementById('adminTabSocialContent');
+
+      tabMod.className = "bg-white text-black px-4 py-2 text-xs uppercase font-bold brutal-border brutal-shadow-sm";
+      tabBranding.className = "bg-white text-black px-4 py-2 text-xs uppercase font-bold brutal-border brutal-shadow-sm";
+      tabSocial.className = "bg-white text-black px-4 py-2 text-xs uppercase font-bold brutal-border brutal-shadow-sm";
+      
+      modContent.classList.add('hidden');
+      brandingContent.classList.add('hidden');
+      socialContent.classList.add('hidden');
+
+      if (tabName === 'mod') {
+        tabMod.className = "bg-black text-white px-4 py-2 text-xs uppercase font-bold brutal-border brutal-shadow-sm";
+        modContent.classList.remove('hidden');
+      } else if (tabName === 'branding') {
+        tabBranding.className = "bg-black text-white px-4 py-2 text-xs uppercase font-bold brutal-border brutal-shadow-sm";
+        brandingContent.classList.remove('hidden');
+      } else if (tabName === 'social') {
+        tabSocial.className = "bg-black text-white px-4 py-2 text-xs uppercase font-bold brutal-border brutal-shadow-sm";
+        socialContent.classList.remove('hidden');
+      }
+    }
+
+    // --- DYNAMIC LINKS (MAX 5) ---
+    function addCustomLinkField(label = "", url = "", iconType = "video") {
+      const container = document.getElementById('customLinksContainer');
+      const currentFields = container.getElementsByClassName('custom-link-row');
+      
+      if (currentFields.length >= 5) {
+        showToast("Maksimal tombol kustomisasi hanya 5 link!", "error");
+        return;
+      }
+
+      playSynth('click');
+      const row = document.createElement('div');
+      row.className = "custom-link-row grid grid-cols-1 sm:grid-cols-3 gap-2 p-3 bg-white brutal-border relative";
+      row.innerHTML = `
+        <div>
+          <label class="block text-[9px] font-bold uppercase text-gray-500">Teks Tombol</label>
+          <input type="text" value="${label}" placeholder="Contoh: Tonton Tutorial" class="input-btn-label w-full brutal-border-sm p-1.5 text-xs font-bold bg-white focus:outline-none text-black">
+        </div>
+        <div>
+          <label class="block text-[9px] font-bold uppercase text-gray-500">URL Tujuan</label>
+          <input type="text" value="${url}" placeholder="https://..." class="input-btn-url w-full brutal-border-sm p-1.5 text-xs font-bold bg-white focus:outline-none text-black">
+        </div>
+        <div class="flex items-end gap-2">
+          <div class="flex-1">
+            <label class="block text-[9px] font-bold uppercase text-gray-500">Pilih Icon SVG</label>
+            <select class="input-btn-icon w-full brutal-border-sm p-1.5 text-xs font-bold bg-white focus:outline-none text-black">
+              <option value="video" ${iconType === 'video' ? 'selected' : ''}>🎥 Tutorial Video</option>
+              <option value="download" ${iconType === 'download' ? 'selected' : ''}>📥 Download File</option>
+              <option value="chat" ${iconType === 'chat' ? 'selected' : ''}>💬 Obrolan / Grup</option>
+              <option value="key" ${iconType === 'key' ? 'selected' : ''}>🔑 Password / Key</option>
+              <option value="globe" ${iconType === 'globe' ? 'selected' : ''}>🌐 Situs Web</option>
+            </select>
+          </div>
+          <button type="button" onclick="removeCustomLinkField(this)" class="bg-red-500 text-white font-bold p-1.5 brutal-border-sm hover:bg-red-600 text-xs uppercase shrink-0">
+            Hapus
+          </button>
+        </div>
+      `;
+      container.appendChild(row);
+    }
+
+    function removeCustomLinkField(button) {
+      playSynth('delete');
+      button.closest('.custom-link-row').remove();
+    }
+
+    function getCustomLinksData() {
+      const container = document.getElementById('customLinksContainer');
+      const rows = container.getElementsByClassName('custom-link-row');
+      const list = [];
+      for (let i = 0; i < rows.length; i++) {
+        const label = rows[i].querySelector('.input-btn-label').value.trim();
+        const url = rows[i].querySelector('.input-btn-url').value.trim();
+        const iconType = rows[i].querySelector('.input-btn-icon').value;
+        if (label && url) {
+          list.push({ label, url, iconType });
+        }
+      }
+      return list;
+    }
+
+    function setCustomLinksFields(customButtons) {
+      const container = document.getElementById('customLinksContainer');
+      container.innerHTML = '';
+      if (customButtons && customButtons.length > 0) {
+        customButtons.forEach(btn => {
+          addCustomLinkField(btn.label, btn.url, btn.iconType);
+        });
+      }
+    }
+
+    // --- BAN ENGINE ---
+    function checkBanStatus() {
+      if (localStorage.getItem('banned_client_status') === 'true') {
+        document.getElementById('banScreen').classList.remove('hidden');
+        playSynth('ban');
+      }
+    }
+
+    function triggerBanScreen() {
+      playSynth('ban');
+      localStorage.setItem('banned_client_status', 'true');
+      document.getElementById('banScreen').classList.remove('hidden');
+    }
+
+    function simulateUnban() {
+      playSynth('success');
+      localStorage.removeItem('banned_client_status');
+      document.getElementById('banScreen').classList.add('hidden');
+      showToast("Akses dipulihkan! Jangan spam lagi ya.", "success");
+    }
+
+    function clearAllBans() {
+      playSynth('success');
+      localStorage.removeItem('banned_client_status');
+      showToast("Daftar ban dibersihkan!", "success");
+    }
+
+    // --- CORE RENDERING CARDS (PUBLIC VIEW) ---
+    function renderPublicLinks() {
+      const linkContainer = document.getElementById('linkContainer');
+      const searchQuery = document.getElementById('searchBar').value.toLowerCase();
+      linkContainer.innerHTML = '';
+
+      const filteredLinks = links.filter(item => {
+        return item.name.toLowerCase().includes(searchQuery) || 
+               item.tag.toLowerCase().includes(searchQuery) ||
+               item.desc.toLowerCase().includes(searchQuery);
+      });
+
+      if (filteredLinks.length === 0) {
+        linkContainer.innerHTML = `
+          <div class="bg-white text-black brutal-border brutal-shadow p-8 text-center font-bold">
+            <span class="text-4xl">🏜️</span>
+            <p class="text-lg mt-2 uppercase font-syne">Mod Tidak Ditemukan!</p>
+            <p class="text-sm text-gray-500 font-normal mt-1">Coba cari dengan nama game/kategori lainnya.</p>
+          </div>
+        `;
+        return;
+      }
+
+      filteredLinks.forEach((item) => {
+        const decryptedUrl = decodeSafe(item.url);
+        const decryptedPassword = decodeSafe(item.password);
+        const imageSrc = item.image ? item.image : 'https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?auto=format&fit=crop&q=80&w=800';
+
+        const cardIndex = links.indexOf(item); 
+
+        let customButtonsHtml = "";
+        if (item.customButtons && item.customButtons.length > 0) {
+          item.customButtons.forEach(btn => {
+            const iconSvg = SVG_ICONS[btn.iconType] || "";
+            customButtonsHtml += `
+              <button onclick="handleActionClick(${cardIndex}, '${btn.url}')" class="bg-black text-white font-bold text-xs uppercase py-3 px-4 brutal-border brutal-shadow-sm brutal-btn flex items-center justify-center gap-2">
+                ${iconSvg} <span>${btn.label}</span>
+              </button>
+            `;
+          });
+        }
+
+        let commentsListHtml = "";
+        if (item.comments && item.comments.length > 0) {
+          item.comments.forEach(c => {
+            commentsListHtml += `
+              <div class="p-2 border-b border-black text-xs">
+                <span class="font-extrabold text-[#8D00FF]">@${c.name}:</span>
+                <span class="font-medium text-gray-800">${c.text}</span>
               </div>
-              <span class="text-lg">${genderEmoji}</span>
+            `;
+          });
+        } else {
+          commentsListHtml = `<p class="p-2 text-xs text-gray-500 italic">Belum ada komentar. Jadilah yang pertama!</p>`;
+        }
+
+        const userLikesCount = parseInt(localStorage.getItem(`like_count_card_${cardIndex}`) || '0');
+        const isLikeDisabled = userLikesCount >= 10 ? "disabled" : "";
+
+        const card = document.createElement('div');
+        card.className = "bg-white text-black brutal-border brutal-shadow p-6 flex flex-col md:flex-row gap-6 items-start";
+        
+        card.innerHTML = `
+          <!-- Kolom Foto Auto-Aspect Ratio -->
+          <div class="w-full md:w-64 h-auto shrink-0 brutal-border bg-zinc-100 overflow-hidden relative shadow-inner p-1 self-stretch flex items-center justify-center min-h-[160px]">
+            <div class="absolute inset-0 bg-cover bg-center filter blur-md opacity-25" style="background-image: url('${imageSrc}');"></div>
+            <img src="${imageSrc}" alt="Screenshot" class="relative z-10 w-full h-auto object-contain max-h-[300px] rounded-sm transition-transform duration-200 hover:scale-[1.02]">
+          </div>
+
+          <!-- Kolom Informasi Mod -->
+          <div class="flex-1 flex flex-col justify-between self-stretch">
+            <div>
+              <div class="flex items-center gap-2 mb-2">
+                <span class="bg-[#4CCD99] brutal-border text-xs font-bold uppercase px-2 py-0.5 text-black">${item.tag}</span>
+              </div>
+              <h3 class="font-syne font-extrabold text-xl md:text-2xl uppercase mb-2 leading-tight">${item.name}</h3>
+              <p class="text-sm text-gray-700 mb-4 leading-relaxed font-medium">${item.desc}</p>
             </div>
-            <div class="flex justify-between items-center mt-2">
-              <span class="text-[9px] font-mono px-2 py-0.5 brutal-border bg-white text-black font-black uppercase">
-                Base: ${voice.base}
-              </span>
-              <span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded ${badgeBg} uppercase border border-black">
-                ${voice.cat}
-              </span>
+            
+            <div class="space-y-4">
+              <!-- Password Area -->
+              <div class="bg-[#FFF5C3] brutal-border p-3 flex items-center gap-2 text-xs font-bold text-orange-800">
+                <span>🔑</span>
+                <span>PASSWORD: ${decryptedPassword}</span>
+              </div>
+
+              <!-- Button Actions -->
+              <div class="flex flex-col sm:flex-row flex-wrap gap-2">
+                <button onclick="handleActionClick(${cardIndex}, '${decryptedUrl}', true)" class="flex-1 text-center bg-[#FF6B6B] font-bold text-xs uppercase py-3 px-4 brutal-border brutal-shadow-sm brutal-btn flex items-center justify-center gap-2 text-black">
+                  ${SVG_ICONS.download} <span>DOWNLOAD APK MOD</span>
+                </button>
+                ${customButtonsHtml}
+              </div>
+
+              <!-- REAL-TIME INTERACTION PANEL -->
+              <div class="border-t-2 border-dashed border-black pt-3 flex flex-col gap-3">
+                <div class="flex justify-between items-center text-xs font-bold text-gray-600">
+                  <div class="flex items-center gap-1.5">
+                    <span>👁️</span> <span id="view-counter-${cardIndex}">${item.views || 0}</span> views
+                  </div>
+                  <div class="flex items-center gap-4">
+                    <button onclick="likeMod(${cardIndex})" ${isLikeDisabled} class="flex items-center gap-1.5 bg-[#FFECEC] px-3 py-1.5 brutal-border-sm brutal-btn-sm text-[10px] text-black disabled:opacity-50 disabled:cursor-not-allowed">
+                      ❤️ <span>${item.likes || 0}</span> Likes (${userLikesCount}/10)
+                    </button>
+                    <button onclick="toggleCommentsSection(${cardIndex})" class="flex items-center gap-1 hover:text-blue-500 bg-zinc-100 px-2 py-1 brutal-border-sm brutal-btn-sm text-[10px] text-black">
+                      💬 Komentar
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Komentar Panel Section -->
+                <div id="comments-panel-${cardIndex}" class="hidden bg-zinc-50 border-2 border-black p-3 text-black">
+                  <h4 class="font-bold text-xs uppercase mb-2 border-b border-black pb-1">Komentar Pengguna</h4>
+                  <div class="max-h-28 overflow-y-auto bg-white border border-black mb-3 divide-y divide-gray-200">
+                    ${commentsListHtml}
+                  </div>
+                  <div class="flex flex-col sm:flex-row gap-1.5">
+                    <input type="text" id="comm-name-${cardIndex}" placeholder="Nama..." class="brutal-border-sm p-1.5 text-xs font-bold bg-white focus:outline-none w-full sm:w-28 text-black">
+                    <input type="text" id="comm-text-${cardIndex}" placeholder="Tulis komentar..." class="flex-1 brutal-border-sm p-1.5 text-xs font-bold bg-white focus:outline-none text-black">
+                    <button onclick="submitComment(${cardIndex})" class="bg-[#4CCD99] hover:bg-[#3ec08a] font-bold text-xs uppercase py-1.5 px-3 brutal-border-sm brutal-btn-sm text-black">
+                      Kirim
+                    </button>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         `;
+        linkContainer.appendChild(card);
       });
     }
 
-    function selectVoice(id) {
-      selectedVoiceId = id;
-      renderVoices();
+    // --- KLIK ACTION COUNTER ---
+    function handleActionClick(index, targetUrl, isMainDownload = false) {
+      playSynth('success');
+
+      if (!links[index].views) links[index].views = 0;
+      links[index].views += 1;
+
+      const viewCounterEl = document.getElementById(`view-counter-${index}`);
+      if (viewCounterEl) {
+        viewCounterEl.innerText = links[index].views;
+      }
+
+      dbSet(_0x4f12._0x0d, links);
+
+      if (isMainDownload) {
+        antiSpamCounter++;
+        if (antiSpamCounter > 6) {
+          triggerBanScreen();
+          return;
+        }
+        setTimeout(() => { if (antiSpamCounter > 0) antiSpamCounter--; }, 5000);
+      }
+
+      if (targetUrl) {
+        window.open(targetUrl, '_blank');
+      }
     }
 
-    function filterVoices(cat) {
-      ['semua', 'pria', 'wanita', 'anime', 'tua', 'unik'].forEach(c => {
-        const btn = document.getElementById(`filter-${c}`);
-        if (btn) btn.className = "bg-white hover:bg-black hover:text-white px-2 py-1 brutal-border border-black font-bold";
+    function likeMod(index) {
+      let userLikesCount = parseInt(localStorage.getItem(`like_count_card_${index}`) || '0');
+
+      if (userLikesCount >= 10) {
+        playSynth('delete');
+        triggerScreenShake();
+        showToast("Batas menyukai maksimal 10x!", "error");
+        return;
+      }
+
+      playSynth('success');
+      userLikesCount += 1;
+      localStorage.setItem(`like_count_card_${index}`, userLikesCount);
+
+      if (!links[index].likes) links[index].likes = 0;
+      links[index].likes += 1;
+      
+      dbSet(_0x4f12._0x0d, links, () => {
+        renderPublicLinks();
       });
-      
-      const activeBtn = document.getElementById(`filter-${cat}`);
-      if (activeBtn) activeBtn.className = "bg-black text-white px-2 py-1 brutal-border border-black font-bold";
-
-      selectedCategory = cat;
-      renderVoices();
     }
 
-    function pcmToWav(base64Pcm, sampleRate = 24000) {
-      const binaryString = atob(base64Pcm);
-      const len = binaryString.length;
-      const bytes = new Uint8Array(len);
-      for (let i = 0; i < len; i++) bytes[i] = binaryString.charCodeAt(i);
-      
-      const wavHeader = new ArrayBuffer(44);
-      const view = new DataView(wavHeader);
-      
-      writeString(view, 0, 'RIFF');
-      view.setUint32(4, 36 + bytes.buffer.byteLength, true);
-      writeString(view, 8, 'WAVE');
-      writeString(view, 12, 'fmt ');
-      view.setUint32(16, 16, true);
-      view.setUint16(20, 1, true);
-      view.setUint16(22, 1, true);
-      view.setUint32(24, sampleRate, true);
-      view.setUint32(28, sampleRate * 2, true); 
-      view.setUint16(32, 2, true);
-      view.setUint16(34, 16, true);
-      writeString(view, 36, 'data');
-      view.setUint32(40, bytes.buffer.byteLength, true);
-      
-      const finalWav = new Uint8Array(wavHeader.byteLength + bytes.buffer.byteLength);
-      finalWav.set(new Uint8Array(wavHeader), 0);
-      finalWav.set(new Uint8Array(bytes.buffer), wavHeader.byteLength);
-      
-      return new Blob([finalWav], { type: 'audio/wav' });
-    }
-    
-    function writeString(view, offset, string) {
-      for (let i = 0; i < string.length; i++) view.setUint8(offset + i, string.charCodeAt(i));
+    function toggleCommentsSection(index) {
+      playSynth('click');
+      const panel = document.getElementById(`comments-panel-${index}`);
+      panel.classList.toggle('hidden');
     }
 
-    async function generateSpeech() {
-      const textVal = ttsText.value.trim();
-      const currentKey = apiKeyInput.value.trim();
+    function submitComment(index) {
+      const nameInput = document.getElementById(`comm-name-${index}`);
+      const textInput = document.getElementById(`comm-text-${index}`);
+      const name = nameInput.value.trim();
+      const text = textInput.value.trim();
 
-      if (!textVal) {
-        showError("Isi teks terlebih dahulu sebelum menggenerasikan suara!");
-        return;
-      }
-      if (!currentKey) {
-        showError("API Key tidak boleh kosong!");
+      if (!name || !text) {
+        showToast("Form nama dan komentar wajib diisi!", "error");
         return;
       }
 
-      setLoadingState(true, "Mempersiapkan vokal AI...");
+      playSynth('success');
+      if (!links[index].comments) links[index].comments = [];
+      links[index].comments.push({ name, text });
 
-      const activeVoice = voices.find(v => v.id === selectedVoiceId);
-      const speedModifier = speedSlider.value == 0 ? "Bicaralah perlahan." : (speedSlider.value == 2 ? "Bicaralah dengan tempo cepat." : "Bicaralah dengan kecepatan normal.");
-      
-      const emotions = {
-        normal: "Gunakan intonasi yang normal, stabil, natural.",
-        excited: "Bicaralah dengan sangat gembira, antusias, ceria.",
-        whispering: "Bicaralah secara lirih, lembut, hampir berbisik.",
-        dramatic: "Gunakan nada bicara yang sangat dramatis dan mendalam.",
-        angry: "Bicaralah dengan nada ketus, tegas, dan berpenekanan kuat.",
-        news: "Bicaralah dengan gaya penyiar berita resmi, lugas, dan rapi."
-      };
+      nameInput.value = "";
+      textInput.value = "";
 
-      const systemPrompt = `Kamu adalah mesin Text-to-Speech natural. Karakter: ${activeVoice.modifier} Gaya Emosi: ${emotions[emotionSelect.value]} Tempo: ${speedModifier} Aturan: Bacakan teks campuran Indonesia-Inggris secara mengalir lancar tanpa kaku.`;
+      dbSet(_0x4f12._0x0d, links, () => {
+        renderPublicLinks();
+        showToast("Komentar terkirim!", "success");
+      });
+    }
 
-      const payload = {
-        contents: [{ parts: [{ text: textVal }] }],
-        systemInstruction: { parts: [{ text: systemPrompt }] },
-        generationConfig: {
-          responseModalities: ["AUDIO"],
-          speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: activeVoice.base } } }
-        }
-      };
+    // --- ADMIN PANEL CONTROL ENGINE ---
+    function renderAdminTable() {
+      const tbody = document.getElementById('adminTableBody');
+      tbody.innerHTML = '';
 
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${currentKey}`;
+      links.forEach((item, index) => {
+        const imageSrc = item.image ? item.image : 'https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?auto=format&fit=crop&q=80&w=150';
+        const tr = document.createElement('tr');
+        tr.className = "border-b border-black hover:bg-gray-50";
+        tr.innerHTML = `
+          <td class="p-3 border-r border-black w-20">
+            <img src="${imageSrc}" class="w-12 h-12 object-cover brutal-border" alt="Thumb">
+          </td>
+          <td class="p-3 border-r border-black font-bold text-xs sm:text-sm text-black">
+            ${item.name}
+          </td>
+          <td class="p-3 border-r border-black">
+            <span class="bg-gray-200 px-2 py-0.5 brutal-border-sm text-[10px] uppercase text-black">${item.tag}</span>
+          </td>
+          <td class="p-3">
+            <div class="flex flex-col sm:flex-row gap-1.5">
+              <button onclick="editMod(${index})" class="bg-[#FF8A08] brutal-border brutal-shadow-sm brutal-btn-sm py-1 px-3.5 text-xs uppercase text-white font-bold">Edit</button>
+              <button onclick="triggerDelete(${index})" class="bg-red-500 brutal-border brutal-shadow-sm brutal-btn-sm py-1 px-3.5 text-xs uppercase text-white font-bold">Hapus</button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
 
-      try {
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
+    function renderCredits() {
+      const container = document.getElementById('footerCreditsContainer');
+      const adminList = document.getElementById('adminCreditsList');
+      container.innerHTML = '';
+      adminList.innerHTML = '';
+
+      credits.forEach((c, index) => {
+        const a = document.createElement('a');
+        a.href = c.url;
+        a.target = "_blank";
+        a.onclick = () => playSynth('click');
+        a.style.backgroundColor = c.color || '#4CCD99';
+        a.className = "px-4 py-2 brutal-border brutal-shadow-sm brutal-btn-sm flex items-center gap-2 text-xs uppercase text-black font-bold";
+        a.innerHTML = `<span>${c.platform}:</span> <span class="font-extrabold">${c.handle}</span>`;
+        container.appendChild(a);
+
+        const div = document.createElement('div');
+        div.className = "flex items-center justify-between p-2.5 border-2 border-black bg-white";
+        div.innerHTML = `
+          <span class="text-xs font-bold uppercase text-black">${c.platform} -> ${c.handle}</span>
+          <button onclick="deleteCredit(${index})" class="bg-red-500 text-white font-bold text-[10px] px-2 py-1 hover:bg-red-600">Hapus</button>
+        `;
+        adminList.appendChild(div);
+      });
+    }
+
+    function triggerDelete(index) {
+      playSynth('click');
+      triggerScreenShake();
+      activeDeleteIndex = index;
+      const targetName = links[index].name;
+      document.getElementById('confirmModalText').innerText = `Apakah kamu yakin ingin menghapus "${targetName}" secara permanen?`;
+      document.getElementById('confirmModal').classList.remove('hidden');
+    }
+
+    function closeConfirmModal() {
+      playSynth('click');
+      document.getElementById('confirmModal').classList.add('hidden');
+      activeDeleteIndex = null;
+    }
+
+    document.getElementById('btnConfirmYes').addEventListener('click', function() {
+      if (activeDeleteIndex !== null) {
+        playSynth('delete');
+        links.splice(activeDeleteIndex, 1);
+        
+        dbSet(_0x4f12._0x0d, links, () => {
+          showToast("Link Mod berhasil dihapus!", "info");
+          closeConfirmModal();
+          renderPublicLinks();
+          renderAdminTable();
+          clearForm();
         });
-
-        if (!response.ok) {
-          const errData = await response.json().catch(() => ({}));
-          throw new Error(errData.error?.message || "Respons server bermasalah.");
-        }
-
-        const responseData = await response.json();
-        const audioPart = responseData.candidates?.[0]?.content?.parts?.find(p => p.inlineData && p.inlineData.mimeType.startsWith('audio/'));
-        
-        if (!audioPart?.inlineData?.data) {
-          throw new Error("Respons tidak mengandung data audio.");
-        }
-
-        let sampleRate = 24000;
-        const rateMatch = audioPart.inlineData.mimeType.match(/rate=(\d+)/);
-        if (rateMatch) sampleRate = parseInt(rateMatch[1], 10);
-
-        if (generatedAudioUrl) URL.revokeObjectURL(generatedAudioUrl);
-        const wavBlob = pcmToWav(audioPart.inlineData.data, sampleRate);
-        generatedAudioUrl = URL.createObjectURL(wavBlob);
-        
-        mainAudio.src = generatedAudioUrl;
-        audioPlayBtn.removeAttribute('disabled');
-        downloadBtn.href = generatedAudioUrl;
-        downloadBtn.classList.remove('hidden');
-        audioStatusText.textContent = `Vokal siap: ${activeVoice.name}`;
-        
-        addHistory(activeVoice.name, textVal, generatedAudioUrl);
-        setLoadingState(false);
-        toggleAudio();
-
-      } catch (err) {
-        console.error(err);
-        setLoadingState(false);
-        showError("Gagal meracik suara: " + err.message);
       }
-    }
+    });
 
-    function toggleAudio() {
-      if (!generatedAudioUrl) return;
-      if (isPlaying) mainAudio.pause(); else mainAudio.play();
-    }
+    // --- CRUD OPERATORS ---
+    function saveMod() {
+      const name = document.getElementById('modName').value.trim();
+      const tag = document.getElementById('modTag').value.trim();
+      const desc = document.getElementById('modDesc').value.trim();
+      const url = document.getElementById('modUrl').value.trim();
+      const password = document.getElementById('modPassword').value.trim();
+      const imageUrlInput = document.getElementById('modImageUrl').value.trim();
+      const imageFile = document.getElementById('modImageFile').files[0];
+      const editIndex = document.getElementById('editIndex').value;
 
-    function onAudioPlaying() {
-      isPlaying = true;
-      playIcon.classList.add('hidden');
-      pauseIcon.classList.remove('hidden');
-      audioStatusText.textContent = "🔊 Sedang bersuara...";
-      startVisualizerAnimation();
-    }
+      const manualViews = parseInt(document.getElementById('modViewsInput').value) || 0;
+      const manualLikes = parseInt(document.getElementById('modLikesInput').value) || 0;
 
-    function onAudioPaused() {
-      isPlaying = false;
-      playIcon.classList.remove('hidden');
-      pauseIcon.classList.add('hidden');
-      audioStatusText.textContent = "⏸️ Jeda";
-      stopVisualizerAnimation();
-    }
+      const customButtons = getCustomLinksData();
 
-    function onAudioEnded() {
-      isPlaying = false;
-      playIcon.classList.remove('hidden');
-      pauseIcon.classList.add('hidden');
-      audioStatusText.textContent = "⏹️ Selesai.";
-      stopVisualizerAnimation();
-    }
+      if (!name || !tag || !desc || !url) {
+        showToast("Kolom Nama, Tag, Deskripsi, dan URL wajib diisi!", "error");
+        return;
+      }
 
-    let visInterval = null;
-    function startVisualizerAnimation() {
-      if (visInterval) clearInterval(visInterval);
-      visInterval = setInterval(() => {
-        visualizerBars.forEach(bar => {
-          const randHeight = Math.floor(Math.random() * 32) + 4;
-          bar.style.height = `${randHeight}px`;
-        });
-      }, 80);
-    }
-
-    function stopVisualizerAnimation() {
-      if (visInterval) clearInterval(visInterval);
-      visualizerBars.forEach(bar => bar.style.height = `4px`);
-    }
-
-    function setLoadingState(isLoading, message = "") {
-      if (isLoading) {
-        loader.classList.remove('hidden');
-        loaderText.textContent = message;
-        generateBtn.setAttribute('disabled', 'true');
-        generateBtn.classList.add('opacity-50');
+      if (imageFile) {
+        if (imageFile.size > 52428800) { 
+          showToast("Ukuran gambar melebihi batas 50MB!", "error");
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = function(e) { processSave(e.target.result); };
+        reader.readAsDataURL(imageFile);
       } else {
-        loader.classList.add('hidden');
-        generateBtn.removeAttribute('disabled');
-        generateBtn.classList.remove('opacity-50');
+        let existingImg = "";
+        let existingViews = manualViews || 0;
+        let existingLikes = manualLikes || 0;
+        let existingComments = [];
+
+        if (editIndex !== "") {
+          existingImg = links[parseInt(editIndex)].image;
+          existingViews = manualViews !== 0 ? manualViews : (links[parseInt(editIndex)].views || 0);
+          existingLikes = manualLikes !== 0 ? manualLikes : (links[parseInt(editIndex)].likes || 0);
+          existingComments = links[parseInt(editIndex)].comments || [];
+        } else {
+          existingViews = manualViews || 0;
+          existingLikes = manualLikes || 0;
+        }
+        
+        processSave(imageUrlInput || existingImg || "", existingViews, existingLikes, existingComments);
+      }
+
+      function processSave(finalImage, viewsVal, likesVal, commentsVal) {
+        const modData = {
+          name,
+          tag: tag.toUpperCase(),
+          desc,
+          url: encodeSafe(url),
+          password: encodeSafe(password || "Tanpa Password / Langsung Ekstrak"),
+          image: finalImage,
+          views: viewsVal,
+          likes: likesVal,
+          comments: commentsVal,
+          customButtons: customButtons
+        };
+
+        if (editIndex !== "") {
+          links[parseInt(editIndex)] = modData;
+          showToast("Link Modifikasi berhasil diupdate!", "success");
+        } else {
+          links.unshift(modData);
+          showToast("Mod baru berhasil dirilis!", "success");
+        }
+
+        playSynth('success');
+        dbSet(_0x4f12._0x0d, links, () => {
+          clearForm();
+          renderPublicLinks();
+          renderAdminTable();
+        });
       }
     }
 
-    function addHistory(voiceName, text, url) {
-      noHistoryText.classList.add('hidden');
-      const snippet = text.length > 30 ? text.substring(0, 30) + '...' : text;
-      generationHistory.unshift({ id: Date.now(), voice: voiceName, textSnippet: snippet, audioUrl: url });
-      if (generationHistory.length > 5) generationHistory.pop();
-      renderHistory();
+    function editMod(index) {
+      playSynth('click');
+      const item = links[index];
+      
+      document.getElementById('modName').value = item.name;
+      document.getElementById('modTag').value = item.tag;
+      document.getElementById('modDesc').value = item.desc;
+      document.getElementById('modUrl').value = decodeSafe(item.url);
+      document.getElementById('modPassword').value = decodeSafe(item.password) === "Tanpa Password / Langsung Ekstrak" ? "" : decodeSafe(item.password);
+      document.getElementById('modImageUrl').value = item.image.startsWith("data:image") ? "" : item.image;
+      
+      document.getElementById('modViewsInput').value = item.views || 0;
+      document.getElementById('modLikesInput').value = item.likes || 0;
+
+      setCustomLinksFields(item.customButtons);
+
+      document.getElementById('modImageFile').value = "";
+      document.getElementById('editIndex').value = index;
+      document.getElementById('formTitle').innerText = "📝 Edit Link Modifikasi";
+      document.getElementById('formTitle').classList.replace('text-[#FF8A08]', 'text-blue-600');
+      document.getElementById('formTitle').scrollIntoView({ behavior: 'smooth' });
     }
 
-    function renderHistory() {
-      historyList.innerHTML = '';
-      generationHistory.forEach(item => {
-        historyList.innerHTML += `
-          <div class="bg-gray-100 brutal-border p-2 flex justify-between items-center hover:bg-yellow-100">
-            <div><span class="font-black bg-black text-white px-1 mr-1">${item.voice}</span><span class="text-gray-700 italic">"${item.textSnippet}"</span></div>
-            <button onclick="playHistory('${item.audioUrl}')" class="bg-white hover:bg-black hover:text-white px-2 py-0.5 font-bold brutal-border">▶ PUTAR</button>
-          </div>`;
+    function clearForm() {
+      document.getElementById('modName').value = '';
+      document.getElementById('modTag').value = '';
+      document.getElementById('modDesc').value = '';
+      document.getElementById('modUrl').value = '';
+      document.getElementById('modPassword').value = '';
+      document.getElementById('modImageUrl').value = '';
+      document.getElementById('modImageFile').value = '';
+      document.getElementById('modViewsInput').value = '';
+      document.getElementById('modLikesInput').value = '';
+      document.getElementById('customLinksContainer').innerHTML = '';
+      document.getElementById('editIndex').value = '';
+      
+      document.getElementById('formTitle').innerText = "➕ Tambah Mod Baru";
+      document.getElementById('formTitle').classList.add('text-[#FF8A08]');
+    }
+
+    // --- CREDITS OPERATORS ---
+    function addCredit() {
+      const platform = document.getElementById('credPlatform').value.trim();
+      const handle = document.getElementById('credHandle').value.trim();
+      const url = document.getElementById('credUrl').value.trim();
+      const color = document.getElementById('credColor').value;
+
+      if (!platform || !handle || !url) {
+        showToast("Lengkapi semua kolom isian credit sosmed!", "error");
+        return;
+      }
+
+      playSynth('success');
+      credits.push({ platform, handle, url, color });
+      
+      dbSet(_0x4f12._0x0e, credits, () => {
+        showToast("Credit baru ditambahkan!", "success");
+        document.getElementById('credPlatform').value = '';
+        document.getElementById('credHandle').value = '';
+        document.getElementById('credUrl').value = '';
+        renderCredits();
       });
     }
 
-    function playHistory(url) {
-      mainAudio.src = url;
-      audioPlayBtn.removeAttribute('disabled');
-      downloadBtn.href = url;
-      downloadBtn.classList.remove('hidden');
-      toggleAudio();
+    function deleteCredit(index) {
+      playSynth('delete');
+      credits.splice(index, 1);
+      dbSet(_0x4f12._0x0e, credits, () => {
+        showToast("Credit berhasil dihapus!", "info");
+        renderCredits();
+      });
     }
 
-    function showError(msg) {
-      errorModalText.textContent = msg;
-      errorModal.classList.remove('hidden');
-    }
+    // --- INIT APPLICATION RUNTIME ---
+    initIndexedDB(() => {
+      loadAllDataFromDB();
 
-    // Modal close
-    function closeErrorModal() {
-      errorModal.classList.add('hidden');
-    }
+      const savedTheme = localStorage.getItem('user_theme_choice');
+      if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      }
+      
+      checkBanStatus();
+    });
   </script>
 </body>
 </html>
-
-```
