@@ -1,0 +1,656 @@
+```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VOKALBRUTAL // Multi-Language Natural TTS</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts for Neo Brutalism Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            mono: ['Space Grotesk', 'monospace'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Styling khusus Neo Brutalisme */
+    .brutal-border {
+      border: 4px solid #000000;
+    }
+    .brutal-shadow {
+      box-shadow: 4px 4px 0px 0px #000000;
+      transition: all 0.15s ease-in-out;
+    }
+    .brutal-shadow-lg {
+      box-shadow: 8px 8px 0px 0px #000000;
+      transition: all 0.15s ease-in-out;
+    }
+    .brutal-shadow:active:not([disabled]), .brutal-shadow-lg:active:not([disabled]) {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px 0px #000000;
+    }
+    .brutal-btn-active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px 0px #000000 !important;
+    }
+    
+    /* Scrollbar brutalist style */
+    ::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f3f4f6;
+      border-left: 3px solid #000;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #ffde4d;
+      border: 3px solid #000;
+    }
+  </style>
+</head>
+<body class="bg-[#F4F4F0] text-black font-sans min-h-screen p-4 md:p-8 selection:bg-[#ff007a] selection:text-white">
+
+  <!-- Header Banner Utama -->
+  <header class="max-w-7xl mx-auto mb-8 bg-[#00E5FF] brutal-border brutal-shadow-lg p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:16px_16px]"></div>
+    
+    <div class="z-10">
+      <div class="bg-black text-white px-3 py-1 font-mono text-xs uppercase inline-block mb-3 brutal-border">
+        ⚡ GENERATOR TTS ULTRA ALAMI ⚡
+      </div>
+      <h1 class="text-4xl md:text-6xl font-black tracking-tight font-mono leading-none">
+        VOKAL<span class="text-[#FF007A] underline decoration-wavy decoration-black">BRUTAL</span>
+      </h1>
+      <p class="text-lg md:text-xl font-bold mt-2 font-mono">
+        Campuran Indo-Inggris Alami dengan Puluhan Pilihan Karakter & Logat!
+      </p>
+    </div>
+
+    <!-- API Key Input Field (Sudah dikunci otomatis dengan API Key kamu) -->
+    <div class="z-10 bg-white brutal-border brutal-shadow p-4 w-full md:w-auto max-w-sm">
+      <label class="block font-mono font-bold text-xs uppercase mb-1">🔐 API KEY CONFIG</label>
+      <input type="password" id="apiKeyInput" value="AQ.Ab8RN6I5-kVz35ALyCUeoQfjaP-uxw0fnJc3vfC8qFtD1wfjlw" placeholder="Masukkan Gemini API Key" 
+             class="w-full p-2 text-xs font-mono brutal-border bg-yellow-50 focus:bg-white focus:outline-none placeholder-gray-500 font-bold">
+      <p class="text-[10px] text-gray-700 mt-1 font-mono">
+        *Kunci API kamu sudah terpasang dan aman di dalam sistem.
+      </p>
+    </div>
+  </header>
+
+  <!-- Dashboard Utama -->
+  <main class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <!-- PANEL KIRI - Pengaturan Teks & Opsi -->
+    <section class="lg:col-span-5 flex flex-col gap-6">
+      
+      <!-- Input Teks -->
+      <div class="bg-[#FF9F0A] brutal-border brutal-shadow-lg p-6 flex flex-col gap-4">
+        <div class="flex justify-between items-center">
+          <h2 class="text-xl font-black font-mono uppercase bg-white px-2 py-1 brutal-border inline-block">
+            ✍️ Masukkan Teks
+          </h2>
+          <span id="charCount" class="font-mono font-bold text-xs bg-black text-white px-2 py-1">
+            0 / 400
+          </span>
+        </div>
+
+        <textarea id="ttsText" rows="6" maxlength="400" placeholder="Ketik apa saja di sini! Contoh: 'Halo guys, welcome back to my channel! Hari ini kita mau unboxing gadget super cool yang harganya affordable banget.'"
+                  class="w-full p-4 font-mono text-sm brutal-border focus:outline-none focus:ring-4 focus:ring-black resize-none bg-white placeholder-gray-500 font-bold leading-relaxed"></textarea>
+
+        <!-- Template Teks Rekomendasi -->
+        <div>
+          <span class="block font-mono font-bold text-xs uppercase mb-2">Preset Teks Campuran:</span>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="applyPresetText(1)" class="bg-white hover:bg-black hover:text-white px-2 py-1 text-xs font-mono font-bold brutal-border brutal-shadow text-left">
+              💬 Casual Vlog (Mixed)
+            </button>
+            <button onclick="applyPresetText(2)" class="bg-white hover:bg-black hover:text-white px-2 py-1 text-xs font-mono font-bold brutal-border brutal-shadow text-left">
+              👔 Presentasi Bisnis
+            </button>
+            <button onclick="applyPresetText(3)" class="bg-white hover:bg-black hover:text-white px-2 py-1 text-xs font-mono font-bold brutal-border brutal-shadow text-left">
+              👵 Nasihat Klasik
+            </button>
+            <button onclick="applyPresetText(4)" class="bg-white hover:bg-black hover:text-white px-2 py-1 text-xs font-mono font-bold brutal-border brutal-shadow text-left">
+              🌸 Anime Drama
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Parameter & Kustomisasi Nada Suara -->
+      <div class="bg-[#39FF14] brutal-border brutal-shadow-lg p-6 flex flex-col gap-4">
+        <h2 class="text-xl font-black font-mono uppercase bg-white px-2 py-1 brutal-border inline-block self-start">
+          ⚙️ Modifikasi Suara
+        </h2>
+
+        <!-- Kecepatan -->
+        <div>
+          <label class="block font-mono font-bold text-sm mb-1 flex justify-between">
+            <span>Kecepatan Bicara</span>
+            <span id="speedVal" class="bg-black text-white px-1 font-mono text-xs">Normal</span>
+          </label>
+          <input type="range" id="speedSlider" min="0" max="2" value="1" step="1" 
+                 class="w-full accent-black h-4 brutal-border bg-white" oninput="updateRangeLabels()">
+          <div class="flex justify-between text-[10px] font-mono font-bold mt-1">
+            <span>Lambat</span>
+            <span>Normal</span>
+            <span>Cepat</span>
+          </div>
+        </div>
+
+        <!-- Emosi / Intonasi -->
+        <div>
+          <label class="block font-mono font-bold text-sm mb-1">Gaya & Intonasi Emosional</label>
+          <select id="emotionSelect" class="w-full p-2 font-mono text-sm brutal-border bg-white focus:outline-none">
+            <option value="normal">Normal (Stabil & Natural)</option>
+            <option value="excited">Ceria & Antusias (Energetic)</option>
+            <option value="whispering">Berbisik (Calm & Soft)</option>
+            <option value="dramatic">Dramatis & Bersemangat</option>
+            <option value="angry">Ketus / Tegas (Assertive)</option>
+            <option value="news">Gaya Pembawa Berita Resmi</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Tombol Generate Utama -->
+      <button id="generateBtn" onclick="generateSpeech()" 
+              class="w-full py-5 bg-[#FF007A] text-white font-mono text-2xl font-black tracking-wider brutal-border brutal-shadow-lg hover:bg-white hover:text-black transition-all flex items-center justify-center gap-3">
+        <span>🗣️ GENERASIKAN SUARA</span>
+      </button>
+
+      <!-- Status / Loader -->
+      <div id="loader" class="hidden bg-black text-[#39FF14] brutal-border p-4 font-mono text-sm brutal-shadow flex items-center gap-3">
+        <div class="animate-spin rounded-full h-5 w-5 border-2 border-t-transparent border-[#39FF14]"></div>
+        <span id="loaderText">Sedang meracik gelombang suara kecerdasan buatan...</span>
+      </div>
+
+    </section>
+
+    <!-- PANEL KANAN - Katalog Suara & Player -->
+    <section class="lg:col-span-7 flex flex-col gap-6">
+      
+      <!-- Audio Player Area & Visualizer -->
+      <div class="bg-white brutal-border brutal-shadow-lg p-6 flex flex-col gap-4">
+        <h2 class="text-xl font-black font-mono uppercase bg-[#FFE600] px-2 py-1 brutal-border inline-block self-start">
+          📻 Monitor Pemutar Suara
+        </h2>
+
+        <div class="bg-[#F4F4F0] brutal-border p-4 flex flex-col md:flex-row items-center gap-4">
+          <button id="audioPlayBtn" onclick="toggleAudio()" disabled
+                  class="bg-[#ff007a] text-white p-4 rounded-none brutal-border brutal-shadow disabled:opacity-50 disabled:cursor-not-allowed">
+            <svg id="playIcon" class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <svg id="pauseIcon" class="w-8 h-8 fill-current hidden" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+          </button>
+
+          <!-- Waveform Visualizer -->
+          <div class="flex-1 w-full flex items-end justify-between h-12 px-2 bg-black brutal-border overflow-hidden relative">
+            <div id="visualizerBars" class="absolute inset-0 flex items-end justify-around p-1">
+              <div class="bar w-1.5 bg-[#39FF14] h-2 transition-all duration-100"></div>
+              <div class="bar w-1.5 bg-[#39FF14] h-4 transition-all duration-100"></div>
+              <div class="bar w-1.5 bg-[#39FF14] h-1 transition-all duration-100"></div>
+              <div class="bar w-1.5 bg-[#39FF14] h-6 transition-all duration-100"></div>
+              <div class="bar w-1.5 bg-[#39FF14] h-3 transition-all duration-100"></div>
+              <div class="bar w-1.5 bg-[#39FF14] h-8 transition-all duration-100"></div>
+              <div class="bar w-1.5 bg-[#39FF14] h-2 transition-all duration-100"></div>
+              <div class="bar w-1.5 bg-[#39FF14] h-4 transition-all duration-100"></div>
+              <div class="bar w-1.5 bg-[#39FF14] h-5 transition-all duration-100"></div>
+              <div class="bar w-1.5 bg-[#39FF14] h-2 transition-all duration-100"></div>
+              <div class="bar w-1.5 bg-[#39FF14] h-7 transition-all duration-100"></div>
+              <div class="bar w-1.5 bg-[#39FF14] h-3 transition-all duration-100"></div>
+              <div class="bar w-1.5 bg-[#39FF14] h-9 transition-all duration-100"></div>
+              <div class="bar w-1.5 bg-[#39FF14] h-1 transition-all duration-100"></div>
+              <div class="bar w-1.5 bg-[#39FF14] h-4 transition-all duration-100"></div>
+            </div>
+            <div id="audioStatusText" class="absolute inset-0 flex items-center justify-center font-mono text-xs text-white bg-black/60 font-bold pointer-events-none">
+              Belum ada audio yang digenerasikan.
+            </div>
+          </div>
+
+          <!-- Download Button -->
+          <a id="downloadBtn" href="#" download="VokalBrutal-Speech.wav"
+             class="hidden bg-[#00E5FF] hover:bg-black hover:text-white text-black font-mono font-bold px-4 py-4 brutal-border brutal-shadow flex items-center gap-2">
+            <span>💾 UNDUH</span>
+          </a>
+        </div>
+
+        <audio id="mainAudioElement" class="hidden" onended="onAudioEnded()" onplay="onAudioPlaying()" onpause="onAudioPaused()"></audio>
+      </div>
+
+      <!-- Katalog Suara & Pilihan Karakter -->
+      <div class="bg-[#FFE600] brutal-border brutal-shadow-lg p-6 flex flex-col gap-4">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+          <h2 class="text-xl font-black font-mono uppercase bg-white px-2 py-1 brutal-border inline-block">
+            🎙️ Pilih Karakter Suara (40 Pilihan)
+          </h2>
+          <!-- Filter Kategori -->
+          <div class="flex flex-wrap gap-1 font-mono text-xs">
+            <button onclick="filterVoices('semua')" id="filter-semua" class="bg-black text-white px-2 py-1 brutal-border border-black font-bold">Semua</button>
+            <button onclick="filterVoices('pria')" id="filter-pria" class="bg-white hover:bg-black hover:text-white px-2 py-1 brutal-border border-black font-bold">Pria</button>
+            <button onclick="filterVoices('wanita')" id="filter-wanita" class="bg-white hover:bg-black hover:text-white px-2 py-1 brutal-border border-black font-bold">Wanita</button>
+            <button onclick="filterVoices('anime')" id="filter-anime" class="bg-white hover:bg-black hover:text-white px-2 py-1 brutal-border border-black font-bold">Anime</button>
+            <button onclick="filterVoices('tua')" id="filter-tua" class="bg-white hover:bg-black hover:text-white px-2 py-1 brutal-border border-black font-bold">Lansia</button>
+            <button onclick="filterVoices('unik')" id="filter-unik" class="bg-white hover:bg-black hover:text-white px-2 py-1 brutal-border border-black font-bold">Unik / Daerah</button>
+          </div>
+        </div>
+
+        <!-- Grid Cards Suara -->
+        <div id="voiceGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[420px] overflow-y-auto pr-2"></div>
+      </div>
+
+      <!-- Riwayat Generasi -->
+      <div class="bg-white brutal-border brutal-shadow-lg p-6 flex flex-col gap-3">
+        <h2 class="text-lg font-black font-mono uppercase bg-black text-white px-2 py-1 inline-block self-start">
+          📂 Riwayat Sesi
+        </h2>
+        <div id="historyList" class="flex flex-col gap-2 font-mono text-xs max-h-[160px] overflow-y-auto">
+          <p id="noHistoryText" class="text-gray-500 italic">Belum ada suara yang dibuat pada sesi ini.</p>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer class="max-w-7xl mx-auto mt-12 text-center font-mono text-xs font-bold bg-black text-white p-4 brutal-border">
+    VOKALBRUTAL TTS ENGINE // POWERED BY GEMINI 2.5 FLASH AUDIO API
+  </footer>
+
+  <!-- Modal Error Custom -->
+  <div id="errorModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+    <div class="bg-red-500 brutal-border brutal-shadow-lg max-w-md w-full p-6 text-white relative">
+      <h3 class="text-2xl font-black font-mono mb-2">🛑 TERJADI EROR!</h3>
+      <p id="errorModalText" class="font-mono text-sm leading-relaxed mb-6"></p>
+      <button onclick="closeErrorModal()" class="w-full bg-black text-white hover:bg-white hover:text-black py-2 font-mono font-bold brutal-border">
+        TUTUP & COBA LAGI
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // --- 40 DATA PROFIL SUARA ---
+    const voices = [
+      { id: 1, name: "Budi (Pria Dewasa)", gender: "pria", cat: "pria", base: "Zephyr", desc: "Suara pria dewasa Indonesia yang berat, hangat, dan sangat profesional.", modifier: "pria dewasa Indonesia yang ramah, matang, tegas, artikulasi jelas, tempo stabil." },
+      { id: 2, name: "Andi (Host Kreatif)", gender: "pria", cat: "pria", base: "Puck", desc: "Pria muda, energik, dan gaul. Cocok untuk vlog atau ulasan teknologi.", modifier: "pria muda kreatif Indonesia, bersemangat, gaya kasual santai, sering mengobrol langsung ke pendengar." },
+      { id: 3, name: "Pak Jaka (Formal)", gender: "pria", cat: "pria", base: "Charon", desc: "Suara pembicara resmi, dalam, berwibawa layaknya pejabat tinggi.", modifier: "pria berumur berwibawa, bahasa Indonesia baku, nada formal, serius, penuh penekanan kata." },
+      { id: 4, name: "Doni (Suara Bioskop)", gender: "pria", cat: "pria", base: "Fenrir", desc: "Deep voice, sangat tebal dan dramatis, seperti pengisi suara trailer film.", modifier: "pria bersuara sangat bass, dalam, dramatis, berbicara lambat layaknya narator bioskop terkenal." },
+      { id: 5, name: "Reza (Customer Service)", gender: "pria", cat: "pria", base: "Orus", desc: "Sopan, lembut, dan menenangkan. Cocok untuk instruksi suara bantuan.", modifier: "pria ramah, nada sabar dan menenangkan, intonasi melayani, sopan sekali." },
+      { id: 6, name: "Indra (Motivator)", gender: "pria", cat: "pria", base: "Iapetus", desc: "Penuh semangat membara dan membakar jiwa pendengar.", modifier: "pria paruh baya motivator berapi-api, penuh energi positif, nada naik turun dinamis." },
+      { id: 7, name: "Rizky (Podcast Santai)", gender: "pria", cat: "pria", base: "Enceladus", desc: "Gaya bicara lo-fi, tenang, seperti sedang mengobrol di kafe.", modifier: "pria muda bergaya kasual santai, nada rendah bersahabat, seperti mengobrol dekat mikrofon." },
+      { id: 8, name: "Dosen Hariadi", gender: "pria", cat: "pria", base: "Rasalgethi", desc: "Edukatif, penuh penjelasan runtut, dan teduh.", modifier: "pria akademisi Indonesia, mengajar dengan sabar, intonasi runtut dan informatif." },
+      { id: 9, name: "Coach Tommy", gender: "pria", cat: "pria", base: "Achernar", desc: "Gaya pelatih kebugaran atau olahraga, tegas dan lugas.", modifier: "pria tegas bertenaga, memberi instruksi cepat, vokal kuat dan bersemangat." },
+      { id: 10, name: "Radit (Gaya Komedian)", gender: "pria", cat: "pria", base: "Alnilam", desc: "Agak cepat, bergelombang, dengan intonasi jenaka khas tongkrongan.", modifier: "pria muda jenaka, intonasi kocak dan ekspresif, ceria dengan nada bercanda." },
+      { id: 11, name: "Siti (Wanita Karir)", gender: "wanita", cat: "wanita", base: "Kore", desc: "Profesional, anggun, tegas, dan berpendidikan tinggi.", modifier: "wanita karir modern Indonesia, pintar, bicara lugas dan anggun, intonasi profesional." },
+      { id: 12, name: "Rara (Vlogger Ceria)", gender: "wanita", cat: "wanita", base: "Leda", desc: "Cepat, menyenangkan, penuh tawa, dan sangat ekspresif.", modifier: "wanita muda Indonesia ceria sekali, ramah, tempo agak cepat, suara cerah gembira." },
+      { id: 13, name: "Bu Retno (Sopan)", gender: "wanita", cat: "wanita", base: "Aoede", desc: "Suara keibuan yang lembut, membimbing, dan menenangkan hati.", modifier: "wanita dewasa matang keibuan, lembut, ramah tamah khas Indonesia, penuh kasih sayang." },
+      { id: 14, name: "Devi (Asisten Virtual)", gender: "wanita", cat: "wanita", base: "Callirrhoe", desc: "Intonasi futuristik, rapi, bersih, layaknya asisten AI mutakhir.", modifier: "asisten AI wanita pintar, intonasi stabil, ramah tapi efisien, pengucapan kata sangat rapi." },
+      { id: 15, name: "Sarah (News Anchor)", gender: "wanita", cat: "wanita", base: "Autonoe", desc: "Suara jurnalis televisi nasional, lugas dan presisi.", modifier: "wanita pembaca berita televisi formal, artikulasi tajam, tegas, intonasi berwibawa." },
+      { id: 16, name: "Nadia (Meditasi)", gender: "wanita", cat: "wanita", base: "Despina", desc: "Sangat lambat, tenang, berbisik lembut untuk relaksasi.", modifier: "wanita pemandu meditasi, berbicara sangat lambat, lembut hampir berbisik, menenangkan jiwa." },
+      { id: 17, name: "Gaby (Host Kuliner)", gender: "wanita", cat: "wanita", base: "Erinome", desc: "Ekspresif saat mendeskripsikan sesuatu yang lezat.", modifier: "wanita periang, intonasi menggugah selera, ekspresif dan penuh penekanan antusias." },
+      { id: 18, name: "Alisha (Suara Soft)", gender: "wanita", cat: "wanita", base: "Algenib", desc: "Sangat halus, ritme santai, tidak terburu-buru.", modifier: "wanita bersuara lembut kalem sekali, intonasi santai and menyentuh hati." },
+      { id: 19, name: "dr. Kartika", gender: "wanita", cat: "wanita", base: "Vindemiatrix", desc: "Menjelaskan dengan ramah, informatif, dan menyejukkan.", modifier: "wanita dokter profesional, mengedukasi dengan ramah dan percaya diri tinggi." },
+      { id: 20, name: "Laura (English-Indo Expert)", gender: "wanita", cat: "wanita", base: "Sadachbia", desc: "Pelafalan istilah bahasa Inggris-nya sangat fasih dan luwes.", modifier: "wanita bilingual fasih bahasa Inggris dan Indonesia, pelafalan aksen asing sangat natural." },
+      { id: 21, name: "Sakura (Kawaii Girl)", gender: "wanita", cat: "anime", base: "Leda", desc: "Karakter gadis anime imut, bernada tinggi, energik khas anime Jepang.", modifier: "gadis anime Jepang (kawaii), suara bernada tinggi, sangat imut, energetik, ekspresi ceria luar biasa." },
+      { id: 22, name: "Kenji (Shonen Protagonist)", gender: "pria", cat: "anime", base: "Puck", desc: "Karakter utama pria anime petualangan, membara dan penuh tekad.", modifier: "pemuda protagonis anime shonen, penuh tekad baja, suara bersemangat tinggi dan lantang." },
+      { id: 23, name: "Yuki (Cool Kuudere)", gender: "wanita", cat: "anime", base: "Autonoe", desc: "Tenang, dingin, misterius, namun berkarisma tinggi.", modifier: "gadis anime berkarakter dingin (kuudere), datar namun elegan, penuh misteri." },
+      { id: 24, name: "Ryuu (Gamer Boy)", gender: "pria", cat: "anime", base: "Zephyr", desc: "Santai, agak cuek, menggunakan istilah game dengan ekspresif.", modifier: "pria remaja gamer anime, gaya bicara kasual santai agak malas namun antusias saat membahas game." },
+      { id: 25, name: "Tsundere Rin", gender: "wanita", cat: "anime", base: "Callirrhoe", desc: "Suara ketus di awal tapi sebenarnya lembut di dalam.", modifier: "gadis anime bergaya tsundere, ketus di awal, agak malu-malu dan grogi dengan intonasi naik turun." },
+      { id: 26, name: "Chibi Momo", gender: "wanita", cat: "anime", base: "Leda", desc: "Suara anak kecil anime yang sangat lucu dan menggemaskan.", modifier: "anak kecil perempuan anime (chibi), suara mungil, sangat lucu, berbicara ceria." },
+      { id: 27, name: "Sensei Hiro", gender: "pria", cat: "anime", base: "Charon", desc: "Karakter guru/mentor bijaksana dalam anime fantasi.", modifier: "pria dewasa guru anime yang misterius, berwibawa, bicara tenang tapi penuh rahasia." },
+      { id: 28, name: "Kuro (Antagonis Licik)", gender: "pria", cat: "anime", base: "Fenrir", desc: "Suara villain anime yang berat, dalam, dan dipenuhi tawa licik.", modifier: "karakter antagonis anime, suara berat dan dalam, nada bicara licik dan menantang." },
+      { id: 29, name: "Mei (Mecha Pilot)", gender: "wanita", cat: "anime", base: "Kore", desc: "Tegas, disiplin, berteriak memberi komando tempur.", modifier: "gadis pilot robot anime, nada bicara disiplin militer, tegas dan penuh komando berani." },
+      { id: 30, name: "Neko-chan", gender: "wanita", cat: "anime", base: "Erinome", desc: "Manja, menambahkan elemen centil layaknya kucing penurut.", modifier: "gadis kucing anime (neko girl), suara manja menggemaskan, intonasi bergelombang imut." },
+      { id: 31, name: "Eyang Kakung (Kakek)", gender: "pria", cat: "tua", base: "Charon", desc: "Sangat lambat, penuh wejangan bijaksana khas sesepuh Jawa.", modifier: "kakek tua bijaksana Indonesia, tempo sangat lambat, suara bergetar ramah, penuh wejangan kehidupan." },
+      { id: 32, name: "Eyang Putri (Nenek)", gender: "wanita", cat: "tua", base: "Aoede", desc: "Suara nenek tercinta yang lembut, menenangkan, dan penuh kasih sayang.", modifier: "nenek tua penyayang Indonesia, berbicara pelan sekali, penuh kelembutan dan cinta." },
+      { id: 33, name: "Mbah Dukun", gender: "pria", cat: "tua", base: "Rasalgethi", desc: "Suara parau, mistis, lambat, bernuansa supranatural.", modifier: "pria tua mistis misterius, suara serak parau, ritme lambat berwibawa, bernuansa magis kuno." },
+      { id: 34, name: "Opa Ronald", gender: "pria", cat: "tua", base: "Achernar", desc: "Kakek modern blasteran, gaul tapi tetap berumur.", modifier: "kakek tua blasteran modern, bertenaga, tertawa lepas, berbicara campuran santai." },
+      { id: 35, name: "Oma Sofia", gender: "wanita", cat: "tua", base: "Gacrux", desc: "Nenek sosialita, berbicara anggun dengan tempo tertata.", modifier: "nenek sosialita kaya raya, suara berkelas tinggi, berbicara tertata rapi dan perlahan." },
+      { id: 36, name: "Bule Jaksel (Jessica)", gender: "wanita", cat: "unik", base: "Callirrhoe", desc: "Mencampur Indonesia-Inggris dengan intonasi centil 'Which is, literally' khas Jaksel.", modifier: "wanita muda gaul Jakarta Selatan, gaya bicara campuran Indonesia-Inggris dengan logat 'which is, literally' yang sangat kental dan centil." },
+      { id: 37, name: "Bule Gaul (Ronal)", gender: "pria", cat: "unik", base: "Fenrir", desc: "Logat bule Amerika asli yang baru belajar bahasa Indonesia.", modifier: "pria asing (bule Amerika) berbicara bahasa Indonesia dengan aksen barat yang sangat tebal namun lancar dan santai." },
+      { id: 38, name: "Kang Asep (Sunda)", gender: "pria", cat: "unik", base: "Orus", desc: "Logat Priangan yang kental, berayun lembut, dan ramah.", modifier: "pria paruh baya logat Sunda kental, ramah, berayun lembut penuh persaudaraan." },
+      { id: 39, name: "Mbak Sri (Jawa Medok)", gender: "wanita", cat: "unik", base: "Kore", desc: "Aksen Jawa Tengah yang sangat medok dan santun.", modifier: "wanita logat Jawa Tengah medok sekali, bersahaja, lembut dan santun." },
+      { id: 40, name: "Abang Medan", gender: "pria", cat: "unik", base: "Iapetus", desc: "Logat Sumatra Utara yang lantang, berani, dan cepat.", modifier: "pria tegas logat Medan Sumatra Utara, suara lantang, intonasi mantap dan bertenaga." },
+    ];
+
+    // --- STATE MANAGEMENT ---
+    let selectedVoiceId = 1;
+    let selectedCategory = 'semua';
+    let generatedAudioUrl = null;
+    let isPlaying = false;
+    let generationHistory = [];
+
+    // --- DOM ELEMENTS ---
+    const voiceGrid = document.getElementById('voiceGrid');
+    const ttsText = document.getElementById('ttsText');
+    const charCount = document.getElementById('charCount');
+    const generateBtn = document.getElementById('generateBtn');
+    const loader = document.getElementById('loader');
+    const loaderText = document.getElementById('loaderText');
+    const audioPlayBtn = document.getElementById('audioPlayBtn');
+    const playIcon = document.getElementById('playIcon');
+    const pauseIcon = document.getElementById('pauseIcon');
+    const audioStatusText = document.getElementById('audioStatusText');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const mainAudio = document.getElementById('mainAudioElement');
+    const historyList = document.getElementById('historyList');
+    const noHistoryText = document.getElementById('noHistoryText');
+    const speedSlider = document.getElementById('speedSlider');
+    const speedVal = document.getElementById('speedVal');
+    const emotionSelect = document.getElementById('emotionSelect');
+    const apiKeyInput = document.getElementById('apiKeyInput');
+    const errorModal = document.getElementById('errorModal');
+    const errorModalText = document.getElementById('errorModalText');
+    const visualizerBars = document.querySelectorAll('.bar');
+
+    window.onload = function() {
+      renderVoices();
+      updateCharCount();
+      ttsText.addEventListener('input', updateCharCount);
+    };
+
+    function updateCharCount() {
+      const len = ttsText.value.length;
+      charCount.textContent = `${len} / 400`;
+    }
+
+    function updateRangeLabels() {
+      const speeds = ["Lambat 🐢", "Normal 🚶‍♂️", "Cepat ⚡"];
+      speedVal.textContent = speeds[speedSlider.value];
+    }
+
+    function applyPresetText(id) {
+      const presets = {
+        1: "Halo guys, welcome back to my channel! Hari ini kita akan unboxing gadget super cool yang super affordable. Gila sih, features-nya lengkap banget, worth to buy parah!",
+        2: "Selamat pagi rekan-rekan sekalian. Pada sesi presentation kali ini, kita akan fokus membicarakan strategy pertumbuhan bisnis kita di era digital marketing modern.",
+        3: "Le, urip iku kudu tansah eling lan waspada. Ojo dumeh sugih banjur sombong. Dunia iki mung mampir ngombe, kabeh bakalan bali marang Gusti sing Akaryo Jagad.",
+        4: "N-Nani?! Kenapa kamu menatapku seperti itu? B-Bukan berarti aku menyukaimu ya! Jangan salah paham dulu, baka!"
+      };
+      ttsText.value = presets[id];
+      updateCharCount();
+    }
+
+    function renderVoices() {
+      voiceGrid.innerHTML = '';
+      const filtered = voices.filter(v => selectedCategory === 'semua' || v.cat === selectedCategory);
+
+      filtered.forEach(voice => {
+        const isSelected = voice.id === selectedVoiceId;
+        const cardClass = isSelected 
+          ? 'bg-black text-white brutal-border brutal-shadow-lg p-4 cursor-pointer flex flex-col justify-between h-[120px] brutal-btn-active'
+          : 'bg-white hover:bg-black hover:text-white text-black brutal-border brutal-shadow p-4 cursor-pointer flex flex-col justify-between h-[120px]';
+
+        const genderEmoji = voice.gender === 'pria' ? '👨' : '👩';
+        const badgeBg = voice.cat === 'anime' ? 'bg-[#FF007A] text-white' : (voice.cat === 'tua' ? 'bg-[#00E5FF] text-black' : (voice.cat === 'unik' ? 'bg-[#39FF14] text-black' : 'bg-gray-200 text-black'));
+
+        voiceGrid.innerHTML += `
+          <div onclick="selectVoice(${voice.id})" class="${cardClass}">
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="font-bold text-sm font-mono tracking-tight">${voice.name}</h3>
+                <p class="text-[10px] mt-1 line-clamp-2 opacity-90">${voice.desc}</p>
+              </div>
+              <span class="text-lg">${genderEmoji}</span>
+            </div>
+            <div class="flex justify-between items-center mt-2">
+              <span class="text-[9px] font-mono px-2 py-0.5 brutal-border bg-white text-black font-black uppercase">
+                Base: ${voice.base}
+              </span>
+              <span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded ${badgeBg} uppercase border border-black">
+                ${voice.cat}
+              </span>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function selectVoice(id) {
+      selectedVoiceId = id;
+      renderVoices();
+    }
+
+    function filterVoices(cat) {
+      ['semua', 'pria', 'wanita', 'anime', 'tua', 'unik'].forEach(c => {
+        const btn = document.getElementById(`filter-${c}`);
+        if (btn) btn.className = "bg-white hover:bg-black hover:text-white px-2 py-1 brutal-border border-black font-bold";
+      });
+      
+      const activeBtn = document.getElementById(`filter-${cat}`);
+      if (activeBtn) activeBtn.className = "bg-black text-white px-2 py-1 brutal-border border-black font-bold";
+
+      selectedCategory = cat;
+      renderVoices();
+    }
+
+    function pcmToWav(base64Pcm, sampleRate = 24000) {
+      const binaryString = atob(base64Pcm);
+      const len = binaryString.length;
+      const bytes = new Uint8Array(len);
+      for (let i = 0; i < len; i++) bytes[i] = binaryString.charCodeAt(i);
+      
+      const wavHeader = new ArrayBuffer(44);
+      const view = new DataView(wavHeader);
+      
+      writeString(view, 0, 'RIFF');
+      view.setUint32(4, 36 + bytes.buffer.byteLength, true);
+      writeString(view, 8, 'WAVE');
+      writeString(view, 12, 'fmt ');
+      view.setUint32(16, 16, true);
+      view.setUint16(20, 1, true);
+      view.setUint16(22, 1, true);
+      view.setUint32(24, sampleRate, true);
+      view.setUint32(28, sampleRate * 2, true); 
+      view.setUint16(32, 2, true);
+      view.setUint16(34, 16, true);
+      writeString(view, 36, 'data');
+      view.setUint32(40, bytes.buffer.byteLength, true);
+      
+      const finalWav = new Uint8Array(wavHeader.byteLength + bytes.buffer.byteLength);
+      finalWav.set(new Uint8Array(wavHeader), 0);
+      finalWav.set(new Uint8Array(bytes.buffer), wavHeader.byteLength);
+      
+      return new Blob([finalWav], { type: 'audio/wav' });
+    }
+    
+    function writeString(view, offset, string) {
+      for (let i = 0; i < string.length; i++) view.setUint8(offset + i, string.charCodeAt(i));
+    }
+
+    async function generateSpeech() {
+      const textVal = ttsText.value.trim();
+      const currentKey = apiKeyInput.value.trim();
+
+      if (!textVal) {
+        showError("Isi teks terlebih dahulu sebelum menggenerasikan suara!");
+        return;
+      }
+      if (!currentKey) {
+        showError("API Key tidak boleh kosong!");
+        return;
+      }
+
+      setLoadingState(true, "Mempersiapkan vokal AI...");
+
+      const activeVoice = voices.find(v => v.id === selectedVoiceId);
+      const speedModifier = speedSlider.value == 0 ? "Bicaralah perlahan." : (speedSlider.value == 2 ? "Bicaralah dengan tempo cepat." : "Bicaralah dengan kecepatan normal.");
+      
+      const emotions = {
+        normal: "Gunakan intonasi yang normal, stabil, natural.",
+        excited: "Bicaralah dengan sangat gembira, antusias, ceria.",
+        whispering: "Bicaralah secara lirih, lembut, hampir berbisik.",
+        dramatic: "Gunakan nada bicara yang sangat dramatis dan mendalam.",
+        angry: "Bicaralah dengan nada ketus, tegas, dan berpenekanan kuat.",
+        news: "Bicaralah dengan gaya penyiar berita resmi, lugas, dan rapi."
+      };
+
+      const systemPrompt = `Kamu adalah mesin Text-to-Speech natural. Karakter: ${activeVoice.modifier} Gaya Emosi: ${emotions[emotionSelect.value]} Tempo: ${speedModifier} Aturan: Bacakan teks campuran Indonesia-Inggris secara mengalir lancar tanpa kaku.`;
+
+      const payload = {
+        contents: [{ parts: [{ text: textVal }] }],
+        systemInstruction: { parts: [{ text: systemPrompt }] },
+        generationConfig: {
+          responseModalities: ["AUDIO"],
+          speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: activeVoice.base } } }
+        }
+      };
+
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${currentKey}`;
+
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({}));
+          throw new Error(errData.error?.message || "Respons server bermasalah.");
+        }
+
+        const responseData = await response.json();
+        const audioPart = responseData.candidates?.[0]?.content?.parts?.find(p => p.inlineData && p.inlineData.mimeType.startsWith('audio/'));
+        
+        if (!audioPart?.inlineData?.data) {
+          throw new Error("Respons tidak mengandung data audio.");
+        }
+
+        let sampleRate = 24000;
+        const rateMatch = audioPart.inlineData.mimeType.match(/rate=(\d+)/);
+        if (rateMatch) sampleRate = parseInt(rateMatch[1], 10);
+
+        if (generatedAudioUrl) URL.revokeObjectURL(generatedAudioUrl);
+        const wavBlob = pcmToWav(audioPart.inlineData.data, sampleRate);
+        generatedAudioUrl = URL.createObjectURL(wavBlob);
+        
+        mainAudio.src = generatedAudioUrl;
+        audioPlayBtn.removeAttribute('disabled');
+        downloadBtn.href = generatedAudioUrl;
+        downloadBtn.classList.remove('hidden');
+        audioStatusText.textContent = `Vokal siap: ${activeVoice.name}`;
+        
+        addHistory(activeVoice.name, textVal, generatedAudioUrl);
+        setLoadingState(false);
+        toggleAudio();
+
+      } catch (err) {
+        console.error(err);
+        setLoadingState(false);
+        showError("Gagal meracik suara: " + err.message);
+      }
+    }
+
+    function toggleAudio() {
+      if (!generatedAudioUrl) return;
+      if (isPlaying) mainAudio.pause(); else mainAudio.play();
+    }
+
+    function onAudioPlaying() {
+      isPlaying = true;
+      playIcon.classList.add('hidden');
+      pauseIcon.classList.remove('hidden');
+      audioStatusText.textContent = "🔊 Sedang bersuara...";
+      startVisualizerAnimation();
+    }
+
+    function onAudioPaused() {
+      isPlaying = false;
+      playIcon.classList.remove('hidden');
+      pauseIcon.classList.add('hidden');
+      audioStatusText.textContent = "⏸️ Jeda";
+      stopVisualizerAnimation();
+    }
+
+    function onAudioEnded() {
+      isPlaying = false;
+      playIcon.classList.remove('hidden');
+      pauseIcon.classList.add('hidden');
+      audioStatusText.textContent = "⏹️ Selesai.";
+      stopVisualizerAnimation();
+    }
+
+    let visInterval = null;
+    function startVisualizerAnimation() {
+      if (visInterval) clearInterval(visInterval);
+      visInterval = setInterval(() => {
+        visualizerBars.forEach(bar => {
+          const randHeight = Math.floor(Math.random() * 32) + 4;
+          bar.style.height = `${randHeight}px`;
+        });
+      }, 80);
+    }
+
+    function stopVisualizerAnimation() {
+      if (visInterval) clearInterval(visInterval);
+      visualizerBars.forEach(bar => bar.style.height = `4px`);
+    }
+
+    function setLoadingState(isLoading, message = "") {
+      if (isLoading) {
+        loader.classList.remove('hidden');
+        loaderText.textContent = message;
+        generateBtn.setAttribute('disabled', 'true');
+        generateBtn.classList.add('opacity-50');
+      } else {
+        loader.classList.add('hidden');
+        generateBtn.removeAttribute('disabled');
+        generateBtn.classList.remove('opacity-50');
+      }
+    }
+
+    function addHistory(voiceName, text, url) {
+      noHistoryText.classList.add('hidden');
+      const snippet = text.length > 30 ? text.substring(0, 30) + '...' : text;
+      generationHistory.unshift({ id: Date.now(), voice: voiceName, textSnippet: snippet, audioUrl: url });
+      if (generationHistory.length > 5) generationHistory.pop();
+      renderHistory();
+    }
+
+    function renderHistory() {
+      historyList.innerHTML = '';
+      generationHistory.forEach(item => {
+        historyList.innerHTML += `
+          <div class="bg-gray-100 brutal-border p-2 flex justify-between items-center hover:bg-yellow-100">
+            <div><span class="font-black bg-black text-white px-1 mr-1">${item.voice}</span><span class="text-gray-700 italic">"${item.textSnippet}"</span></div>
+            <button onclick="playHistory('${item.audioUrl}')" class="bg-white hover:bg-black hover:text-white px-2 py-0.5 font-bold brutal-border">▶ PUTAR</button>
+          </div>`;
+      });
+    }
+
+    function playHistory(url) {
+      mainAudio.src = url;
+      audioPlayBtn.removeAttribute('disabled');
+      downloadBtn.href = url;
+      downloadBtn.classList.remove('hidden');
+      toggleAudio();
+    }
+
+    function showError(msg) {
+      errorModalText.textContent = msg;
+      errorModal.classList.remove('hidden');
+    }
+
+    // Modal close
+    function closeErrorModal() {
+      errorModal.classList.add('hidden');
+    }
+  </script>
+</body>
+</html>
+
+```
