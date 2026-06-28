@@ -11,7 +11,10 @@
   <!-- Google Fonts: Plus Jakarta Sans & Syne -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=500;700;800&family=Syne:wght=700;800&display=swap" rel="stylesheet">
+
+  <!-- Supabase JS Client CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
     tailwind.config = {
@@ -152,6 +155,15 @@
   </style>
 </head>
 <body class="min-h-screen pb-16">
+
+  <!-- ================= RETRO LOADING OVERLAY ================= -->
+  <div id="loadingOverlay" class="fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-6 text-center select-none text-white transition-opacity duration-300">
+    <div class="brutal-border brutal-shadow bg-yellow-400 p-8 max-w-lg text-black">
+      <span class="text-6xl block mb-4 animate-spin">⏳</span>
+      <h2 class="font-syne font-extrabold text-2xl uppercase tracking-tighter">SINKRONISASI DATABASE</h2>
+      <p class="text-xs font-bold mt-2">Menghubungkan ke Cloud Supabase Premium Core...</p>
+    </div>
+  </div>
 
   <!-- ================= RETRO BAN SCREEN ================= -->
   <div id="banScreen" class="hidden fixed inset-0 bg-red-600 z-50 flex flex-col items-center justify-center p-6 text-center select-none text-white">
@@ -328,21 +340,15 @@
               </div>
             </div>
 
-            <!-- MEGA UPLOAD s/d 50MB -->
-            <div class="p-3 bg-green-50 border-2 border-green-300">
-              <label class="block font-bold text-xs uppercase text-green-700 font-extrabold">📁 Upload Gambar Mod (Hingga 50MB - IndexedDB)</label>
-              <input type="file" id="modImageFile" accept="image/*" class="w-full brutal-border p-1.5 font-bold bg-white focus:outline-none text-xs text-black">
-              <span class="text-[10px] text-gray-500 block mt-1">Sistem database modern siap menampung foto kualitas tinggi langsung di perangkat!</span>
-            </div>
-            <div class="flex items-center">
+            <div class="flex items-center col-span-1 md:col-span-2">
               <div class="w-full">
-                <label class="block font-bold mb-1 text-xs uppercase text-black">Atau Gunakan Link URL Gambar</label>
-                <input type="text" id="modImageUrl" placeholder="https://..." class="w-full brutal-border p-2.5 font-bold bg-white focus:outline-none text-black">
+                <label class="block font-bold mb-1 text-xs uppercase text-black">Gunakan Link URL Gambar Mod</label>
+                <input type="text" id="modImageUrl" placeholder="https://images.unsplash.com/... atau link gambar web lainnya" class="w-full brutal-border p-2.5 font-bold bg-white focus:outline-none text-black">
               </div>
             </div>
           </div>
 
-          <!-- KUSTOMISASI DINGIN: UP TO 5 LINKS WITH MODERN ICONS -->
+          <!-- KUSTOMISASI TOMBOL AKSI -->
           <div class="mt-6 p-4 border-4 border-black bg-zinc-50">
             <h4 class="font-syne font-extrabold text-sm uppercase mb-4 text-black border-b-2 border-black pb-2 flex justify-between items-center">
               <span>🔗 Kustomisasi Tombol Aksi (Max 5 Link)</span>
@@ -358,7 +364,7 @@
 
           <div class="flex gap-2 mt-6">
             <button onclick="saveMod()" class="flex-1 bg-[#4CCD99] font-bold uppercase py-2.5 brutal-border brutal-shadow-sm brutal-btn-sm text-sm text-black">
-              Simpan Link Mod
+              Simpan Link Mod ke Server ⚡
             </button>
             <button onclick="clearForm()" class="bg-gray-200 font-bold uppercase py-2.5 px-4 brutal-border text-sm text-black">
               Reset Form
@@ -400,8 +406,8 @@
               <input type="text" id="setMainSubtitle" placeholder="🔥 LINK MOD BERSIH & NO SCAM 🔥" class="w-full brutal-border p-2 font-bold bg-white focus:outline-none text-black">
             </div>
             <div class="md:col-span-2">
-              <label class="block font-bold mb-1 text-xs uppercase text-purple-700">🖼 Ganti Foto Profil Web Utama (Maksimal 50MB)</label>
-              <input type="file" id="setMainLogoFile" accept="image/*" class="w-full brutal-border p-1.5 font-bold bg-white text-xs text-black">
+              <label class="block font-bold mb-1 text-xs uppercase text-purple-700">🖼 Link URL Foto Profil Web Utama</label>
+              <input type="text" id="setMainLogoUrl" placeholder="https://..." class="w-full brutal-border p-2.5 font-bold bg-white text-xs text-black">
             </div>
           </div>
           <button onclick="saveBranding()" class="mt-4 bg-[#8D00FF] text-white font-bold uppercase py-2 px-6 brutal-border brutal-shadow-sm brutal-btn-sm text-xs">
@@ -499,24 +505,87 @@
       </div>
 
       <p class="font-syne font-bold uppercase tracking-wide text-sm">© 2026 MOD CENTRAL - Developed by Axeluf</p>
-      <p class="text-[10px] text-gray-500 mt-2 font-mono">POWERED BY AXELUF ENGINE V4.4 (ULTIMATE OBFUSCATED STATE)</p>
+      <p class="text-[10px] text-gray-500 mt-2 font-mono">POWERED BY SUPABASE CLOUD DATABASE REAL-TIME</p>
     </footer>
 
   </div>
 
   <!-- Safe Obfuscated JavaScript Runtime -->
   <script type="text/javascript">
-    // Kamus sandi rahasia yang terenkripsi untuk mengelabui Inspect Element dan Pencari Kata Kunci GitHub
+    // =========================================================================
+    // ⚙️ INITIALIZE SUPABASE CLIENT DARI DATA KAMU
+    // =========================================================================
+    const SUPABASE_URL = "https://vfkribtxnkwjnxduvvul.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_Y6r3wH62GFwnIs-4cWvesg_ibPuFm4_";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
     const _0x4f12 = {
       // Hex & Unicode Scrambled Credentials
       _0x0a: "\x61\x78\x65\x6c\x75\x66",                 // axeluf
       _0x0b: "\x62\x72\x61\x6e\x64\x61\x6c\x7a\x37\x30", // brandalz70
-      _0x0c: "\x75\x6c\x74\x69\x6d\x61\x74\x65\x5f\x73\x74\x6f\x72\x65", // ultimate_store
-      _0x0d: "\x6c\x69\x6e\x6b\x73",                     // links
-      _0x0e: "\x63\x72\x65\x64\x69\x74\x73"              // credits
+      _0x0d: "links_supabase_db",                     
+      _0x0e: "credits_supabase_db"              
     };
 
-    // --- TOAST NOTIFICATION FUNCTION ---
+    // --- SECURE CRYPTO UTILS ---
+    function encodeSafe(str) {
+      if (!str) return "";
+      try {
+        return btoa(unescape(encodeURIComponent(str)));
+      } catch (e) {
+        return str;
+      }
+    }
+
+    function decodeSafe(str) {
+      if (!str) return "";
+      try {
+        return decodeURIComponent(escape(atob(str)));
+      } catch (e) {
+        return str; 
+      }
+    }
+
+    // --- SUPABASE SINKRONISASI WRAPPER ---
+    async function cloudGet(key, defaultValue) {
+      try {
+        const { data, error } = await supabaseClient
+          .from('settings')
+          .select('value')
+          .eq('key', key)
+          .maybeSingle();
+
+        if (error) {
+          console.warn(`Supabase get error untuk ${key}:`, error.message);
+          return defaultValue;
+        }
+
+        if (data && data.value !== undefined && data.value !== null) {
+          return data.value;
+        }
+        return defaultValue;
+      } catch (err) {
+        console.error("Gagal membaca database Supabase Cloud:", err);
+        return defaultValue;
+      }
+    }
+
+    async function cloudSet(key, value) {
+      try {
+        const { error } = await supabaseClient
+          .from('settings')
+          .upsert({ key: key, value: value }, { onConflict: 'key' });
+
+        if (error) {
+          console.error(`Supabase set error untuk ${key}:`, error.message);
+          showToast("Gagal menyimpan ke Cloud! Pastikan Query SQL di Supabase sudah dijalankan.", "error");
+        }
+      } catch (err) {
+        console.error("Gagal menulis data ke database Supabase Cloud:", err);
+      }
+    }
+
+    // --- TOAST NOTIFICATION ---
     function showToast(message, type = 'info') {
       const toastBox = document.getElementById('toastBox');
       const toastContent = document.getElementById('toastContent');
@@ -543,25 +612,6 @@
         toastBox.classList.remove('translate-y-0', 'opacity-100');
         toastBox.classList.add('translate-y-20', 'opacity-0');
       }, 3000);
-    }
-
-    // --- SECURE CRYPTO UTILS ---
-    function encodeSafe(str) {
-      if (!str) return "";
-      try {
-        return btoa(unescape(encodeURIComponent(str)));
-      } catch (e) {
-        return str;
-      }
-    }
-
-    function decodeSafe(str) {
-      if (!str) return "";
-      try {
-        return decodeURIComponent(escape(atob(str)));
-      } catch (e) {
-        return str; 
-      }
     }
 
     // --- AUDIO RETRO SYNTH ---
@@ -652,52 +702,6 @@
       globe: `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>`
     };
 
-    // --- SECURE DATABASE STORAGE ENGINE (INDEXEDDB) ---
-    let db;
-    const DB_NAME = "ModCentralUltimateDB_v4_4";
-    const DB_VERSION = 1;
-
-    function initIndexedDB(callback) {
-      const request = indexedDB.open(DB_NAME, DB_VERSION);
-      request.onerror = function() {
-        console.error("Gagal memuat database browser!");
-      };
-      request.onsuccess = function(e) {
-        db = e.target.result;
-        callback();
-      };
-      request.onupgradeneeded = function(e) {
-        const database = e.target.result;
-        database.createObjectStore(_0x4f12._0x0c, { keyPath: "key" });
-      };
-    }
-
-    function dbGet(key, defaultValue, callback) {
-      const transaction = db.transaction([_0x4f12._0x0c], "readonly");
-      const store = transaction.objectStore(_0x4f12._0x0c);
-      const request = store.get(key);
-      request.onsuccess = function() {
-        if (request.result) {
-          callback(request.result.value);
-        } else {
-          callback(defaultValue);
-        }
-      };
-    }
-
-    // Perbaikan fungsionalitas penulisan database
-    function dbSet(key, value, callback) {
-      const transaction = db.transaction([_0x4f12._0x0c], "readwrite");
-      const store = transaction.objectStore(_0x4f12._0x0c);
-      const request = store.put({ key: key, value: value });
-      request.onsuccess = function() {
-        if (callback) callback();
-      };
-      request.onerror = function(err) {
-        console.error("Gagal melakukan penulisan ke database.", err);
-      };
-    }
-
     // --- WEB CORE STATE ---
     let links = [];
     let credits = [];
@@ -705,7 +709,7 @@
     let activeDeleteIndex = null;
     let antiSpamCounter = 0;
 
-    // Default Mock Data
+    // Default Mock Data jika Database Cloud Supabase masih kosong
     const initialMockData = [
       {
         name: "Mobile Legends Mod Skin & Radar Map",
@@ -760,64 +764,55 @@
       showToast(`Tema diganti ke: ${themeName.toUpperCase()}`, 'info');
     }
 
-    // --- DATA FETCHERS ---
-    function loadAllDataFromDB() {
-      dbGet("web_title", "MOD CENTRAL", (val) => {
-        document.getElementById('mainTitleText').innerText = val;
-        document.getElementById('setMainTitle').value = val;
-      });
+    // --- DATA FETCHERS FROM SUPABASE CLOUD ---
+    async function loadAllDataFromDB() {
+      const overlay = document.getElementById('loadingOverlay');
 
-      dbGet("web_subtitle", "🔥 LINK MOD BERSIH & NO SCAM 🔥", (val) => {
-        document.getElementById('mainSubtitleText').innerText = val;
-        document.getElementById('setMainSubtitle').value = val;
-      });
+      const title = await cloudGet("web_title", "MOD CENTRAL");
+      document.getElementById('mainTitleText').innerText = title;
+      document.getElementById('setMainTitle').value = title;
 
-      dbGet("web_logo", "https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?auto=format&fit=crop&q=80&w=200", (val) => {
-        document.getElementById('mainLogo').src = val;
-      });
+      const subtitle = await cloudGet("web_subtitle", "🔥 LINK MOD BERSIH & NO SCAM 🔥");
+      document.getElementById('mainSubtitleText').innerText = subtitle;
+      document.getElementById('setMainSubtitle').value = subtitle;
 
-      dbGet(_0x4f12._0x0e, initialCredits, (val) => {
-        credits = val;
-        renderCredits();
-      });
+      const logo = await cloudGet("web_logo", "https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?auto=format&fit=crop&q=80&w=200");
+      document.getElementById('mainLogo').src = logo;
+      document.getElementById('setMainLogoUrl').value = logo;
 
-      dbGet(_0x4f12._0x0d, initialMockData, (val) => {
-        links = val;
-        renderPublicLinks();
-        renderAdminTable();
-      });
+      credits = await cloudGet(_0x4f12._0x0e, initialCredits);
+      renderCredits();
+
+      links = await cloudGet(_0x4f12._0x0d, initialMockData);
+      renderPublicLinks();
+      renderAdminTable();
+
+      // Sembunyikan Loading Overlay secara mulus
+      if (overlay) {
+        overlay.style.opacity = '0';
+        setTimeout(() => overlay.remove(), 300);
+      }
     }
 
-    function saveBranding() {
+    async function saveBranding() {
       playSynth('success');
       const title = document.getElementById('setMainTitle').value.trim();
       const subtitle = document.getElementById('setMainSubtitle').value.trim();
-      const logoFile = document.getElementById('setMainLogoFile').files[0];
+      const logoUrl = document.getElementById('setMainLogoUrl').value.trim();
 
       if (title) {
-        dbSet("web_title", title);
+        await cloudSet("web_title", title);
         document.getElementById('mainTitleText').innerText = title;
       }
       if (subtitle) {
-        dbSet("web_subtitle", subtitle);
+        await cloudSet("web_subtitle", subtitle);
         document.getElementById('mainSubtitleText').innerText = subtitle;
       }
-
-      if (logoFile) {
-        if (logoFile.size > 52428800) { 
-          showToast("Logo melebihi batas 50MB!", "error");
-          return;
-        }
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          dbSet("web_logo", e.target.result);
-          document.getElementById('mainLogo').src = e.target.result;
-          showToast("Logo baru berhasil disimpan!", "success");
-        };
-        reader.readAsDataURL(logoFile);
-      } else {
-        showToast("Setelan branding berhasil diterapkan!", "success");
+      if (logoUrl) {
+        await cloudSet("web_logo", logoUrl);
+        document.getElementById('mainLogo').src = logoUrl;
       }
+      showToast("Setelan branding berhasil disinkronisasi ke Supabase Cloud!", "success");
     }
 
     // --- SECURE OBFUSCATED AUTHENTICATION CHECK ---
@@ -990,25 +985,6 @@
       }
     }
 
-    function triggerBanScreen() {
-      playSynth('ban');
-      localStorage.setItem('banned_client_status', 'true');
-      document.getElementById('banScreen').classList.remove('hidden');
-    }
-
-    function simulateUnban() {
-      playSynth('success');
-      localStorage.removeItem('banned_client_status');
-      document.getElementById('banScreen').classList.add('hidden');
-      showToast("Akses dipulihkan! Jangan spam lagi ya.", "success");
-    }
-
-    function clearAllBans() {
-      playSynth('success');
-      localStorage.removeItem('banned_client_status');
-      showToast("Daftar ban dibersihkan!", "success");
-    }
-
     // --- CORE RENDERING CARDS (PUBLIC VIEW) ---
     function renderPublicLinks() {
       const linkContainer = document.getElementById('linkContainer');
@@ -1143,7 +1119,7 @@
     }
 
     // --- KLIK ACTION COUNTER ---
-    function handleActionClick(index, targetUrl, isMainDownload = false) {
+    async function handleActionClick(index, targetUrl, isMainDownload = false) {
       playSynth('success');
 
       if (!links[index].views) links[index].views = 0;
@@ -1154,7 +1130,7 @@
         viewCounterEl.innerText = links[index].views;
       }
 
-      dbSet(_0x4f12._0x0d, links);
+      await cloudSet(_0x4f12._0x0d, links);
 
       if (isMainDownload) {
         antiSpamCounter++;
@@ -1170,7 +1146,7 @@
       }
     }
 
-    function likeMod(index) {
+    async function likeMod(index) {
       let userLikesCount = parseInt(localStorage.getItem(`like_count_card_${index}`) || '0');
 
       if (userLikesCount >= 10) {
@@ -1187,9 +1163,8 @@
       if (!links[index].likes) links[index].likes = 0;
       links[index].likes += 1;
       
-      dbSet(_0x4f12._0x0d, links, () => {
-        renderPublicLinks();
-      });
+      await cloudSet(_0x4f12._0x0d, links);
+      renderPublicLinks();
     }
 
     function toggleCommentsSection(index) {
@@ -1198,7 +1173,7 @@
       panel.classList.toggle('hidden');
     }
 
-    function submitComment(index) {
+    async function submitComment(index) {
       const nameInput = document.getElementById(`comm-name-${index}`);
       const textInput = document.getElementById(`comm-text-${index}`);
       const name = nameInput.value.trim();
@@ -1216,10 +1191,9 @@
       nameInput.value = "";
       textInput.value = "";
 
-      dbSet(_0x4f12._0x0d, links, () => {
-        renderPublicLinks();
-        showToast("Komentar terkirim!", "success");
-      });
+      await cloudSet(_0x4f12._0x0d, links);
+      renderPublicLinks();
+      showToast("Komentar terkirim!", "success");
     }
 
     // --- ADMIN PANEL CONTROL ENGINE ---
@@ -1293,30 +1267,28 @@
       activeDeleteIndex = null;
     }
 
-    document.getElementById('btnConfirmYes').addEventListener('click', function() {
+    document.getElementById('btnConfirmYes').addEventListener('click', async function() {
       if (activeDeleteIndex !== null) {
         playSynth('delete');
         links.splice(activeDeleteIndex, 1);
         
-        dbSet(_0x4f12._0x0d, links, () => {
-          showToast("Link Mod berhasil dihapus!", "info");
-          closeConfirmModal();
-          renderPublicLinks();
-          renderAdminTable();
-          clearForm();
-        });
+        await cloudSet(_0x4f12._0x0d, links);
+        showToast("Link Mod berhasil dihapus!", "info");
+        closeConfirmModal();
+        renderPublicLinks();
+        renderAdminTable();
+        clearForm();
       }
     });
 
     // --- CRUD OPERATORS ---
-    function saveMod() {
+    async function saveMod() {
       const name = document.getElementById('modName').value.trim();
       const tag = document.getElementById('modTag').value.trim();
       const desc = document.getElementById('modDesc').value.trim();
       const url = document.getElementById('modUrl').value.trim();
       const password = document.getElementById('modPassword').value.trim();
       const imageUrlInput = document.getElementById('modImageUrl').value.trim();
-      const imageFile = document.getElementById('modImageFile').files[0];
       const editIndex = document.getElementById('editIndex').value;
 
       const manualViews = parseInt(document.getElementById('modViewsInput').value) || 0;
@@ -1329,62 +1301,48 @@
         return;
       }
 
-      if (imageFile) {
-        if (imageFile.size > 52428800) { 
-          showToast("Ukuran gambar melebihi batas 50MB!", "error");
-          return;
-        }
-        const reader = new FileReader();
-        reader.onload = function(e) { processSave(e.target.result); };
-        reader.readAsDataURL(imageFile);
+      let existingImg = imageUrlInput || "";
+      let existingViews = manualViews || 0;
+      let existingLikes = manualLikes || 0;
+      let existingComments = [];
+
+      if (editIndex !== "") {
+        const oldItem = links[parseInt(editIndex)];
+        existingImg = imageUrlInput || oldItem.image;
+        existingViews = manualViews !== 0 ? manualViews : (oldItem.views || 0);
+        existingLikes = manualLikes !== 0 ? manualLikes : (oldItem.likes || 0);
+        existingComments = oldItem.comments || [];
       } else {
-        let existingImg = "";
-        let existingViews = manualViews || 0;
-        let existingLikes = manualLikes || 0;
-        let existingComments = [];
-
-        if (editIndex !== "") {
-          existingImg = links[parseInt(editIndex)].image;
-          existingViews = manualViews !== 0 ? manualViews : (links[parseInt(editIndex)].views || 0);
-          existingLikes = manualLikes !== 0 ? manualLikes : (links[parseInt(editIndex)].likes || 0);
-          existingComments = links[parseInt(editIndex)].comments || [];
-        } else {
-          existingViews = manualViews || 0;
-          existingLikes = manualLikes || 0;
-        }
-        
-        processSave(imageUrlInput || existingImg || "", existingViews, existingLikes, existingComments);
+        existingViews = manualViews || 0;
+        existingLikes = manualLikes || 0;
       }
 
-      function processSave(finalImage, viewsVal, likesVal, commentsVal) {
-        const modData = {
-          name,
-          tag: tag.toUpperCase(),
-          desc,
-          url: encodeSafe(url),
-          password: encodeSafe(password || "Tanpa Password / Langsung Ekstrak"),
-          image: finalImage,
-          views: viewsVal,
-          likes: likesVal,
-          comments: commentsVal,
-          customButtons: customButtons
-        };
+      const modData = {
+        name,
+        tag: tag.toUpperCase(),
+        desc,
+        url: encodeSafe(url),
+        password: encodeSafe(password || "Tanpa Password / Langsung Ekstrak"),
+        image: existingImg,
+        views: existingViews,
+        likes: existingLikes,
+        comments: existingComments,
+        customButtons: customButtons
+      };
 
-        if (editIndex !== "") {
-          links[parseInt(editIndex)] = modData;
-          showToast("Link Modifikasi berhasil diupdate!", "success");
-        } else {
-          links.unshift(modData);
-          showToast("Mod baru berhasil dirilis!", "success");
-        }
-
-        playSynth('success');
-        dbSet(_0x4f12._0x0d, links, () => {
-          clearForm();
-          renderPublicLinks();
-          renderAdminTable();
-        });
+      if (editIndex !== "") {
+        links[parseInt(editIndex)] = modData;
+        showToast("Link Modifikasi berhasil diupdate!", "success");
+      } else {
+        links.unshift(modData);
+        showToast("Mod baru berhasil dirilis!", "success");
       }
+
+      playSynth('success');
+      await cloudSet(_0x4f12._0x0d, links);
+      clearForm();
+      renderPublicLinks();
+      renderAdminTable();
     }
 
     function editMod(index) {
@@ -1396,14 +1354,13 @@
       document.getElementById('modDesc').value = item.desc;
       document.getElementById('modUrl').value = decodeSafe(item.url);
       document.getElementById('modPassword').value = decodeSafe(item.password) === "Tanpa Password / Langsung Ekstrak" ? "" : decodeSafe(item.password);
-      document.getElementById('modImageUrl').value = item.image.startsWith("data:image") ? "" : item.image;
+      document.getElementById('modImageUrl').value = item.image;
       
       document.getElementById('modViewsInput').value = item.views || 0;
       document.getElementById('modLikesInput').value = item.likes || 0;
 
       setCustomLinksFields(item.customButtons);
 
-      document.getElementById('modImageFile').value = "";
       document.getElementById('editIndex').value = index;
       document.getElementById('formTitle').innerText = "📝 Edit Link Modifikasi";
       document.getElementById('formTitle').classList.replace('text-[#FF8A08]', 'text-blue-600');
@@ -1417,7 +1374,6 @@
       document.getElementById('modUrl').value = '';
       document.getElementById('modPassword').value = '';
       document.getElementById('modImageUrl').value = '';
-      document.getElementById('modImageFile').value = '';
       document.getElementById('modViewsInput').value = '';
       document.getElementById('modLikesInput').value = '';
       document.getElementById('customLinksContainer').innerHTML = '';
@@ -1428,7 +1384,7 @@
     }
 
     // --- CREDITS OPERATORS ---
-    function addCredit() {
+    async function addCredit() {
       const platform = document.getElementById('credPlatform').value.trim();
       const handle = document.getElementById('credHandle').value.trim();
       const url = document.getElementById('credUrl').value.trim();
@@ -1442,26 +1398,43 @@
       playSynth('success');
       credits.push({ platform, handle, url, color });
       
-      dbSet(_0x4f12._0x0e, credits, () => {
-        showToast("Credit baru ditambahkan!", "success");
-        document.getElementById('credPlatform').value = '';
-        document.getElementById('credHandle').value = '';
-        document.getElementById('credUrl').value = '';
-        renderCredits();
-      });
+      await cloudSet(_0x4f12._0x0e, credits);
+      showToast("Credit baru ditambahkan!", "success");
+      document.getElementById('credPlatform').value = '';
+      document.getElementById('credHandle').value = '';
+      document.getElementById('credUrl').value = '';
+      renderCredits();
     }
 
-    function deleteCredit(index) {
+    async function deleteCredit(index) {
       playSynth('delete');
       credits.splice(index, 1);
-      dbSet(_0x4f12._0x0e, credits, () => {
-        showToast("Credit berhasil dihapus!", "info");
-        renderCredits();
-      });
+      await cloudSet(_0x4f12._0x0e, credits);
+      showToast("Credit berhasil dihapus!", "info");
+      renderCredits();
+    }
+
+    function triggerBanScreen() {
+      playSynth('ban');
+      localStorage.setItem('banned_client_status', 'true');
+      document.getElementById('banScreen').classList.remove('hidden');
+    }
+
+    function simulateUnban() {
+      playSynth('success');
+      localStorage.removeItem('banned_client_status');
+      document.getElementById('banScreen').classList.add('hidden');
+      showToast("Akses dipulihkan! Jangan spam lagi ya.", "success");
+    }
+
+    function clearAllBans() {
+      playSynth('success');
+      localStorage.removeItem('banned_client_status');
+      showToast("Daftar ban dibersihkan!", "success");
     }
 
     // --- INIT APPLICATION RUNTIME ---
-    initIndexedDB(() => {
+    window.addEventListener('DOMContentLoaded', () => {
       loadAllDataFromDB();
 
       const savedTheme = localStorage.getItem('user_theme_choice');
