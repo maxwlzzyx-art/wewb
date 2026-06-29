@@ -154,7 +154,61 @@
     }
   </style>
 </head>
-<body class="min-h-screen pb-16">
+<body class="min-h-screen pb-16 relative overflow-x-hidden">
+
+  <!-- ================= SIDEBAR NAVIGATION DRAWER (NEW) ================= -->
+  <div id="sidebarDrawer" class="fixed inset-y-0 left-0 w-80 max-w-[85vw] bg-white text-black z-50 transform -translate-x-full transition-transform duration-300 ease-in-out border-r-4 border-black shadow-[10px_0_0_0_#000000] flex flex-col">
+    <!-- Header Drawer -->
+    <div class="p-6 bg-[#FFDE4D] border-b-4 border-black flex justify-between items-center shrink-0">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">🍔</span>
+        <h2 class="font-syne font-extrabold text-xl uppercase tracking-tight">MENU UTAMA</h2>
+      </div>
+      <button onclick="toggleSidebarDrawer()" class="bg-red-500 text-white border-2 border-black w-9 h-9 flex items-center justify-center font-bold text-lg brutal-shadow-sm active:translate-y-0.5">✕</button>
+    </div>
+
+    <!-- Content/Menu List -->
+    <div class="p-6 space-y-4 overflow-y-auto flex-1 font-bold">
+      <button onclick="selectCategoryFilter(''); toggleSidebarDrawer()" class="w-full text-left p-3.5 bg-zinc-50 hover:bg-yellow-100 border-2 border-black brutal-shadow-sm text-sm uppercase flex items-center justify-between">
+        <span>🏠 HOME / SEMUA MOD</span>
+        <span class="bg-black text-white px-2 py-0.5 text-xs brutal-border-sm" id="countAllMods">0</span>
+      </button>
+
+      <button onclick="selectCategoryFilter('GAME'); toggleSidebarDrawer()" class="w-full text-left p-3.5 bg-zinc-50 hover:bg-[#4CCD99]/30 border-2 border-black brutal-shadow-sm text-sm uppercase flex items-center justify-between">
+        <span>🎮 GAME LIST</span>
+        <span class="bg-[#4CCD99] text-black px-2 py-0.5 text-xs brutal-border-sm" id="countGameMods">0</span>
+      </button>
+
+      <button onclick="selectCategoryFilter('APK'); toggleSidebarDrawer()" class="w-full text-left p-3.5 bg-zinc-50 hover:bg-[#FF6B6B]/30 border-2 border-black brutal-shadow-sm text-sm uppercase flex items-center justify-between">
+        <span>📱 APK LIST</span>
+        <span class="bg-[#FF6B6B] text-black px-2 py-0.5 text-xs brutal-border-sm" id="countApkMods">0</span>
+      </button>
+
+      <!-- SEPARATOR -->
+      <div class="border-t-4 border-dashed border-black my-4 pt-4">
+        <h3 class="text-xs text-gray-500 uppercase tracking-widest mb-3">🔥 DAFTAR KATEGORI UNIK</h3>
+        <div id="dynamicTagsList" class="flex flex-wrap gap-2">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- SEPARATOR -->
+      <div class="border-t-4 border-dashed border-black my-4 pt-4">
+        <h3 class="text-xs text-gray-500 uppercase tracking-widest mb-3">📢 SALURAN SOSMED</h3>
+        <div class="space-y-2">
+          <a href="https://youtube.com/@axelufey" target="_blank" onclick="toggleSidebarDrawer()" class="block text-center p-2.5 bg-red-600 text-white border-2 border-black brutal-shadow-sm text-xs uppercase hover:translate-y-0.5">
+            🎥 YOUTUBE AXELUF
+          </a>
+          <a href="https://instagram.com/maxl3rd" target="_blank" onclick="toggleSidebarDrawer()" class="block text-center p-2.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white border-2 border-black brutal-shadow-sm text-xs uppercase hover:translate-y-0.5">
+            📸 INSTAGRAM
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BACKDROP OVERLAY UNTUK SIDEBAR -->
+  <div id="sidebarBackdrop" onclick="toggleSidebarDrawer()" class="hidden fixed inset-0 bg-black/60 z-40 transition-opacity duration-300"></div>
 
   <!-- ================= RETRO LOADING OVERLAY ================= -->
   <div id="loadingOverlay" class="fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-6 text-center select-none text-white transition-opacity duration-300">
@@ -232,11 +286,18 @@
     
     <!-- ================= NAVBAR / HEADER ================= -->
     <header class="bg-white text-black brutal-border brutal-shadow p-6 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-4 text-center sm:text-left flex-col sm:flex-row">
-        <!-- Logo / Avatar Utama -->
-        <div class="relative">
-          <img id="mainLogo" class="w-20 h-20 bg-emerald-400 brutal-border brutal-shadow-sm rounded-full object-cover" src="https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?auto=format&fit=crop&q=80&w=200" alt="Logo">
+      <div class="flex items-center gap-4 text-center sm:text-left flex-col sm:flex-row w-full sm:w-auto">
+        <!-- Hamburgers Menu Button & Logo -->
+        <div class="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-start">
+          <button onclick="toggleSidebarDrawer()" class="bg-[#FFECEC] text-black border-4 border-black p-3.5 brutal-shadow-sm brutal-btn hover:bg-yellow-300 font-extrabold text-2xl flex items-center justify-center" title="Buka Sidebar Menu">
+            ☰
+          </button>
+          
+          <div class="relative">
+            <img id="mainLogo" class="w-20 h-20 bg-emerald-400 brutal-border brutal-shadow-sm rounded-full object-cover" src="https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?auto=format&fit=crop&q=80&w=200" alt="Logo">
+          </div>
         </div>
+
         <div>
           <h1 id="mainTitleText" class="font-syne font-extrabold text-3xl tracking-tight uppercase">MOD CENTRAL</h1>
           <p id="mainSubtitleText" class="text-xs font-bold bg-[#FF8A08] inline-block px-3 py-1 brutal-border mt-1 rounded-sm text-black">
@@ -307,8 +368,8 @@
               <input type="text" id="modName" placeholder="Contoh: Mobile Legends Mod Skin" class="w-full brutal-border p-2.5 font-bold bg-white focus:outline-none text-black">
             </div>
             <div>
-              <label class="block font-bold mb-1 text-xs uppercase text-black">Kategori (Tag)</label>
-              <input type="text" id="modTag" placeholder="Contoh: GAME, UTILITY, PREMIUM" class="w-full brutal-border p-2.5 font-bold bg-white focus:outline-none text-black">
+              <label class="block font-bold mb-1 text-xs uppercase text-black">Kategori (Tag) - Pisahkan dengan koma untuk Multi-Tag</label>
+              <input type="text" id="modTag" placeholder="Contoh: GAME, APK, PREMIUM, SKIN" class="w-full brutal-border p-2.5 font-bold bg-white focus:outline-none text-black">
             </div>
             
             <div class="md:col-span-2">
@@ -477,6 +538,17 @@
 
     <!-- ================= VIEW 3: HALAMAN UTAMA (PUBLIC) ================= -->
     <main class="text-black">
+      <!-- Active Filter Indicator (NEW) -->
+      <div id="activeFilterBadge" class="hidden bg-black text-white p-4 mb-6 brutal-border brutal-shadow-sm flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🎯</span>
+          <span class="font-extrabold text-sm uppercase">Kategori Aktif: <span id="activeFilterLabel" class="text-[#FFDE4D] underline">GAME</span></span>
+        </div>
+        <button onclick="selectCategoryFilter('')" class="bg-[#FF6B6B] text-black brutal-border-sm hover:bg-red-400 font-extrabold text-xs px-3 py-1 uppercase active:translate-y-0.5">
+          Tampilkan Semua ✕
+        </button>
+      </div>
+
       <!-- Kolom Pencarian -->
       <section class="mb-8">
         <div class="bg-white brutal-border brutal-shadow flex items-center">
@@ -527,6 +599,9 @@
       _0x0e: "credits_supabase_db"              
     };
 
+    // --- GLOBAL STATE FOR CATEGORY FILTER (NEW) ---
+    let activeCategoryFilter = "";
+
     // --- SECURE CRYPTO UTILS ---
     function encodeSafe(str) {
       if (!str) return "";
@@ -544,6 +619,44 @@
       } catch (e) {
         return str; 
       }
+    }
+
+    // --- SIDEBAR DRAWER CONTROLLER (NEW) ---
+    function toggleSidebarDrawer() {
+      playSynth('click');
+      const drawer = document.getElementById('sidebarDrawer');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      
+      const isOpen = !drawer.classList.contains('-translate-x-full');
+      
+      if (isOpen) {
+        drawer.classList.add('-translate-x-full');
+        backdrop.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+      } else {
+        drawer.classList.remove('-translate-x-full');
+        backdrop.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+      }
+    }
+
+    // --- SELECT CATEGORY FILTER (NEW) ---
+    function selectCategoryFilter(category) {
+      playSynth('success');
+      activeCategoryFilter = category.trim().toUpperCase();
+      
+      const filterBadge = document.getElementById('activeFilterBadge');
+      const filterLabel = document.getElementById('activeFilterLabel');
+
+      if (activeCategoryFilter) {
+        filterLabel.innerText = activeCategoryFilter;
+        filterBadge.classList.remove('hidden');
+        filterBadge.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        filterBadge.classList.add('hidden');
+      }
+
+      renderPublicLinks();
     }
 
     // --- SUPABASE SINKRONISASI WRAPPER ---
@@ -709,11 +822,11 @@
     let activeDeleteIndex = null;
     let antiSpamCounter = 0;
 
-    // Default Mock Data jika Database Cloud Supabase masih kosong
+    // Default Mock Data
     const initialMockData = [
       {
         name: "Mobile Legends Mod Skin & Radar Map",
-        tag: "MLBB",
+        tag: "MLBB, GAME, SKIN",
         desc: "Unlock semua skin hero favoritmu secara aman, anti banned lengkap dengan radar map di pojok kiri atas. Patch Terbaru!",
         url: encodeSafe("https://www.mediafire.com/example-mlbb-mod"),
         password: encodeSafe("Password ada di menit ke-3 video!"),
@@ -727,22 +840,6 @@
         customButtons: [
           { label: "Cara Pasang", url: "https://youtube.com/@axelufey", iconType: "video" },
           { label: "Grup WA Mabar", url: "https://chat.whatsapp.com", iconType: "chat" }
-        ]
-      },
-      {
-        name: "Bus Simulator Indonesia (Bussid) Mod Jetbus 5",
-        tag: "BUSSID",
-        desc: "Mod Bus JB5 pariwisata super jernih, full strobo ngalir, lengkap dengan klakson basuri yang paling viral saat ini.",
-        url: encodeSafe("https://www.mediafire.com/example-bussid-jb5"),
-        password: encodeSafe("Tanpa password / Free download!"),
-        image: "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&q=80&w=800",
-        views: 894,
-        likes: 231,
-        comments: [
-          { name: "SopirOleng", text: "Strobonya keren banget pas dimainin malem-malem." }
-        ],
-        customButtons: [
-          { label: "Gameplay Mod", url: "https://youtube.com/@axelufey", iconType: "video" }
         ]
       }
     ];
@@ -764,7 +861,7 @@
       showToast(`Tema diganti ke: ${themeName.toUpperCase()}`, 'info');
     }
 
-    // --- DATA FETCHERS FROM SUPABASE CLOUD ---
+    // --- DATA FETCHERS WITH REAL-TIME VERCEL REDIS ---
     async function loadAllDataFromDB() {
       const overlay = document.getElementById('loadingOverlay');
 
@@ -786,12 +883,64 @@
       links = await cloudGet(_0x4f12._0x0d, initialMockData);
       renderPublicLinks();
       renderAdminTable();
+      calculateCategoryCounts();
 
-      // Sembunyikan Loading Overlay secara mulus
+      // Sembunyikan Loading Overlay setelah sinkronisasi selesai
       if (overlay) {
         overlay.style.opacity = '0';
         setTimeout(() => overlay.remove(), 300);
       }
+    }
+
+    // --- CALCULATE UNIQUE CATEGORIES & COUNTS (NEW) ---
+    function calculateCategoryCounts() {
+      let totalAll = links.length;
+      let totalGame = 0;
+      let totalApk = 0;
+      let uniqueTags = new Set();
+
+      links.forEach(item => {
+        // Safe Split Tags
+        const rawTags = item.tag ? item.tag.split(',') : [];
+        let hasGame = false;
+        let hasApk = false;
+
+        rawTags.forEach(t => {
+          const cleanTag = t.trim().toUpperCase();
+          if (cleanTag) {
+            uniqueTags.add(cleanTag);
+            if (cleanTag.includes("GAME")) hasGame = true;
+            if (cleanTag.includes("APK") || cleanTag.includes("APP") || cleanTag.includes("UTILITY")) hasApk = true;
+          }
+        });
+
+        if (hasGame) totalGame++;
+        if (hasApk) totalApk++;
+      });
+
+      document.getElementById('countAllMods').innerText = totalAll;
+      document.getElementById('countGameMods').innerText = totalGame;
+      document.getElementById('countApkMods').innerText = totalApk;
+
+      // Render Dynamic Tag Pills in the Sidebar Drawer
+      const container = document.getElementById('dynamicTagsList');
+      container.innerHTML = '';
+      
+      if (uniqueTags.size === 0) {
+        container.innerHTML = `<span class="text-xs italic text-gray-500">Belum ada kategori</span>`;
+        return;
+      }
+
+      uniqueTags.forEach(tag => {
+        const btn = document.createElement('button');
+        btn.onclick = () => {
+          selectCategoryFilter(tag);
+          toggleSidebarDrawer();
+        };
+        btn.className = "bg-[#4CCD99]/10 hover:bg-[#4CCD99]/30 text-xs px-2.5 py-1.5 brutal-border-sm font-bold uppercase transition-all duration-100";
+        btn.innerText = `#${tag}`;
+        container.appendChild(btn);
+      });
     }
 
     async function saveBranding() {
@@ -812,7 +961,7 @@
         await cloudSet("web_logo", logoUrl);
         document.getElementById('mainLogo').src = logoUrl;
       }
-      showToast("Setelan branding berhasil disinkronisasi ke Supabase Cloud!", "success");
+      showToast("Setelan branding berhasil disimpan ke Cloud Database!", "success");
     }
 
     // --- SECURE OBFUSCATED AUTHENTICATION CHECK ---
@@ -991,10 +1140,21 @@
       const searchQuery = document.getElementById('searchBar').value.toLowerCase();
       linkContainer.innerHTML = '';
 
+      // Advanced Multi-Tag & Search Query Filtering
       const filteredLinks = links.filter(item => {
-        return item.name.toLowerCase().includes(searchQuery) || 
-               item.tag.toLowerCase().includes(searchQuery) ||
-               item.desc.toLowerCase().includes(searchQuery);
+        const matchSearch = item.name.toLowerCase().includes(searchQuery) || 
+                            item.tag.toLowerCase().includes(searchQuery) ||
+                            item.desc.toLowerCase().includes(searchQuery);
+
+        if (!matchSearch) return false;
+
+        // Apply Sidebar Category Filter if any
+        if (activeCategoryFilter) {
+          const itemTags = item.tag ? item.tag.split(',').map(t => t.trim().toUpperCase()) : [];
+          return itemTags.includes(activeCategoryFilter);
+        }
+
+        return true;
       });
 
       if (filteredLinks.length === 0) {
@@ -1002,7 +1162,7 @@
           <div class="bg-white text-black brutal-border brutal-shadow p-8 text-center font-bold">
             <span class="text-4xl">🏜️</span>
             <p class="text-lg mt-2 uppercase font-syne">Mod Tidak Ditemukan!</p>
-            <p class="text-sm text-gray-500 font-normal mt-1">Coba cari dengan nama game/kategori lainnya.</p>
+            <p class="text-sm text-gray-500 font-normal mt-1">Coba cari dengan nama game atau reset filter kategori.</p>
           </div>
         `;
         return;
@@ -1014,6 +1174,22 @@
         const imageSrc = item.image ? item.image : 'https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?auto=format&fit=crop&q=80&w=800';
 
         const cardIndex = links.indexOf(item); 
+
+        // Split tags and render separately (NEW/FIXED)
+        let tagsHtml = "";
+        if (item.tag) {
+          const rawTags = item.tag.split(',');
+          rawTags.forEach(t => {
+            const cleanTag = t.trim();
+            if (cleanTag) {
+              tagsHtml += `
+                <button onclick="selectCategoryFilter('${cleanTag}')" class="bg-[#4CCD99] hover:bg-[#3dbd8c] transition-colors brutal-border-sm text-[10px] font-bold uppercase px-2 py-0.5 text-black">
+                  ${cleanTag}
+                </button>
+              `;
+            }
+          });
+        }
 
         let customButtonsHtml = "";
         if (item.customButtons && item.customButtons.length > 0) {
@@ -1057,8 +1233,8 @@
           <!-- Kolom Informasi Mod -->
           <div class="flex-1 flex flex-col justify-between self-stretch">
             <div>
-              <div class="flex items-center gap-2 mb-2">
-                <span class="bg-[#4CCD99] brutal-border text-xs font-bold uppercase px-2 py-0.5 text-black">${item.tag}</span>
+              <div class="flex flex-wrap gap-1.5 mb-2">
+                ${tagsHtml}
               </div>
               <h3 class="font-syne font-extrabold text-xl md:text-2xl uppercase mb-2 leading-tight">${item.name}</h3>
               <p class="text-sm text-gray-700 mb-4 leading-relaxed font-medium">${item.desc}</p>
@@ -1203,6 +1379,17 @@
 
       links.forEach((item, index) => {
         const imageSrc = item.image ? item.image : 'https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?auto=format&fit=crop&q=80&w=150';
+        
+        // Beautiful brutalist small multi-pills in table (NEW)
+        let pills = "";
+        if (item.tag) {
+          item.tag.split(',').forEach(t => {
+            if (t.trim()) {
+              pills += `<span class="bg-gray-200 px-1.5 py-0.5 border border-black text-[9px] uppercase text-black font-extrabold mr-1 rounded-sm">${t.trim()}</span>`;
+            }
+          });
+        }
+
         const tr = document.createElement('tr');
         tr.className = "border-b border-black hover:bg-gray-50";
         tr.innerHTML = `
@@ -1213,7 +1400,7 @@
             ${item.name}
           </td>
           <td class="p-3 border-r border-black">
-            <span class="bg-gray-200 px-2 py-0.5 brutal-border-sm text-[10px] uppercase text-black">${item.tag}</span>
+            <div class="flex flex-wrap gap-1">${pills}</div>
           </td>
           <td class="p-3">
             <div class="flex flex-col sm:flex-row gap-1.5">
@@ -1277,6 +1464,7 @@
         closeConfirmModal();
         renderPublicLinks();
         renderAdminTable();
+        calculateCategoryCounts();
         clearForm();
       }
     });
@@ -1319,7 +1507,7 @@
 
       const modData = {
         name,
-        tag: tag.toUpperCase(),
+        tag: tag.toUpperCase(), // Saved as uppercase string list for clean tag indexing
         desc,
         url: encodeSafe(url),
         password: encodeSafe(password || "Tanpa Password / Langsung Ekstrak"),
@@ -1343,6 +1531,7 @@
       clearForm();
       renderPublicLinks();
       renderAdminTable();
+      calculateCategoryCounts();
     }
 
     function editMod(index) {
