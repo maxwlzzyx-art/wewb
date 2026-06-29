@@ -362,10 +362,10 @@
     </div>
   </div>
 
-  <!-- ================= STICKY TOP NAVIGATION BAR (MENU GARIS TIGA UTAMA) ================= -->
-  <nav class="bg-white text-black brutal-border brutal-shadow p-4 sticky top-12 z-30 max-w-4xl mx-auto mt-4 flex items-center justify-between gap-4">
+  <!-- ================= TOP NAVIGATION BAR (TIDAK IKUT SCROLL - RELATIVE) ================= -->
+  <nav class="bg-white text-black brutal-border brutal-shadow p-4 relative z-30 max-w-4xl mx-auto mt-4 flex items-center justify-between gap-4">
     <div class="flex items-center gap-3">
-      <!-- TOMBOL GARIS TIGA (PERSISTEN, SELALU DI SINI) -->
+      <!-- TOMBOL GARIS TIGA -->
       <button onclick="toggleSidebarDrawer()" class="bg-[#FFECEC] text-black border-4 border-black p-3 brutal-shadow-sm brutal-btn hover:bg-yellow-300 font-extrabold text-2xl flex items-center justify-center h-12 w-12 shrink-0" title="Buka Sidebar Menu">
         ☰
       </button>
@@ -386,12 +386,12 @@
 
     <!-- ================= MODERN PROFILE SECTION WITH BANNER BEHIND IT ================= -->
     <div class="w-full bg-white brutal-border brutal-shadow mb-8 overflow-hidden relative">
-      <!-- YouTube Style Banner Background (DI BELAKANG PROFIL) -->
+      <!-- YouTube Style Banner Background -->
       <div id="webBannerWrapper" class="relative w-full h-48 sm:h-64 bg-zinc-900 border-b-4 border-black overflow-hidden flex items-center justify-center">
         <img id="webBannerImage" src="https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?auto=format&fit=crop&q=1200" alt="Banner YouTube" class="w-full h-full object-cover select-none">
       </div>
 
-      <!-- Container Profil & Deskripsi (Fleksibel & Posisi Dapat Diatur Admin) -->
+      <!-- Container Profil & Deskripsi -->
       <div id="headerProfileContainer" class="p-6 pt-0 relative flex flex-col items-start text-left gap-4">
         <!-- Avatar Foto Profil Bulat Menimpa Banner -->
         <div class="relative -mt-16 sm:-mt-20 z-10">
@@ -478,7 +478,7 @@
               <input type="text" id="modPassword" placeholder="Contoh: Password di Video Menit 04:20" class="w-full brutal-border p-2.5 font-bold bg-white focus:outline-none text-black">
             </div>
 
-            <!-- PERBAIKAN: FORM UNGGAL GAMBAR DAN FILTER RASIO YANG SEBELUMNYA CRASH -->
+            <!-- UNGGUL GAMBAR DAN FILTER RASIO -->
             <div>
               <label class="block font-bold mb-1 text-xs uppercase text-black">Link URL Gambar Mod</label>
               <input type="text" id="modImageUrl" placeholder="https://..." class="w-full brutal-border p-2.5 font-bold bg-white focus:outline-none text-black">
@@ -514,25 +514,59 @@
           </div>
 
           <!-- KUSTOMISASI TOMBOL AKSI -->
-          <div class="mt-6 p-4 border-4 border-black bg-zinc-50">
+          <div class="mt-6 p-4 border-4 border-black bg-zinc-50 text-black">
             <h4 class="font-syne font-extrabold text-sm uppercase mb-4 text-black border-b-2 border-black pb-2 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
               <span>🔗 Kustomisasi Tombol Aksi (Max 5 Link)</span>
-              <div class="flex flex-wrap gap-1.5">
-                <!-- PRESET QUICK LINKS -->
-                <button type="button" onclick="injectQuickLinkPreset('Cara Pasang', 'https://youtube.com/@axelufey', 'video')" class="bg-amber-300 hover:bg-amber-400 brutal-border-sm font-bold text-[10px] px-2 py-0.5 text-black">
-                  + Preset: Pasang
-                </button>
-                <button type="button" onclick="injectQuickLinkPreset('Grup WA Mabar', 'https://chat.whatsapp.com', 'chat')" class="bg-emerald-300 hover:bg-emerald-400 brutal-border-sm font-bold text-[10px] px-2 py-0.5 text-black">
-                  + Preset: Grup WA
-                </button>
-                <button type="button" onclick="addCustomLinkField()" class="bg-[#4CCD99] brutal-border-sm hover:bg-[#3ec08a] font-bold text-xs px-2.5 py-1 text-black">
-                  + Tambah Manual
-                </button>
-              </div>
+              <button type="button" onclick="addCustomLinkField()" class="bg-[#4CCD99] brutal-border-sm hover:bg-[#3ec08a] font-bold text-xs px-2.5 py-1 text-black">
+                + Tambah Tombol Manual
+              </button>
             </h4>
 
-            <div id="customLinksContainer" class="space-y-4">
+            <div id="customLinksContainer" class="space-y-4 mb-6">
               <!-- Field tombol dinamis dimasukkan di sini via JavaScript -->
+            </div>
+
+            <!-- NEW FEATURE: KELOLA PRESET TOMBOL CUSTOM (CLOUD PERSISTED) -->
+            <div class="border-t-4 border-dashed border-black pt-4">
+              <h5 class="font-extrabold text-xs uppercase mb-3 text-purple-700">⚙️ Kelola Preset Tombol Anda (Cloud Persisted)</h5>
+              
+              <!-- Form Save/Edit Preset -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 bg-purple-50 p-3 border-2 border-black mb-4">
+                <input type="hidden" id="editPresetIndex" value="">
+                <div>
+                  <label class="block text-[9px] font-bold uppercase text-purple-900">Teks Preset</label>
+                  <input type="text" id="presetLabel" placeholder="Cara Pasang" class="w-full brutal-border-sm p-1.5 text-xs font-bold bg-white focus:outline-none text-black">
+                </div>
+                <div>
+                  <label class="block text-[9px] font-bold uppercase text-purple-900">URL Preset</label>
+                  <input type="text" id="presetUrl" placeholder="https://..." class="w-full brutal-border-sm p-1.5 text-xs font-bold bg-white focus:outline-none text-black">
+                </div>
+                <div class="flex items-end gap-1.5">
+                  <div class="flex-1">
+                    <label class="block text-[9px] font-bold uppercase text-purple-900">Pilih Ikon</label>
+                    <select id="presetIcon" class="w-full brutal-border-sm p-1.5 text-xs font-bold bg-white focus:outline-none text-black">
+                      <option value="video">🎥 Tutorial Video</option>
+                      <option value="download">📥 Download File</option>
+                      <option value="chat">💬 Obrolan / Grup</option>
+                      <option value="key">🔑 Password / Key</option>
+                      <option value="globe">🌐 Situs Web</option>
+                    </select>
+                  </div>
+                  <div class="flex gap-1">
+                    <button type="button" onclick="saveCustomPreset()" id="btnSavePreset" class="bg-purple-600 hover:bg-purple-700 text-white font-bold px-3 py-1.5 text-xs brutal-border-sm">
+                      Simpan
+                    </button>
+                    <button type="button" onclick="clearPresetForm()" id="btnCancelPreset" class="hidden bg-gray-200 text-black font-bold px-2 py-1.5 text-xs brutal-border-sm">
+                      Batal
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- List Quick Presets -->
+              <div id="customPresetButtonList" class="flex flex-wrap gap-2">
+                <!-- Preset buttons rendered via JS -->
+              </div>
             </div>
           </div>
 
@@ -600,7 +634,7 @@
           </button>
         </div>
 
-        <!-- NEW FEATURE: SETTING RUNNING TEXT & TIMEOUT SAFELINK -->
+        <!-- SETTING RUNNING TEXT & TIMEOUT SAFELINK -->
         <div class="bg-white brutal-border brutal-shadow-sm p-5">
           <h3 class="font-syne font-extrabold text-lg uppercase mb-4 text-[#FF55BB]">📢 Pengaturan Pengumuman & Safelink</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -809,10 +843,11 @@
       _0x0f: "pinned_tags_db" 
     };
 
-    // --- GLOBAL STATE FOR CATEGORY FILTER & PINNING ---
+    // --- GLOBAL STATE ---
     let activeCategoryFilter = "";
     let pinnedTags = [];
-    let safelinkTimerValue = 5; // Default hitung mundur safelink (5 detik)
+    let safelinkTimerValue = 5; 
+    let customPresets = []; // Global state kustom preset tombol
 
     // --- SECURE CRYPTO UTILS ---
     function encodeSafe(str) {
@@ -1047,8 +1082,6 @@
         imageRatio: "aspect-video object-cover", 
         views: 384,
         likes: 120,
-        workVotes: 45,       // New: Polling counter "Work"
-        brokenVotes: 2,      // New: Polling counter "Butuh Update"
         comments: [
           { name: "Rian_Slayer", text: "Mantap bang langsung work di akun smurf gua!" },
           { name: "BocilMaju", text: "Password dapet di menit ke 4 guys, tonton dlu!" }
@@ -1067,6 +1100,12 @@
     ];
 
     const initialPinnedTags = ["MLBB", "GAME", "APK"];
+
+    // Default Custom Button Presets
+    const initialCustomPresets = [
+      { label: "Cara Pasang", url: "https://youtube.com/@axelufey", iconType: "video" },
+      { label: "Grup WA Mabar", url: "https://chat.whatsapp.com", iconType: "chat" }
+    ];
 
     function triggerScreenShake() {
       document.body.classList.add('shake');
@@ -1122,6 +1161,10 @@
 
       safelinkTimerValue = parseInt(await cloudGet("web_safelink_time", "5"));
       document.getElementById('setSafelinkTime').value = safelinkTimerValue;
+
+      // Load custom presets
+      customPresets = await cloudGet("web_custom_presets_db", initialCustomPresets);
+      renderCustomPresets();
 
       // Pinned Tags
       pinnedTags = await cloudGet(_0x4f12._0x0f, initialPinnedTags);
@@ -1522,7 +1565,115 @@
     // --- SUNTIK TOMBOL PRESET CEPAT ---
     function injectQuickLinkPreset(label, url, iconType) {
       addCustomLinkField(label, url, iconType);
-      showToast(`Preset "${label}" ditambahkan ke form kustomisasi tombol!`, 'success');
+      showToast(`Tombol "${label}" ditambahkan ke form kustomisasi!`, 'success');
+    }
+
+    // --- DYNAMIC CUSTOM PRESET SAVE / EDIT / DELETE ENGINE ---
+    async function saveCustomPreset() {
+      const label = document.getElementById('presetLabel').value.trim();
+      const url = document.getElementById('presetUrl').value.trim();
+      const iconType = document.getElementById('presetIcon').value;
+      const editIndex = document.getElementById('editPresetIndex').value;
+
+      if (!label || !url) {
+        showToast("Teks preset dan URL preset wajib diisi!", "error");
+        return;
+      }
+
+      playSynth('success');
+      const presetData = { label, url, iconType };
+
+      if (editIndex !== "") {
+        customPresets[parseInt(editIndex)] = presetData;
+        showToast("Preset tombol berhasil diperbarui!", "success");
+      } else {
+        customPresets.push(presetData);
+        showToast("Preset tombol baru berhasil disimpan!", "success");
+      }
+
+      await cloudSet("web_custom_presets_db", customPresets);
+      clearPresetForm();
+      renderCustomPresets();
+    }
+
+    function editCustomPreset(index, event) {
+      if (event) event.stopPropagation();
+      playSynth('click');
+      const item = customPresets[index];
+      
+      document.getElementById('presetLabel').value = item.label;
+      document.getElementById('presetUrl').value = item.url;
+      document.getElementById('presetIcon').value = item.iconType;
+      document.getElementById('editPresetIndex').value = index;
+
+      document.getElementById('btnSavePreset').innerText = "Update";
+      document.getElementById('btnCancelPreset').classList.remove('hidden');
+    }
+
+    async function deleteCustomPreset(index, event) {
+      if (event) event.stopPropagation();
+      playSynth('delete');
+      const removed = customPresets[index].label;
+      customPresets.splice(index, 1);
+
+      await cloudSet("web_custom_presets_db", customPresets);
+      showToast(`Preset "${removed}" dihapus dari database!`, "info");
+      clearPresetForm();
+      renderCustomPresets();
+    }
+
+    function clearPresetForm() {
+      document.getElementById('presetLabel').value = "";
+      document.getElementById('presetUrl').value = "";
+      document.getElementById('presetIcon').selectedIndex = 0;
+      document.getElementById('editPresetIndex').value = "";
+      document.getElementById('btnSavePreset').innerText = "Simpan";
+      document.getElementById('btnCancelPreset').classList.add('hidden');
+    }
+
+    function renderCustomPresets() {
+      const container = document.getElementById('customPresetButtonList');
+      container.innerHTML = "";
+
+      if (customPresets.length === 0) {
+        container.innerHTML = `<span class="text-xs italic text-gray-400">Belum ada preset kustom yang disimpan.</span>`;
+        return;
+      }
+
+      customPresets.forEach((c, index) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = "flex items-center bg-white border-2 border-black text-xs font-bold brutal-shadow-sm p-1.5 gap-2 hover:bg-purple-100 transition-colors";
+
+        const triggerBtn = document.createElement('button');
+        triggerBtn.type = "button";
+        triggerBtn.onclick = () => injectQuickLinkPreset(c.label, c.url, c.iconType);
+        triggerBtn.className = "hover:text-purple-700 uppercase flex items-center gap-1.5 flex-1 select-none text-left";
+        
+        let iconHtml = SVG_ICONS[c.iconType] || "🔗";
+        triggerBtn.innerHTML = `<span>${iconHtml}</span> <span>${c.label}</span>`;
+
+        const divider = document.createElement('span');
+        divider.className = "text-zinc-400";
+        divider.innerText = "|";
+
+        const editBtn = document.createElement('button');
+        editBtn.type = "button";
+        editBtn.onclick = (e) => editCustomPreset(index, e);
+        editBtn.className = "text-blue-600 hover:underline px-1 text-[10px]";
+        editBtn.innerText = "EDIT";
+
+        const delBtn = document.createElement('button');
+        delBtn.type = "button";
+        delBtn.onclick = (e) => deleteCustomPreset(index, e);
+        delBtn.className = "text-red-500 hover:underline px-1 text-[10px]";
+        delBtn.innerText = "HAPUS";
+
+        wrapper.appendChild(triggerBtn);
+        wrapper.appendChild(divider);
+        wrapper.appendChild(editBtn);
+        wrapper.appendChild(delBtn);
+        container.appendChild(wrapper);
+      });
     }
 
     // --- DYNAMIC LINKS (MAX 5) ---
@@ -1604,7 +1755,7 @@
       }
     }
 
-    // --- NEW: PREMIUM SAFELINK DOWNLOAD MODAL ---
+    // --- PREMIUM SAFELINK DOWNLOAD MODAL ---
     let safelinkInterval = null;
     function openSafelinkModal(targetUrl) {
       playSynth('success');
@@ -1650,27 +1801,6 @@
     function closeSafelinkModal() {
       if (safelinkInterval) clearInterval(safelinkInterval);
       document.getElementById('safelinkModal').classList.add('hidden');
-    }
-
-    // --- NEW: VOTE MOD ACTIVE STATUS ---
-    async function voteModStatus(index, isWork) {
-      playSynth('success');
-      if (localStorage.getItem(`voted_mod_${index}`)) {
-        showToast("Kamu sudah mengirim feedback untuk mod ini!", "error");
-        return;
-      }
-
-      if (isWork) {
-        links[index].workVotes = (links[index].workVotes || 0) + 1;
-        showToast("Feedback terkirim: Mod Berfungsi! Terima kasih.", "success");
-      } else {
-        links[index].brokenVotes = (links[index].brokenVotes || 0) + 1;
-        showToast("Feedback terkirim: Butuh Update segera dilaporkan ke Axeluf!", "info");
-      }
-
-      localStorage.setItem(`voted_mod_${index}`, "true");
-      await cloudSet(_0x4f12._0x0d, links);
-      renderPublicLinks();
     }
 
     // --- CORE RENDERING CARDS (PUBLIC VIEW) ---
@@ -1760,95 +1890,96 @@
         const userLikesCount = parseInt(localStorage.getItem(`like_count_card_${cardIndex}`) || '0');
         const isLikeDisabled = userLikesCount >= 10 ? "disabled" : "";
 
-        const workCount = item.workVotes || 0;
-        const brokenCount = item.brokenVotes || 0;
-        const totalVotes = workCount + brokenCount;
-        const workPercentage = totalVotes > 0 ? Math.round((workCount / totalVotes) * 100) : 100;
-
         const card = document.createElement('div');
-        card.className = "bg-white text-black brutal-border brutal-shadow p-6 flex flex-col lg:flex-row gap-6 items-stretch";
+        card.className = "bg-white text-black brutal-border brutal-shadow overflow-hidden flex flex-col";
         
         card.innerHTML = `
-          <!-- Kolom Foto Proporsional yang Dinamis Sesuai Pengaturan Rasio Admin -->
-          <div class="w-full lg:w-72 shrink-0 brutal-border bg-zinc-100 overflow-hidden relative shadow-inner flex items-center justify-center">
-            <img src="${imageSrc}" alt="Screenshot Mod" class="w-full ${ratioClass} transition-transform duration-200 hover:scale-[1.03]">
-          </div>
-
-          <!-- Kolom Informasi Mod -->
-          <div class="flex-1 flex flex-col justify-between">
-            <div>
-              <div class="flex flex-wrap gap-1.5 mb-2">
-                ${tagsHtml}
-                <!-- New: Badge Persentase Work Keaktifan -->
-                <span class="bg-emerald-500 text-black border-2 border-black text-[10px] font-extrabold px-1.5 py-0.5 rounded-sm">
-                  🔥 ${workPercentage}% WORK
-                </span>
-              </div>
-              <h3 class="font-syne font-extrabold text-xl md:text-2xl uppercase mb-2 leading-tight">${item.name}</h3>
-              <p class="text-sm text-gray-700 mb-4 leading-relaxed font-medium whitespace-pre-wrap">${item.desc}</p>
+          <!-- Browser Retro Top Header Decoration with 3 dots -->
+          <div class="bg-black text-white px-4 py-2.5 flex items-center justify-between brutal-border-b font-mono text-xs select-none">
+            <!-- Window Circles (Red, Yellow, Green) -->
+            <div class="flex items-center gap-1.5 shrink-0">
+              <span class="w-3 h-3 rounded-full bg-[#FF6B6B] border-2 border-black inline-block"></span>
+              <span class="w-3 h-3 rounded-full bg-[#FFDE4D] border-2 border-black inline-block"></span>
+              <span class="w-3 h-3 rounded-full bg-[#4CCD99] border-2 border-black inline-block"></span>
             </div>
             
-            <div class="space-y-4">
-              <!-- Password Area -->
-              <div class="bg-[#FFF5C3] brutal-border p-3 flex items-center gap-2 text-xs font-bold text-orange-800">
-                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                <span>PASSWORD: ${decryptedPassword}</span>
-              </div>
+            <!-- Address Bar / Path (Tengah) -->
+            <div class="bg-zinc-900 border border-zinc-700 rounded px-3 py-0.5 text-[10px] text-zinc-400 font-extrabold tracking-wide truncate max-w-[140px] sm:max-w-xs md:max-w-md">
+              axeluf.co/portal/mod-${cardIndex}
+            </div>
 
-              <!-- FEEDBACK POLLING AREA -->
-              <div class="border-2 border-black p-3 bg-zinc-50 flex flex-col sm:flex-row justify-between items-center gap-3">
-                <span class="text-xs font-extrabold uppercase">Apakah Mod ini berfungsi?</span>
-                <div class="flex gap-2">
-                  <button onclick="voteModStatus(${cardIndex}, true)" class="bg-[#4CCD99] px-2.5 py-1.5 brutal-border-sm hover:translate-y-0.5 font-bold text-[10px] uppercase text-black flex items-center gap-1">
-                    🟢 WORK (${workCount})
+            <!-- Stylized Titik 3 / Windows-Browser Ellipsis Menu (Kanan) -->
+            <div class="flex items-center gap-2 cursor-pointer text-zinc-400 hover:text-yellow-300 transition-colors font-extrabold text-lg select-none leading-none pr-1">
+              ⋮
+            </div>
+          </div>
+
+          <!-- Card Body Content -->
+          <div class="p-6 flex flex-col lg:flex-row gap-6 items-stretch">
+            <!-- Kolom Foto Proporsional -->
+            <div class="w-full lg:w-72 shrink-0 brutal-border bg-zinc-100 overflow-hidden relative shadow-inner flex items-center justify-center">
+              <img src="${imageSrc}" alt="Screenshot Mod" class="w-full ${ratioClass} transition-transform duration-200 hover:scale-[1.03]">
+            </div>
+
+            <!-- Kolom Informasi Mod -->
+            <div class="flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex flex-wrap gap-1.5 mb-2">
+                  ${tagsHtml}
+                </div>
+                <h3 class="font-syne font-extrabold text-xl md:text-2xl uppercase mb-2 leading-tight">${item.name}</h3>
+                <p class="text-sm text-gray-700 mb-4 leading-relaxed font-medium whitespace-pre-wrap">${item.desc}</p>
+              </div>
+              
+              <div class="space-y-4">
+                <!-- Password Area -->
+                <div class="bg-[#FFF5C3] brutal-border p-3 flex items-center gap-2 text-xs font-bold text-orange-800">
+                  <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                  <span>PASSWORD: ${decryptedPassword}</span>
+                </div>
+
+                <!-- Button Actions -->
+                <div class="flex flex-col sm:flex-row flex-wrap gap-2">
+                  <button onclick="handleActionClick(${cardIndex}, '${decryptedUrl}', true)" class="flex-1 text-center bg-[#FF6B6B] font-bold text-xs uppercase py-3 px-4 brutal-border brutal-shadow-sm brutal-btn flex items-center justify-center gap-2 text-black">
+                    ${SVG_ICONS.download} <span>DOWNLOAD APK MOD</span>
                   </button>
-                  <button onclick="voteModStatus(${cardIndex}, false)" class="bg-red-500 text-white px-2.5 py-1.5 brutal-border-sm hover:translate-y-0.5 font-bold text-[10px] uppercase flex items-center gap-1">
-                    🔴 UPDATE (${brokenCount})
-                  </button>
-                </div>
-              </div>
-
-              <!-- Button Actions (Menggunakan Safelink Download Interaktif Baru) -->
-              <div class="flex flex-col sm:flex-row flex-wrap gap-2">
-                <button onclick="handleActionClick(${cardIndex}, '${decryptedUrl}', true)" class="flex-1 text-center bg-[#FF6B6B] font-bold text-xs uppercase py-3 px-4 brutal-border brutal-shadow-sm brutal-btn flex items-center justify-center gap-2 text-black">
-                  ${SVG_ICONS.download} <span>DOWNLOAD APK MOD</span>
-                </button>
-                ${customButtonsHtml}
-              </div>
-
-              <!-- REAL-TIME INTERACTION PANEL -->
-              <div class="border-t-2 border-dashed border-black pt-3 flex flex-col gap-3">
-                <div class="flex justify-between items-center text-xs font-bold text-gray-600">
-                  <div class="flex items-center gap-1.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                    <span id="view-counter-${cardIndex}">${item.views || 0}</span> kali dilihat
-                  </div>
-                  <div class="flex items-center gap-4">
-                    <button onclick="likeMod(${cardIndex})" ${isLikeDisabled} class="flex items-center gap-1.5 bg-[#FFECEC] px-3 py-1.5 brutal-border-sm brutal-btn-sm text-[10px] text-black disabled:opacity-50 disabled:cursor-not-allowed">
-                      ❤️ <span>${item.likes || 0}</span> Suka (${userLikesCount}/10)
-                    </button>
-                    <button onclick="toggleCommentsSection(${cardIndex})" class="flex items-center gap-1 bg-zinc-100 px-2 py-1 brutal-border-sm brutal-btn-sm text-[10px] text-black">
-                      💬 Komentar
-                    </button>
-                  </div>
+                  ${customButtonsHtml}
                 </div>
 
-                <!-- Komentar Panel Section -->
-                <div id="comments-panel-${cardIndex}" class="hidden bg-zinc-50 border-2 border-black p-3 text-black">
-                  <h4 class="font-bold text-xs uppercase mb-2 border-b border-black pb-1">Kolom Diskusi Komentar</h4>
-                  <div class="max-h-28 overflow-y-auto bg-white border border-black mb-3 divide-y divide-gray-200">
-                    ${commentsListHtml}
+                <!-- REAL-TIME INTERACTION PANEL -->
+                <div class="border-t-2 border-dashed border-black pt-3 flex flex-col gap-3">
+                  <div class="flex justify-between items-center text-xs font-bold text-gray-600">
+                    <div class="flex items-center gap-1.5">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                      <span id="view-counter-${cardIndex}">${item.views || 0}</span> kali dilihat
+                    </div>
+                    <div class="flex items-center gap-4">
+                      <button onclick="likeMod(${cardIndex})" ${isLikeDisabled} class="flex items-center gap-1.5 bg-[#FFECEC] px-3 py-1.5 brutal-border-sm brutal-btn-sm text-[10px] text-black disabled:opacity-50 disabled:cursor-not-allowed">
+                        ❤️ <span>${item.likes || 0}</span> Suka (${userLikesCount}/10)
+                      </button>
+                      <button onclick="toggleCommentsSection(${cardIndex})" class="flex items-center gap-1 bg-zinc-100 px-2 py-1 brutal-border-sm brutal-btn-sm text-[10px] text-black">
+                        💬 Komentar
+                      </button>
+                    </div>
                   </div>
-                  <div class="flex flex-col sm:flex-row gap-1.5">
-                    <input type="text" id="comm-name-${cardIndex}" placeholder="Nama..." class="brutal-border-sm p-1.5 text-xs font-bold bg-white focus:outline-none w-full sm:w-28 text-black">
-                    <input type="text" id="comm-text-${cardIndex}" placeholder="Tulis komentar..." class="flex-1 brutal-border-sm p-1.5 text-xs font-bold bg-white focus:outline-none text-black">
-                    <button onclick="submitComment(${cardIndex})" class="bg-[#4CCD99] hover:bg-[#3ec08a] font-bold text-xs uppercase py-1.5 px-3 brutal-border-sm brutal-btn-sm text-black">
-                      Kirim
-                    </button>
+
+                  <!-- Komentar Panel Section -->
+                  <div id="comments-panel-${cardIndex}" class="hidden bg-zinc-50 border-2 border-black p-3 text-black">
+                    <h4 class="font-bold text-xs uppercase mb-2 border-b border-black pb-1">Kolom Diskusi Komentar</h4>
+                    <div class="max-h-28 overflow-y-auto bg-white border border-black mb-3 divide-y divide-gray-200">
+                      ${commentsListHtml}
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-1.5">
+                      <input type="text" id="comm-name-${cardIndex}" placeholder="Nama..." class="brutal-border-sm p-1.5 text-xs font-bold bg-white focus:outline-none w-full sm:w-28 text-black">
+                      <input type="text" id="comm-text-${cardIndex}" placeholder="Tulis komentar..." class="flex-1 brutal-border-sm p-1.5 text-xs font-bold bg-white focus:outline-none text-black">
+                      <button onclick="submitComment(${cardIndex})" class="bg-[#4CCD99] hover:bg-[#3ec08a] font-bold text-xs uppercase py-1.5 px-3 brutal-border-sm brutal-btn-sm text-black">
+                        Kirim
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
 
+              </div>
             </div>
           </div>
         `;
@@ -1991,7 +2122,7 @@
         a.style.backgroundColor = c.color || '#4CCD99';
         a.className = "px-4 py-2 brutal-border brutal-shadow-sm brutal-btn-sm flex items-center gap-2 text-xs uppercase text-black font-bold";
         
-       let socialIcon = "";
+        let socialIcon = "";
         if (c.platform.toLowerCase().includes('youtube')) {
           socialIcon = `<svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.163a3.003 3.003 0 00-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.517 0-9.388.508a3.003 3.003 0 00-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 002.11 2.11c1.871.508 9.388.508 9.388.508s7.517 0 9.388-.508a3.003 3.003 0 002.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`;
         } else if (c.platform.toLowerCase().includes('instagram')) {
@@ -2049,7 +2180,7 @@
     async function saveMod() {
       const name = document.getElementById('modName').value.trim();
       const tag = document.getElementById('modTag').value.trim();
-      const desc = document.getElementById('modDesc').value; // Mengambil string desc mentah
+      const desc = document.getElementById('modDesc').value; 
       const url = document.getElementById('modUrl').value.trim();
       const password = document.getElementById('modPassword').value.trim();
       const imageUrlInput = document.getElementById('modImageUrl').value.trim();
@@ -2071,16 +2202,12 @@
       let likesToSave = manualLikes;
       let commentsToSave = [];
       let finalImg = imageUrlInput;
-      let workVotesToSave = 0;
-      let brokenVotesToSave = 0;
 
       if (editIndex !== "") {
         const oldItem = links[parseInt(editIndex)];
         viewsToSave = manualViews !== 0 ? manualViews : (oldItem.views || 0);
         likesToSave = manualLikes !== 0 ? manualLikes : (oldItem.likes || 0);
         commentsToSave = oldItem.comments || [];
-        workVotesToSave = oldItem.workVotes || 0;
-        brokenVotesToSave = oldItem.brokenVotes || 0;
         if (!finalImg) finalImg = oldItem.image;
       }
 
@@ -2095,8 +2222,6 @@
           imageRatio: imageRatio,
           views: viewsToSave,
           likes: likesToSave,
-          workVotes: workVotesToSave,
-          brokenVotes: brokenVotesToSave,
           comments: commentsToSave,
           customButtons: customButtons
         };
@@ -2217,12 +2342,6 @@
       localStorage.removeItem('banned_client_status');
       document.getElementById('banScreen').classList.add('hidden');
       showToast("Akses dipulihkan! Jangan spam lagi ya.", "success");
-    }
-
-    function clearAllBans() {
-      playSynth('success');
-      localStorage.removeItem('banned_client_status');
-      showToast("Daftar ban dibersihkan!", "success");
     }
 
     // --- INIT APPLICATION RUNTIME ---
