@@ -193,18 +193,18 @@
         .bg-green-gelap { background-color: #2E8B6E; }
         .text-hitam { color: #000000; }
         .border-hitam { border-color: #000000; }
-        #loadingOverlay { transition: opacity 0.5s ease; }
-        #loadingProgress { transition: width 0.15s linear; }
+        #loadingOverlay { transition: opacity 0.5s ease; z-index: 9999; }
+        #loadingProgress { transition: width 0.2s linear; }
     </style>
 </head>
 <body>
 
     <!-- LOADING SCREEN -->
-    <div id="loadingOverlay" class="fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-6 text-center select-none">
+    <div id="loadingOverlay" class="fixed inset-0 bg-black/80 z-[9999] flex items-center justify-center p-6 text-center select-none">
         <div class="bg-white brutal-border brutal-shadow p-8 max-w-md w-full text-black">
             <h2 class="font-syne font-extrabold text-2xl uppercase tracking-tight">LOADING PAGE</h2>
             <div class="w-full bg-gray-200 brutal-border-sm h-6 mt-4 relative overflow-hidden rounded-xl">
-                <div id="loadingProgress" class="bg-[#4CCD99] h-full transition-all duration-100" style="width: 0%"></div>
+                <div id="loadingProgress" class="bg-[#4CCD99] h-full transition-all duration-200" style="width: 0%"></div>
                 <div class="absolute inset-0 flex items-center justify-center text-xs font-extrabold" id="loadingProgressText">0%</div>
             </div>
             <p class="text-xs font-bold mt-4 text-gray-600">Menyiapkan data dari Supabase...</p>
@@ -799,11 +799,12 @@
         }
 
         // ======================================================================
-        // LOADING SCREEN CONTROLLER
+        // LOADING SCREEN CONTROLLER (menunggu data selesai)
         // ======================================================================
         let loadingResolve = null;
         let loadingProgress = 0;
         let loadingInterval = null;
+        let isDataLoaded = false;
 
         function showLoading() {
             const overlay = document.getElementById('loadingOverlay');
@@ -811,11 +812,11 @@
             overlay.style.opacity = '1';
             loadingProgress = 0;
             updateLoadingProgress(0);
-            // Mulai animasi progress sampai 90% (sisanya akan diisi saat data selesai)
+            // Animasi progress sampai 90% (sisanya akan diisi saat data selesai)
             if (loadingInterval) clearInterval(loadingInterval);
             loadingInterval = setInterval(() => {
                 if (loadingProgress < 90) {
-                    loadingProgress += Math.random() * 3 + 0.5;
+                    loadingProgress += Math.random() * 2 + 0.5;
                     if (loadingProgress > 90) loadingProgress = 90;
                     updateLoadingProgress(loadingProgress);
                 }
@@ -847,7 +848,7 @@
         }
 
         // ======================================================================
-        // DATA LOADER (dengan loading screen)
+        // DATA LOADER (dengan loading screen yang menunggu data)
         // ======================================================================
         async function loadAllDataFromDB() {
             try {
@@ -949,24 +950,948 @@
                     setAdminState(true);
                 }
 
-                // Sembunyikan loading setelah semua data siap
+                // Data selesai, hilangkan loading
+                isDataLoaded = true;
                 hideLoading();
 
             } catch (err) {
                 console.error("Gagal memuat data dari Supabase:", err);
                 showToast("Terjadi kesalahan saat sinkronisasi data.", "error");
                 // Tetap hilangkan loading walau error
+                isDataLoaded = true;
                 hideLoading();
             }
         }
 
         // ======================================================================
-        // OTHER FUNCTIONS (render, admin, CRUD, dll) 
+        // FUNGSI LAINNYA (render, admin, CRUD, dll)
         // ======================================================================
-        // ... (semua fungsi lainnya tetap sama seperti sebelumnya)
-        // Karena keterbatasan ruang, saya tidak menulis ulang semua fungsi di sini,
-        // tapi pastikan semua fungsi yang diperlukan ada dalam kode final.
+
+        function updateBroadcastBanner(rawText) {
+            const container = document.getElementById('broadcastTextContainer');
+            container.innerHTML = '';
+            const items = rawText.split('|');
+            items.forEach(text => {
+                if (text.trim()) {
+                    const span = document.createElement('span');
+                    span.className = "inline-block mr-12";
+                    span.innerText = text.trim();
+                    container.appendChild(span);
+                }
+            });
+        }
+
+        function calculateCategoryCounts() {
+            let totalAll = links.length;
+            let uniqueTags = new Set();
+            links.forEach(item => {
+                const rawTags = item.tag ? item.tag.split(',') : [];
+                rawTags.forEach(t => {
+                    const cleanTag = t.trim().toUpperCase();
+                    if (cleanTag) uniqueTags.add(cleanTag);
+                });
+            });
+            document.getElementById('countAllMods').innerText = totalAll;
+            const container = document.getElementById('dynamicTagsList');
+            container.innerHTML = '';
+            if (uniqueTags.size === 0) {
+                container.innerHTML = `<span class="text-xs italic text-gray-500">Belum ada kategori</span>`;
+                return;
+            }
+            uniqueTags.forEach(tag => {
+                if (pinnedTags.map(pt => pt.toUpperCase()).includes(tag)) return;
+                let count = 0;
+                links.forEach(item => {
+                    const itemTags = item.tag ? item.tag.split(',').map(t => t.trim().toUpperCase()) : [];
+                    if (itemTags.includes(tag)) count++;
+                });
+                const wrapper = document.createElement('div');
+                wrapper.className =
+                    "w-full flex items-center justify-between gap-1 bg-zinc-100 hover:bg-[#A3FFD6]/40 border-2 border-black p-2.5 text-xs brutal-shadow-sm rounded-xl";
+                const btn = document.createElement('button');
+                btn.onclick = () => { selectCategoryFilter(tag);
+                    toggleSidebarDrawer(); };
+                btn.className = "text-left font-extrabold uppercase flex-1 text-black truncate";
+                btn.innerText = `# ${tag}`;
+                const counterSpan = document.createElement('span');
+                counterSpan.className = "bg-black text-white text-[10px] font-bold px-1.5 py-0.5 brutal-border-sm";
+                counterSpan.innerText = count;
+                wrapper.appendChild(btn);
+                wrapper.appendChild(counterSpan);
+                container.appendChild(wrapper);
+            });
+        }
+
+        function renderPinnedTagsList() {
+            const sidebarContainer = document.getElementById('pinnedTagsList');
+            const adminContainer = document.getElementById('pinnedTagsAdminList');
+            sidebarContainer.innerHTML = '';
+            adminContainer.innerHTML = '';
+            if (pinnedTags.length === 0) {
+                sidebarContainer.innerHTML = `<span class="text-xs italic text-gray-400">Belum ada pin kategori</span>`;
+                adminContainer.innerHTML = `<span class="text-xs italic text-gray-500">Belum ada kategori yang disematkan</span>`;
+                return;
+            }
+            pinnedTags.forEach((tag, index) => {
+                const cleanTag = tag.trim().toUpperCase();
+                let count = 0;
+                links.forEach(item => {
+                    const itemTags = item.tag ? item.tag.split(',').map(t => t.trim().toUpperCase()) : [];
+                    if (itemTags.includes(cleanTag)) count++;
+                });
+                const wrapper = document.createElement('div');
+                wrapper.className =
+                    "w-full flex items-center justify-between gap-1 bg-[#A3FFD6] hover:bg-[#8AE8C0] border-2 border-black p-2.5 text-xs brutal-shadow-sm rounded-xl";
+                const btn = document.createElement('button');
+                btn.onclick = () => { selectCategoryFilter(cleanTag);
+                    toggleSidebarDrawer(); };
+                btn.className = "text-left font-extrabold uppercase flex-1 text-black flex items-center gap-1.5 truncate";
+                btn.innerHTML = `
+                    <svg class="w-4 h-4 text-[#2E8B6E] shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M16 12V4h1V2H7v2h1v8l-2 2v2h5.2v6h1.6v-6H18v-2l-2-2z"/></svg>
+                    <span>${cleanTag}</span>
+                  `;
+                const counterSpan = document.createElement('span');
+                counterSpan.className =
+                    "bg-[#2E8B6E] text-white text-[10px] font-bold px-1.5 py-0.5 brutal-border-sm rounded-full";
+                counterSpan.innerText = count;
+                wrapper.appendChild(btn);
+                wrapper.appendChild(counterSpan);
+                sidebarContainer.appendChild(wrapper);
+                const adminPill = document.createElement('div');
+                adminPill.className =
+                    "bg-[#A3FFD6] border-2 border-black p-2 text-xs font-bold flex items-center gap-2 text-black rounded-xl";
+                adminPill.innerHTML = `
+                    <span>📌 ${cleanTag}</span>
+                    <button onclick="unpinTag(${index})" class="bg-[#2E8B6E] text-white font-extrabold px-1.5 py-0.5 hover:bg-[#1f6b52] brutal-border-sm text-[10px] rounded-full">✕</button>
+                  `;
+                adminContainer.appendChild(adminPill);
+            });
+        }
+
+        async function addPinnedTag() {
+            const tagInput = document.getElementById('pinTagName').value.trim();
+            if (!tagInput) { showToast("Masukkan nama kategori terlebih dahulu!", "error"); return; }
+            const upperTag = tagInput.toUpperCase();
+            if (pinnedTags.includes(upperTag)) { showToast("Kategori ini sudah disematkan!", "error"); return; }
+            playSynth('success');
+            pinnedTags.push(upperTag);
+            await cloudSet(_0x4f12._0x0f, pinnedTags);
+            document.getElementById('pinTagName').value = '';
+            showToast(`Kategori ${upperTag} berhasil di-pin!`, "success");
+            renderPinnedTagsList();
+            calculateCategoryCounts();
+        }
+
+        async function unpinTag(index) {
+            playSynth('delete');
+            const removed = pinnedTags[index];
+            pinnedTags.splice(index, 1);
+            await cloudSet(_0x4f12._0x0f, pinnedTags);
+            showToast(`Pin ${removed} dihapus!`, "info");
+            renderPinnedTagsList();
+            calculateCategoryCounts();
+        }
+
         // ======================================================================
+        // ADMIN & CRUD FUNCTIONS (semua fungsi yang dibutuhkan)
+        // ======================================================================
+
+        function toggleAdminPanel() {
+            playSynth('click');
+            if (isAdmin) {
+                document.getElementById('adminDashboard').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                document.getElementById('loginSection').classList.remove('hidden');
+            }
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginSection').classList.add('hidden');
+        }
+
+        function attemptLogin() {
+            const user = document.getElementById('adminUser').value;
+            const pass = document.getElementById('adminPass').value;
+            if (user === _0x4f12._0x0a && pass === _0x4f12._0x0b) {
+                setAdminState(true);
+                sessionStorage.setItem('admin_logged', 'true');
+                closeLoginModal();
+                playSynth('success');
+                showToast("Login Berhasil! Selamat datang Boss Axeluf.", "success");
+                document.getElementById('adminDashboard').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                playSynth('delete');
+                triggerScreenShake();
+                showToast("Kredensial Admin Salah!", "error");
+            }
+        }
+
+        function logoutAdmin() {
+            playSynth('click');
+            setAdminState(false);
+            sessionStorage.removeItem('admin_logged');
+            showToast("Berhasil keluar dari mode admin.", "info");
+        }
+
+        function setAdminState(active) {
+            isAdmin = active;
+            const adminDashboard = document.getElementById('adminDashboard');
+            const btnNavAdmin = document.getElementById('btnNavAdmin');
+            const btnLogOut = document.getElementById('btnLogOut');
+            if (active) {
+                adminDashboard.classList.remove('hidden');
+                btnNavAdmin.innerText = "🛠️ DASHBOARD ADMIN";
+                btnNavAdmin.classList.replace('bg-[#4CCD99]', 'bg-[#2E8B6E]');
+                btnLogOut.classList.remove('hidden');
+            } else {
+                adminDashboard.classList.add('hidden');
+                btnNavAdmin.innerText = "🔑 PANEL ADMIN";
+                btnNavAdmin.classList.replace('bg-[#2E8B6E]', 'bg-[#4CCD99]');
+                btnLogOut.classList.add('hidden');
+            }
+            renderAdminTable();
+        }
+
+        function switchAdminTab(tabName) {
+            playSynth('click');
+            const tabMod = document.getElementById('tabMod');
+            const tabBranding = document.getElementById('tabBranding');
+            const tabSocial = document.getElementById('tabSocial');
+            const tabPinning = document.getElementById('tabPinning');
+            const modContent = document.getElementById('adminTabModContent');
+            const brandingContent = document.getElementById('adminTabBrandingContent');
+            const socialContent = document.getElementById('adminTabSocialContent');
+            const pinningContent = document.getElementById('adminTabPinningContent');
+            tabMod.className = "bg-white text-black px-4 py-2 text-xs uppercase font-bold brutal-border brutal-shadow-sm rounded-xl";
+            tabBranding.className =
+                "bg-white text-black px-4 py-2 text-xs uppercase font-bold brutal-border brutal-shadow-sm rounded-xl";
+            tabSocial.className =
+                "bg-white text-black px-4 py-2 text-xs uppercase font-bold brutal-border brutal-shadow-sm rounded-xl";
+            tabPinning.className =
+                "bg-white text-black px-4 py-2 text-xs uppercase font-bold brutal-border brutal-shadow-sm rounded-xl";
+            modContent.classList.add('hidden');
+            brandingContent.classList.add('hidden');
+            socialContent.classList.add('hidden');
+            pinningContent.classList.add('hidden');
+            if (tabName === 'mod') {
+                tabMod.className =
+                    "bg-black text-white px-4 py-2 text-xs uppercase font-bold brutal-border brutal-shadow-sm rounded-xl";
+                modContent.classList.remove('hidden');
+            } else if (tabName === 'branding') {
+                tabBranding.className =
+                    "bg-black text-white px-4 py-2 text-xs uppercase font-bold brutal-border brutal-shadow-sm rounded-xl";
+                brandingContent.classList.remove('hidden');
+            } else if (tabName === 'social') {
+                tabSocial.className =
+                    "bg-black text-white px-4 py-2 text-xs uppercase font-bold brutal-border brutal-shadow-sm rounded-xl";
+                socialContent.classList.remove('hidden');
+            } else if (tabName === 'pinning') {
+                tabPinning.className =
+                    "bg-black text-white px-4 py-2 text-xs uppercase font-bold brutal-border brutal-shadow-sm rounded-xl";
+                pinningContent.classList.remove('hidden');
+            }
+        }
+
+        // --- Custom Links ---
+        function addCustomLinkField(label = "", url = "", iconType = "video") {
+            const container = document.getElementById('customLinksContainer');
+            const currentFields = container.getElementsByClassName('custom-link-row');
+            if (currentFields.length >= 5) { showToast("Maksimal tombol kustomisasi hanya 5 link!", "error"); return; }
+            playSynth('click');
+            const row = document.createElement('div');
+            row.className =
+                "custom-link-row grid grid-cols-1 sm:grid-cols-3 gap-2 p-3 bg-white brutal-border rounded-xl relative";
+            row.innerHTML = `
+                <div><label class="block text-[9px] font-bold uppercase text-gray-500">Teks Tombol</label><input type="text" value="${label}" placeholder="Contoh: Tonton Tutorial" class="input-btn-label w-full brutal-border-sm p-1.5 text-xs font-bold bg-white focus:outline-none text-black rounded-xl"></div>
+                <div><label class="block text-[9px] font-bold uppercase text-gray-500">URL Tujuan</label><input type="text" value="${url}" placeholder="https://..." class="input-btn-url w-full brutal-border-sm p-1.5 text-xs font-bold bg-white focus:outline-none text-black rounded-xl"></div>
+                <div class="flex items-end gap-2">
+                  <div class="flex-1"><label class="block text-[9px] font-bold uppercase text-gray-500">Pilih Icon</label><select class="input-btn-icon w-full brutal-border-sm p-1.5 text-xs font-bold bg-white focus:outline-none text-black rounded-xl"><option value="video" ${iconType === 'video' ? 'selected' : ''}>🎥 Tutorial Video</option><option value="download" ${iconType === 'download' ? 'selected' : ''}>📥 Download File</option><option value="chat" ${iconType === 'chat' ? 'selected' : ''}>💬 Obrolan / Grup</option><option value="key" ${iconType === 'key' ? 'selected' : ''}>🔑 Password / Key</option><option value="globe" ${iconType === 'globe' ? 'selected' : ''}>🌐 Situs Web</option></select></div>
+                  <button type="button" onclick="removeCustomLinkField(this)" class="bg-red-500 text-white font-bold p-1.5 brutal-border-sm hover:bg-red-600 text-xs uppercase shrink-0 rounded-xl">Hapus</button>
+                </div>
+              `;
+            container.appendChild(row);
+        }
+
+        function removeCustomLinkField(button) {
+            playSynth('delete');
+            button.closest('.custom-link-row').remove();
+        }
+
+        function getCustomLinksData() {
+            const container = document.getElementById('customLinksContainer');
+            const rows = container.getElementsByClassName('custom-link-row');
+            const list = [];
+            for (let i = 0; i < rows.length; i++) {
+                const label = rows[i].querySelector('.input-btn-label').value.trim();
+                const url = rows[i].querySelector('.input-btn-url').value.trim();
+                const iconType = rows[i].querySelector('.input-btn-icon').value;
+                if (label && url) list.push({ label, url, iconType });
+            }
+            return list;
+        }
+
+        function setCustomLinksFields(customButtons) {
+            const container = document.getElementById('customLinksContainer');
+            container.innerHTML = '';
+            if (customButtons && customButtons.length > 0) {
+                customButtons.forEach(btn => addCustomLinkField(btn.label, btn.url, btn.iconType));
+            }
+        }
+
+        // --- Custom Presets ---
+        async function saveCustomPreset() {
+            const label = document.getElementById('presetLabel').value.trim();
+            const url = document.getElementById('presetUrl').value.trim();
+            const iconType = document.getElementById('presetIcon').value;
+            const editIndex = document.getElementById('editPresetIndex').value;
+            if (!label || !url) { showToast("Teks preset dan URL preset wajib diisi!", "error"); return; }
+            playSynth('success');
+            const presetData = { label, url, iconType };
+            if (editIndex !== "") {
+                customPresets[parseInt(editIndex)] = presetData;
+                showToast("Preset tombol berhasil diperbarui!", "success");
+            } else {
+                customPresets.push(presetData);
+                showToast("Preset tombol baru berhasil disimpan!", "success");
+            }
+            await cloudSet("web_custom_presets_db", customPresets);
+            clearPresetForm();
+            renderCustomPresets();
+        }
+
+        function editCustomPreset(index, event) {
+            if (event) event.stopPropagation();
+            playSynth('click');
+            const item = customPresets[index];
+            document.getElementById('presetLabel').value = item.label;
+            document.getElementById('presetUrl').value = item.url;
+            document.getElementById('presetIcon').value = item.iconType;
+            document.getElementById('editPresetIndex').value = index;
+            document.getElementById('btnSavePreset').innerText = "Update";
+            document.getElementById('btnCancelPreset').classList.remove('hidden');
+        }
+
+        async function deleteCustomPreset(index, event) {
+            if (event) event.stopPropagation();
+            playSynth('delete');
+            const removed = customPresets[index].label;
+            customPresets.splice(index, 1);
+            await cloudSet("web_custom_presets_db", customPresets);
+            showToast(`Preset "${removed}" dihapus dari database!`, "info");
+            clearPresetForm();
+            renderCustomPresets();
+        }
+
+        function clearPresetForm() {
+            document.getElementById('presetLabel').value = "";
+            document.getElementById('presetUrl').value = "";
+            document.getElementById('presetIcon').selectedIndex = 0;
+            document.getElementById('editPresetIndex').value = "";
+            document.getElementById('btnSavePreset').innerText = "Simpan";
+            document.getElementById('btnCancelPreset').classList.add('hidden');
+        }
+
+        function renderCustomPresets() {
+            const container = document.getElementById('customPresetButtonList');
+            container.innerHTML = "";
+            if (customPresets.length === 0) {
+                container.innerHTML = `<span class="text-xs italic text-gray-400">Belum ada preset kustom yang disimpan.</span>`;
+                return;
+            }
+            customPresets.forEach((c, index) => {
+                const wrapper = document.createElement('div');
+                wrapper.className =
+                    "flex items-center bg-white border-2 border-black text-xs font-bold brutal-shadow-sm p-1.5 gap-2 hover:bg-[#A3FFD6]/40 transition-colors rounded-xl";
+                const triggerBtn = document.createElement('button');
+                triggerBtn.type = "button";
+                triggerBtn.onclick = () => injectQuickLinkPreset(c.label, c.url, c.iconType);
+                triggerBtn.className = "hover:text-[#2E8B6E] uppercase flex items-center gap-1.5 flex-1 select-none text-left";
+                let iconHtml = SVG_ICONS[c.iconType] || "🔗";
+                triggerBtn.innerHTML = `<span>${iconHtml}</span> <span>${c.label}</span>`;
+                const divider = document.createElement('span');
+                divider.className = "text-zinc-400";
+                divider.innerText = "|";
+                const editBtn = document.createElement('button');
+                editBtn.type = "button";
+                editBtn.onclick = (e) => editCustomPreset(index, e);
+                editBtn.className = "text-[#2E8B6E] hover:underline px-1 text-[10px]";
+                editBtn.innerText = "EDIT";
+                const delBtn = document.createElement('button');
+                delBtn.type = "button";
+                delBtn.onclick = (e) => deleteCustomPreset(index, e);
+                delBtn.className = "text-red-500 hover:underline px-1 text-[10px]";
+                delBtn.innerText = "HAPUS";
+                wrapper.appendChild(triggerBtn);
+                wrapper.appendChild(divider);
+                wrapper.appendChild(editBtn);
+                wrapper.appendChild(delBtn);
+                container.appendChild(wrapper);
+            });
+        }
+
+        function injectQuickLinkPreset(label, url, iconType) {
+            addCustomLinkField(label, url, iconType);
+            showToast(`Tombol "${label}" ditambahkan ke form kustomisasi!`, 'success');
+        }
+
+        // --- Save Mod ---
+        async function saveMod() {
+            const name = document.getElementById('modName').value.trim();
+            const tag = document.getElementById('modTag').value.trim();
+            const desc = document.getElementById('modDesc').value;
+            const url = document.getElementById('modUrl').value.trim();
+            const password = document.getElementById('modPassword').value.trim();
+            const imageUrlInput = document.getElementById('modImageUrl').value.trim();
+            const imageRatio = document.getElementById('modImageRatio').value;
+            const fileInput = document.getElementById('uploadModImageFile');
+            const editIndex = document.getElementById('editIndex').value;
+            const manualViews = parseInt(document.getElementById('modViewsInput').value) || 0;
+            const manualLikes = parseInt(document.getElementById('modLikesInput').value) || 0;
+            const customButtons = getCustomLinksData();
+            if (!name || !tag || !desc || !url) {
+                showToast("Kolom Nama, Tag, Deskripsi, dan URL wajib diisi!", "error");
+                return;
+            }
+            let viewsToSave = manualViews;
+            let likesToSave = manualLikes;
+            let commentsToSave = [];
+            let finalImg = imageUrlInput;
+            if (editIndex !== "") {
+                const oldItem = links[parseInt(editIndex)];
+                viewsToSave = manualViews !== 0 ? manualViews : (oldItem.views || 0);
+                likesToSave = manualLikes !== 0 ? manualLikes : (oldItem.likes || 0);
+                commentsToSave = oldItem.comments || [];
+                if (!finalImg) finalImg = oldItem.image;
+            }
+            const proceedSaving = async (imgSource) => {
+                const modData = {
+                    name,
+                    tag: tag.toUpperCase(),
+                    desc,
+                    url: encodeSafe(url),
+                    password: encodeSafe(password || "Tanpa Password / Langsung Ekstrak"),
+                    image: imgSource ||
+                        "https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?auto=format&fit=crop&q=80&w=800",
+                    imageRatio: imageRatio,
+                    views: viewsToSave,
+                    likes: likesToSave,
+                    comments: commentsToSave,
+                    customButtons: customButtons
+                };
+                if (editIndex !== "") {
+                    links[parseInt(editIndex)] = modData;
+                    showToast("Link Modifikasi berhasil diupdate!", "success");
+                } else {
+                    links.unshift(modData);
+                    showToast("Mod baru berhasil dirilis!", "success");
+                }
+                playSynth('success');
+                await cloudSet(_0x4f12._0x0d, links);
+                clearForm();
+                renderPublicLinks();
+                renderAdminTable();
+                calculateCategoryCounts();
+            };
+            if (fileInput && fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onloadend = async function() { await proceedSaving(reader.result); };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                await proceedSaving(finalImg);
+            }
+        }
+
+        function editMod(index) {
+            playSynth('click');
+            const item = links[index];
+            document.getElementById('modName').value = item.name;
+            document.getElementById('modTag').value = item.tag;
+            document.getElementById('modDesc').value = item.desc;
+            document.getElementById('modUrl').value = decodeSafe(item.url);
+            document.getElementById('modPassword').value = decodeSafe(item.password) === "Tanpa Password / Langsung Ekstrak" ?
+                "" : decodeSafe(item.password);
+            document.getElementById('modImageUrl').value = item.image && !item.image.startsWith("data:") ? item.image : "";
+            document.getElementById('modViewsInput').value = item.views || 0;
+            document.getElementById('modLikesInput').value = item.likes || 0;
+            if (item.imageRatio) document.getElementById('modImageRatio').value = item.imageRatio;
+            setCustomLinksFields(item.customButtons);
+            document.getElementById('editIndex').value = index;
+            document.getElementById('formTitle').innerText = "📝 Edit Link Modifikasi";
+            document.getElementById('formTitle').classList.replace('text-[#2E8B6E]', 'text-blue-600');
+            document.getElementById('formTitle').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function clearForm() {
+            document.getElementById('modName').value = '';
+            document.getElementById('modTag').value = '';
+            document.getElementById('modDesc').value = '';
+            document.getElementById('modUrl').value = '';
+            document.getElementById('modPassword').value = '';
+            document.getElementById('modImageUrl').value = '';
+            if (document.getElementById('uploadModImageFile')) document.getElementById('uploadModImageFile').value = '';
+            document.getElementById('modImageRatio').selectedIndex = 0;
+            document.getElementById('modViewsInput').value = '';
+            document.getElementById('modLikesInput').value = '';
+            document.getElementById('customLinksContainer').innerHTML = '';
+            document.getElementById('editIndex').value = '';
+            document.getElementById('formTitle').innerText = "➕ Tambah Mod Baru";
+            document.getElementById('formTitle').classList.add('text-[#2E8B6E]');
+            document.getElementById('formTitle').classList.remove('text-blue-600');
+        }
+
+        // --- Credits ---
+        async function addCredit() {
+            const platform = document.getElementById('credPlatform').value.trim();
+            const handle = document.getElementById('credHandle').value.trim();
+            const url = document.getElementById('credUrl').value.trim();
+            const color = document.getElementById('credColor').value;
+            if (!platform || !handle || !url) { showToast("Lengkapi semua kolom isian credit sosmed!", "error"); return; }
+            playSynth('success');
+            credits.push({ platform, handle, url, color });
+            await cloudSet(_0x4f12._0x0e, credits);
+            showToast("Credit baru ditambahkan!", "success");
+            document.getElementById('credPlatform').value = '';
+            document.getElementById('credHandle').value = '';
+            document.getElementById('credUrl').value = '';
+            renderCredits();
+        }
+
+        async function deleteCredit(index) {
+            playSynth('delete');
+            credits.splice(index, 1);
+            await cloudSet(_0x4f12._0x0e, credits);
+            showToast("Credit berhasil dihapus!", "info");
+            renderCredits();
+        }
+
+        function renderCredits() {
+            const container = document.getElementById('footerCreditsContainer');
+            const adminList = document.getElementById('adminCreditsList');
+            container.innerHTML = '';
+            adminList.innerHTML = '';
+            credits.forEach((c, index) => {
+                const a = document.createElement('a');
+                a.href = c.url;
+                a.target = "_blank";
+                a.onclick = () => playSynth('click');
+                a.style.backgroundColor = c.color || '#4CCD99';
+                a.className =
+                    "px-4 py-2 brutal-border brutal-shadow-sm brutal-btn-sm flex items-center gap-2 text-xs uppercase text-black font-bold rounded-xl";
+                let socialIcon = "";
+                if (c.platform.toLowerCase().includes('youtube')) {
+                    socialIcon =
+                        `<svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.163a3.003 3.003 0 00-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.517 0-9.388.508a3.003 3.003 0 00-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 002.11 2.11c1.871.508 9.388.508 9.388.508s7.517 0 9.388-.508a3.003 3.003 0 002.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`;
+                } else if (c.platform.toLowerCase().includes('instagram')) {
+                    socialIcon =
+                        `<svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>`;
+                } else if (c.platform.toLowerCase().includes('whatsapp')) {
+                    socialIcon =
+                        `<svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.62.962 3.21 1.493 4.904 1.495 5.234.002 9.493-4.254 9.495-9.491.002-2.54-1.01-4.922-2.85-6.766-1.841-1.844-4.288-2.86-6.83-2.861-5.241 0-9.503 4.257-9.505 9.496-.001 1.734.502 3.426 1.457 4.912L1.393 21.6l4.63-1.215-.1-.08-.106-.11l-.17-.119zm12.385-6.61c-.333-.167-1.97-.972-2.275-1.083-.306-.113-.528-.167-.75.167-.221.333-.857 1.083-1.05 1.306-.194.222-.389.25-.722.083-.333-.167-1.408-.52-2.681-1.656-.99-.883-1.658-1.973-1.853-2.306-.194-.333-.02-.513.146-.68.15-.15.333-.389.5-.583.167-.195.222-.333.333-.556.111-.222.056-.417-.028-.583-.083-.167-.75-1.807-1.028-2.478-.27-.652-.544-.564-.748-.574-.194-.01-.417-.012-.64-.012-.221 0-.583.083-.888.417-.306.333-1.166 1.139-1.166 2.778 0 1.64 1.194 3.22 1.361 3.444.167.222 2.35 3.589 5.694 5.034.795.343 1.417.549 1.9.704.8.254 1.528.218 2.103.132.64-.096 1.97-.806 2.247-1.583.278-.78.278-1.445.194-1.583-.083-.139-.306-.222-.639-.389z"/></svg>`;
+                } else {
+                    socialIcon =
+                        `<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>`;
+                }
+                a.innerHTML = `${socialIcon} <span>${c.platform}:</span> <span class="font-extrabold">${c.handle}</span>`;
+                container.appendChild(a);
+                const div = document.createElement('div');
+                div.className =
+                    "flex items-center justify-between p-2.5 border-2 border-black bg-white text-black rounded-xl";
+                div.innerHTML = `
+                    <span class="text-xs font-bold uppercase">${c.platform} -> ${c.handle}</span>
+                    <button onclick="deleteCredit(${index})" class="bg-red-500 text-white font-bold text-[10px] px-2 py-1 hover:bg-red-600 rounded-xl">Hapus</button>
+                  `;
+                adminList.appendChild(div);
+            });
+        }
+
+        // --- Admin Table ---
+        function renderAdminTable() {
+            const tbody = document.getElementById('adminTableBody');
+            tbody.innerHTML = '';
+            links.forEach((item, index) => {
+                const imageSrc = item.image ? item.image :
+                    'https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?auto=format&fit=crop&q=80&w=150';
+                let pills = "";
+                if (item.tag) {
+                    item.tag.split(',').forEach(t => {
+                        if (t.trim()) pills +=
+                            `<span class="bg-gray-200 px-1.5 py-0.5 border border-black text-[9px] uppercase text-black font-extrabold mr-1 rounded-full">${t.trim()}</span>`;
+                    });
+                }
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-black hover:bg-gray-50 text-black";
+                tr.innerHTML = `
+                    <td class="p-3 border-r border-black w-20"><img src="${imageSrc}" class="w-12 h-12 object-cover brutal-border rounded-xl" alt="Thumb"></td>
+                    <td class="p-3 border-r border-black font-bold text-xs sm:text-sm text-black">${item.name}</td>
+                    <td class="p-3 border-r border-black"><div class="flex flex-wrap gap-1">${pills}</div></td>
+                    <td class="p-3"><div class="flex flex-col sm:flex-row gap-1.5"><button onclick="editMod(${index})" class="bg-[#2E8B6E] brutal-border brutal-shadow-sm brutal-btn-sm py-1 px-3.5 text-xs uppercase text-white font-bold rounded-xl">Edit</button><button onclick="triggerDelete(${index})" class="bg-red-500 brutal-border brutal-shadow-sm brutal-btn-sm py-1 px-3.5 text-xs uppercase text-white font-bold rounded-xl">Hapus</button></div></td>
+                  `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function triggerDelete(index) {
+            playSynth('click');
+            triggerScreenShake();
+            activeDeleteIndex = index;
+            const targetName = links[index].name;
+            document.getElementById('confirmModalText').innerText =
+                `Apakah kamu yakin ingin menghapus "${targetName}" secara permanen?`;
+            document.getElementById('confirmModal').classList.remove('hidden');
+        }
+
+        function closeConfirmModal() {
+            playSynth('click');
+            document.getElementById('confirmModal').classList.add('hidden');
+            activeDeleteIndex = null;
+        }
+
+        document.getElementById('btnConfirmYes').addEventListener('click', async function() {
+            if (activeDeleteIndex !== null) {
+                playSynth('delete');
+                links.splice(activeDeleteIndex, 1);
+                await cloudSet(_0x4f12._0x0d, links);
+                showToast("Link Mod berhasil dihapus!", "info");
+                closeConfirmModal();
+                renderPublicLinks();
+                renderAdminTable();
+                calculateCategoryCounts();
+                clearForm();
+            }
+        });
+
+        // --- Branding & Background ---
+        async function saveBranding() {
+            playSynth('success');
+            const title = document.getElementById('setMainTitle').value.trim();
+            const subtitle = document.getElementById('setMainSubtitle').value.trim();
+            const logoUrl = document.getElementById('setMainLogoUrl').value.trim();
+            const alignment = document.getElementById('setProfilePosition').value;
+            if (title) { await cloudSet("web_title", title);
+                document.getElementById('mainTitleText').innerText = title; }
+            if (subtitle) { await cloudSet("web_subtitle", subtitle);
+                document.getElementById('mainSubtitleText').innerText = subtitle; }
+            if (logoUrl) { await cloudSet("web_logo", logoUrl);
+                document.getElementById('mainLogo').src = logoUrl;
+                document.getElementById('navLogoMin').src = logoUrl; }
+            await cloudSet("profile_alignment", alignment);
+            const profileContainer = document.getElementById('headerProfileContainer');
+            profileContainer.className = `p-6 pt-0 relative flex flex-col ${alignment} gap-4`;
+            showToast("Setelan branding & posisi profil berhasil disimpan!", "success");
+        }
+
+        async function saveSafelinkAndBroadcast() {
+            playSynth('success');
+            const broadcastText = document.getElementById('setBroadcastText').value.trim();
+            const safelinkTime = document.getElementById('setSafelinkTime').value.trim();
+            if (broadcastText) { await cloudSet("web_broadcast_text", broadcastText);
+                updateBroadcastBanner(broadcastText); }
+            if (safelinkTime) { safelinkTimerValue = parseInt(safelinkTime);
+                await cloudSet("web_safelink_time", safelinkTimerValue.toString()); }
+            showToast("Konfigurasi portal berhasil disimpan!", "success");
+        }
+
+        async function saveBackgroundConfig() {
+            playSynth('success');
+            const bgUrlInput = document.getElementById('setBackgroundUrl').value.trim();
+            const bgFile = document.getElementById('uploadBgFile').files[0];
+            if (bgFile) {
+                const reader = new FileReader();
+                reader.onloadend = async function() {
+                    const base64String = reader.result;
+                    document.documentElement.style.setProperty('--custom-bg-image', `url(${base64String})`);
+                    await cloudSet("web_background_image", base64String);
+                    showToast("Latar belakang lokal berhasil diunggah & disimpan!", "success");
+                };
+                reader.readAsDataURL(bgFile);
+            } else if (bgUrlInput) {
+                document.documentElement.style.setProperty('--custom-bg-image', `url(${bgUrlInput})`);
+                await cloudSet("web_background_image", bgUrlInput);
+                showToast("Latar belakang URL berhasil disimpan!", "success");
+            } else {
+                showToast("Masukkan URL Latar Belakang atau unggah file gambar terlebih dahulu!", "error");
+            }
+        }
+
+        async function resetBackgroundConfig() {
+            playSynth('delete');
+            document.documentElement.style.setProperty('--custom-bg-image', 'none');
+            document.getElementById('setBackgroundUrl').value = '';
+            document.getElementById('uploadBgFile').value = '';
+            await cloudSet("web_background_image", "none");
+            showToast("Latar belakang direset menggunakan tema default.", "info");
+        }
+
+        async function saveBannerConfig() {
+            playSynth('success');
+            const bannerUrlInput = document.getElementById('setBannerUrl').value.trim();
+            const bannerFile = document.getElementById('uploadBannerFile').files[0];
+            if (bannerFile) {
+                const reader = new FileReader();
+                reader.onloadend = async function() {
+                    const base64String = reader.result;
+                    document.getElementById('webBannerImage').src = base64String;
+                    await cloudSet("web_banner_image", base64String);
+                    showToast("Banner lokal berhasil diterapkan & disimpan!", "success");
+                };
+                reader.readAsDataURL(bannerFile);
+            } else if (bannerUrlInput) {
+                document.getElementById('webBannerImage').src = bannerUrlInput;
+                await cloudSet("web_banner_image", bannerUrlInput);
+                showToast("Banner URL berhasil disimpan!", "success");
+            } else {
+                showToast("Silakan masukkan URL atau unggah file gambar banner!", "error");
+            }
+        }
+
+        // --- Ban ---
+        function triggerBanScreen() {
+            playSynth('ban');
+            localStorage.setItem('banned_client_status', 'true');
+            document.getElementById('banScreen').classList.remove('hidden');
+        }
+
+        function simulateUnban() {
+            playSynth('success');
+            localStorage.removeItem('banned_client_status');
+            document.getElementById('banScreen').classList.add('hidden');
+            showToast("Akses dipulihkan! Jangan spam lagi ya.", "success");
+        }
+
+        function clearAllBans() {
+            localStorage.removeItem('banned_client_status');
+            document.getElementById('banScreen').classList.add('hidden');
+            showToast("Semua ban telah direset.", "info");
+        }
+
+        function checkBanStatus() {
+            if (localStorage.getItem('banned_client_status') === 'true') {
+                document.getElementById('banScreen').classList.remove('hidden');
+                playSynth('ban');
+            }
+        }
+
+        // --- Safelink ---
+        let safelinkInterval = null;
+
+        function openSafelinkModal(targetUrl) {
+            playSynth('success');
+            const modal = document.getElementById('safelinkModal');
+            const progress = document.getElementById('safelinkProgress');
+            const progressText = document.getElementById('safelinkProgressText');
+            const statusText = document.getElementById('safelinkStatusText');
+            const buttonArea = document.getElementById('safelinkButtonArea');
+            const downloadBtn = document.getElementById('btnRealDownload');
+            modal.classList.remove('hidden');
+            buttonArea.classList.add('hidden');
+            progress.style.width = '0%';
+            progressText.innerText = '0%';
+            statusText.innerText = 'Menghubungkan ke server cloud premium, mengamankan tautan...';
+            let count = 0;
+            const stepTime = (safelinkTimerValue * 1000) / 100;
+            if (safelinkInterval) clearInterval(safelinkInterval);
+            safelinkInterval = setInterval(() => {
+                count++;
+                progress.style.width = `${count}%`;
+                progressText.innerText = `${count}%`;
+                if (count === 30) statusText.innerText = 'Memindai dari ancaman malware, virus, dan bot spam...';
+                else if (count === 70) statusText.innerText = 'Verifikasi berkas berhasil, mendekripsi alamat tujuan...';
+                if (count >= 100) {
+                    clearInterval(safelinkInterval);
+                    statusText.innerText = 'Selesai! Link Modifikasi kamu aman untuk diunduh.';
+                    buttonArea.classList.remove('hidden');
+                    downloadBtn.href = targetUrl;
+                    playSynth('success');
+                }
+            }, stepTime);
+        }
+
+        function closeSafelinkModal() {
+            if (safelinkInterval) clearInterval(safelinkInterval);
+            document.getElementById('safelinkModal').classList.add('hidden');
+        }
+
+        // --- Render Public Links ---
+        function renderPublicLinks() {
+            const linkContainer = document.getElementById('linkContainer');
+            const searchQuery = document.getElementById('searchBar').value.toLowerCase();
+            linkContainer.innerHTML = '';
+            const filteredLinks = links.filter(item => {
+                const matchSearch = item.name.toLowerCase().includes(searchQuery) ||
+                    item.tag.toLowerCase().includes(searchQuery) ||
+                    item.desc.toLowerCase().includes(searchQuery);
+                if (!matchSearch) return false;
+                if (activeCategoryFilter) {
+                    const itemTags = item.tag ? item.tag.split(',').map(t => t.trim().toUpperCase()) : [];
+                    return itemTags.includes(activeCategoryFilter);
+                }
+                return true;
+            });
+            if (filteredLinks.length === 0) {
+                linkContainer.innerHTML = `
+                    <div class="bg-white text-black brutal-border brutal-shadow p-8 text-center font-bold">
+                      <span class="text-4xl block mb-2">🏜️</span>
+                      <p class="text-lg uppercase font-syne">Mod Tidak Ditemukan!</p>
+                      <p class="text-sm text-gray-500 font-normal mt-1">Coba cari dengan nama game atau reset filter kategori di menu.</p>
+                    </div>
+                  `;
+                return;
+            }
+            filteredLinks.forEach((item) => {
+                const decryptedUrl = decodeSafe(item.url);
+                const decryptedPassword = decodeSafe(item.password);
+                const imageSrc = item.image ? item.image :
+                    'https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?auto=format&fit=crop&q=80&w=800';
+                const ratioClass = item.imageRatio ? item.imageRatio : 'aspect-video object-cover';
+                const cardIndex = links.indexOf(item);
+                let tagsHtml = "";
+                if (item.tag) {
+                    item.tag.split(',').forEach(t => {
+                        const cleanTag = t.trim();
+                        if (cleanTag) {
+                            tagsHtml += `
+                                <button onclick="selectCategoryFilter('${cleanTag}')" class="bg-[#4CCD99] hover:bg-[#3dbd8c] transition-colors brutal-border-sm text-[10px] font-bold uppercase px-2 py-0.5 text-black rounded-xl">#${cleanTag}</button>
+                              `;
+                        }
+                    });
+                }
+                let customButtonsHtml = "";
+                if (item.customButtons && item.customButtons.length > 0) {
+                    item.customButtons.forEach(btn => {
+                        const iconSvg = SVG_ICONS[btn.iconType] || "";
+                        customButtonsHtml += `
+                            <button onclick="handleActionClick(${cardIndex}, '${btn.url}')" class="bg-black text-white font-bold text-xs uppercase py-3 px-4 brutal-border brutal-shadow-sm brutal-btn flex items-center justify-center gap-2 rounded-xl">${iconSvg} <span>${btn.label}</span></button>
+                          `;
+                    });
+                }
+                let commentsListHtml = "";
+                if (item.comments && item.comments.length > 0) {
+                    item.comments.forEach(c => {
+                        commentsListHtml += `
+                            <div class="p-2 border-b border-black text-xs"><span class="font-extrabold text-[#2E8B6E]">@${c.name}:</span> <span class="font-medium text-gray-800">${c.text}</span></div>
+                          `;
+                    });
+                } else {
+                    commentsListHtml = `<p class="p-2 text-xs text-gray-500 italic text-center">Belum ada tanggapan komentar.</p>`;
+                }
+                const userLikesCount = parseInt(localStorage.getItem(`like_count_card_${cardIndex}`) || '0');
+                const isLikeDisabled = userLikesCount >= 10 ? "disabled" : "";
+                const card = document.createElement('div');
+                card.className = "bg-white text-black brutal-border brutal-shadow overflow-hidden flex flex-col";
+                card.innerHTML = `
+                    <div class="bg-black text-white px-4 py-2.5 flex items-center justify-between brutal-border-b font-mono text-xs select-none">
+                      <div class="flex items-center gap-1.5 shrink-0">
+                        <span class="w-3 h-3 rounded-full bg-[#FF6B6B] border-2 border-black inline-block"></span>
+                        <span class="w-3 h-3 rounded-full bg-[#A3FFD6] border-2 border-black inline-block"></span>
+                        <span class="w-3 h-3 rounded-full bg-[#4CCD99] border-2 border-black inline-block"></span>
+                      </div>
+                      <div class="bg-zinc-900 border border-zinc-700 rounded-full px-3 py-0.5 text-[10px] text-zinc-400 font-extrabold tracking-wide truncate max-w-[140px] sm:max-w-xs md:max-w-md">axeluf.co/portal/mod-${cardIndex}</div>
+                      <div class="flex items-center gap-2 cursor-pointer text-zinc-400 hover:text-[#A3FFD6] transition-colors font-extrabold text-lg select-none leading-none pr-1">⋮</div>
+                    </div>
+                    <div class="p-6 flex flex-col lg:flex-row gap-6 items-stretch">
+                      <div class="w-full lg:w-72 shrink-0 brutal-border bg-zinc-100 overflow-hidden rounded-xl shadow-inner flex items-center justify-center">
+                        <img src="${imageSrc}" alt="Screenshot Mod" class="w-full ${ratioClass} transition-transform duration-200 hover:scale-[1.03] rounded-xl">
+                      </div>
+                      <div class="flex-1 flex flex-col justify-between">
+                        <div>
+                          <div class="flex flex-wrap gap-1.5 mb-2">${tagsHtml}</div>
+                          <h3 class="font-syne font-extrabold text-xl md:text-2xl uppercase mb-2 leading-tight">${item.name}</h3>
+                          <p class="text-sm text-gray-700 mb-4 leading-relaxed font-medium whitespace-pre-wrap">${item.desc}</p>
+                        </div>
+                        <div class="space-y-4">
+                          <div class="bg-[#A3FFD6]/30 brutal-border p-3 flex items-center gap-2 text-xs font-bold text-[#2E8B6E] rounded-xl">
+                            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                            <span>PASSWORD: ${decryptedPassword}</span>
+                          </div>
+                          <div class="flex flex-col sm:flex-row flex-wrap gap-2">
+                            <button onclick="handleActionClick(${cardIndex}, '${decryptedUrl}', true)" class="flex-1 text-center bg-[#4CCD99] font-bold text-xs uppercase py-3 px-4 brutal-border brutal-shadow-sm brutal-btn flex items-center justify-center gap-2 text-black rounded-xl">${SVG_ICONS.download} <span>DOWNLOAD APK MOD</span></button>
+                            ${customButtonsHtml}
+                          </div>
+                          <div class="border-t-2 border-dashed border-black pt-3 flex flex-col gap-3">
+                            <div class="flex justify-between items-center text-xs font-bold text-gray-600">
+                              <div class="flex items-center gap-1.5">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                <span id="view-counter-${cardIndex}">${item.views || 0}</span> kali dilihat
+                              </div>
+                              <div class="flex items-center gap-4">
+                                <button onclick="likeMod(${cardIndex})" ${isLikeDisabled} class="flex items-center gap-1.5 bg-[#A3FFD6] px-3 py-1.5 brutal-border-sm brutal-btn-sm text-[10px] text-black disabled:opacity-50 disabled:cursor-not-allowed rounded-xl">❤️ <span>${item.likes || 0}</span> Suka (${userLikesCount}/10)</button>
+                                <button onclick="toggleCommentsSection(${cardIndex})" class="flex items-center gap-1 bg-zinc-100 px-2 py-1 brutal-border-sm brutal-btn-sm text-[10px] text-black rounded-xl">💬 Komentar</button>
+                              </div>
+                            </div>
+                            <div id="comments-panel-${cardIndex}" class="hidden bg-zinc-50 border-2 border-black p-3 text-black rounded-xl">
+                              <h4 class="font-bold text-xs uppercase mb-2 border-b border-black pb-1">Kolom Diskusi Komentar</h4>
+                              <div class="max-h-28 overflow-y-auto bg-white border border-black mb-3 divide-y divide-gray-200 rounded-xl">${commentsListHtml}</div>
+                              <div class="flex flex-col sm:flex-row gap-1.5">
+                                <input type="text" id="comm-name-${cardIndex}" placeholder="Nama..." class="brutal-border-sm p-1.5 text-xs font-bold bg-white focus:outline-none w-full sm:w-28 text-black rounded-xl">
+                                <input type="text" id="comm-text-${cardIndex}" placeholder="Tulis komentar..." class="flex-1 brutal-border-sm p-1.5 text-xs font-bold bg-white focus:outline-none text-black rounded-xl">
+                                <button onclick="submitComment(${cardIndex})" class="bg-[#4CCD99] hover:bg-[#3ec08a] font-bold text-xs uppercase py-1.5 px-3 brutal-border-sm brutal-btn-sm text-black rounded-xl">Kirim</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  `;
+                linkContainer.appendChild(card);
+            });
+        }
+
+        // --- Interactions ---
+        async function handleActionClick(index, targetUrl, isMainDownload = false) {
+            playSynth('success');
+            if (!links[index].views) links[index].views = 0;
+            links[index].views += 1;
+            const viewCounterEl = document.getElementById(`view-counter-${index}`);
+            if (viewCounterEl) viewCounterEl.innerText = links[index].views;
+            await cloudSet(_0x4f12._0x0d, links);
+            if (isMainDownload) {
+                antiSpamCounter++;
+                if (antiSpamCounter > 6) { triggerBanScreen(); return; }
+                setTimeout(() => { if (antiSpamCounter > 0) antiSpamCounter--; }, 5000);
+                openSafelinkModal(targetUrl);
+            } else {
+                if (targetUrl) window.open(targetUrl, '_blank');
+            }
+        }
+
+        async function likeMod(index) {
+            let userLikesCount = parseInt(localStorage.getItem(`like_count_card_${index}`) || '0');
+            if (userLikesCount >= 10) {
+                playSynth('delete');
+                triggerScreenShake();
+                showToast("Batas menyukai maksimal 10x per perangkat!", "error");
+                return;
+            }
+            playSynth('success');
+            userLikesCount += 1;
+            localStorage.setItem(`like_count_card_${index}`, userLikesCount);
+            if (!links[index].likes) links[index].likes = 0;
+            links[index].likes += 1;
+            await cloudSet(_0x4f12._0x0d, links);
+            renderPublicLinks();
+        }
+
+        function toggleCommentsSection(index) {
+            playSynth('click');
+            const panel = document.getElementById(`comments-panel-${index}`);
+            panel.classList.toggle('hidden');
+        }
+
+        async function submitComment(index) {
+            const nameInput = document.getElementById(`comm-name-${index}`);
+            const textInput = document.getElementById(`comm-text-${index}`);
+            const name = nameInput.value.trim();
+            const text = textInput.value.trim();
+            if (!name || !text) { showToast("Form nama dan komentar wajib diisi!", "error"); return; }
+            playSynth('success');
+            if (!links[index].comments) links[index].comments = [];
+            links[index].comments.push({ name, text });
+            nameInput.value = "";
+            textInput.value = "";
+            await cloudSet(_0x4f12._0x0d, links);
+            renderPublicLinks();
+            showToast("Komentar berhasil dikirim!", "success");
+        }
 
         // ======================================================================
         // INIT
@@ -974,9 +1899,7 @@
         window.addEventListener('DOMContentLoaded', () => {
             loadAllDataFromDB();
             const savedTheme = localStorage.getItem('user_theme_choice');
-            if (savedTheme) {
-                document.documentElement.setAttribute('data-theme', savedTheme);
-            }
+            if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
             checkBanStatus();
         });
     </script>
