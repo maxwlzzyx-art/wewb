@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AXELUF ID - Premium Portal V4.5 Pro</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com">
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+    </script>
     <script>
         tailwind.config = {
             theme: {
@@ -156,44 +158,152 @@
             box-shadow: var(--shadow-offset-sm) var(--shadow-offset-sm) 0px 0px var(--border-color);
         }
         @keyframes shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            10% { transform: translate(-1px, -2px) rotate(-1deg); }
-            20% { transform: translate(-3px, 0px) rotate(1deg); }
-            30% { transform: translate(0px, 2px) rotate(0deg); }
-            40% { transform: translate(1px, -1px) rotate(1deg); }
-            50% { transform: translate(-1px, 2px) rotate(-1deg); }
-            60% { transform: translate(-3px, 1px) rotate(0deg); }
-            75% { transform: translate(2px, 1px) rotate(-1deg); }
-            90% { transform: translate(-1px, -1px) rotate(1deg); }
-            100% { transform: translate(1px, 2px) rotate(0deg); }
+            0% {
+                transform: translate(1px, 1px) rotate(0deg);
+            }
+            10% {
+                transform: translate(-1px, -2px) rotate(-1deg);
+            }
+            20% {
+                transform: translate(-3px, 0px) rotate(1deg);
+            }
+            30% {
+                transform: translate(0px, 2px) rotate(0deg);
+            }
+            40% {
+                transform: translate(1px, -1px) rotate(1deg);
+            }
+            50% {
+                transform: translate(-1px, 2px) rotate(-1deg);
+            }
+            60% {
+                transform: translate(-3px, 1px) rotate(0deg);
+            }
+            75% {
+                transform: translate(2px, 1px) rotate(-1deg);
+            }
+            90% {
+                transform: translate(-1px, -1px) rotate(1deg);
+            }
+            100% {
+                transform: translate(1px, 2px) rotate(0deg);
+            }
         }
-        .shake { animation: shake 0.3s; }
-        ::-webkit-scrollbar { width: 12px; }
-        ::-webkit-scrollbar-track { background: var(--border-color); border-radius: 20px; }
-        ::-webkit-scrollbar-thumb { background: var(--accent-color); border: 3px solid var(--border-color); border-radius: 20px; }
+        .shake {
+            animation: shake 0.3s;
+        }
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--border-color);
+            border-radius: 20px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border: 3px solid var(--border-color);
+            border-radius: 20px;
+        }
         @keyframes ticker {
-            0% { transform: translate3d(100%, 0, 0); }
-            100% { transform: translate3d(-100%, 0, 0); }
+            0% {
+                transform: translate3d(100%, 0, 0);
+            }
+            100% {
+                transform: translate3d(-100%, 0, 0);
+            }
         }
-        .ticker-wrap { overflow: hidden; white-space: nowrap; }
-        .ticker-content { display: inline-block; animation: ticker 25s linear infinite; }
-        .ticker-content:hover { animation-play-state: paused; }
-        #sidebarDrawer { border-top-right-radius: var(--border-radius-lg); border-bottom-right-radius: var(--border-radius-lg); }
+        .ticker-wrap {
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .ticker-content {
+            display: inline-block;
+            animation: ticker 25s linear infinite;
+        }
+        .ticker-content:hover {
+            animation-play-state: paused;
+        }
+        #sidebarDrawer {
+            border-top-right-radius: var(--border-radius-lg);
+            border-bottom-right-radius: var(--border-radius-lg);
+        }
         #banScreen .brutal-border,
         #confirmModal .brutal-border,
-        #loginSection .brutal-border { border-radius: var(--border-radius-lg); }
-        .admin-table-rounded { border-radius: var(--border-radius-md); overflow: hidden; }
-        .rounded-full-brutal { border-radius: 9999px; border: 4px solid var(--border-color); }
-        .theme-dot { border-radius: 9999px; border: 2px solid var(--border-color); transition: transform 0.15s ease; cursor: pointer; }
-        .theme-dot:hover { transform: scale(1.15); }
-        .btn-icon-svg { display: inline-flex; align-items: center; justify-content: center; }
-        .bg-green-muda { background-color: #A3FFD6; }
-        .bg-green-sedang { background-color: #4CCD99; }
-        .bg-green-gelap { background-color: #2E8B6E; }
-        .text-hitam { color: #000000; }
-        .border-hitam { border-color: #000000; }
-        #loadingOverlay { transition: opacity 0.5s ease; z-index: 9999; }
-        #loadingProgress { transition: width 0.15s linear; }
+        #loginSection .brutal-border {
+            border-radius: var(--border-radius-lg);
+        }
+        .admin-table-rounded {
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+        }
+        .rounded-full-brutal {
+            border-radius: 9999px;
+            border: 4px solid var(--border-color);
+        }
+        .theme-dot {
+            border-radius: 9999px;
+            border: 2px solid var(--border-color);
+            transition: transform 0.15s ease;
+            cursor: pointer;
+        }
+        .theme-dot:hover {
+            transform: scale(1.15);
+        }
+        .btn-icon-svg {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .bg-green-muda {
+            background-color: #A3FFD6;
+        }
+        .bg-green-sedang {
+            background-color: #4CCD99;
+        }
+        .bg-green-gelap {
+            background-color: #2E8B6E;
+        }
+        .text-hitam {
+            color: #000000;
+        }
+        .border-hitam {
+            border-color: #000000;
+        }
+        #loadingOverlay {
+            transition: opacity 0.5s ease;
+            z-index: 9999;
+        }
+        #loadingProgress {
+            transition: width 0.15s linear;
+        }
+
+        /* Fallback gambar placeholder */
+        .img-placeholder {
+            background: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .img-placeholder::before {
+            content: "🖼️ Gambar Tidak Tersedia";
+            text-align: center;
+            padding: 8px;
+        }
+        .img-placeholder.profile::before {
+            content: "👤";
+            font-size: 48px;
+        }
+        .img-placeholder.banner::before {
+            content: "🎬 Banner";
+            font-size: 24px;
+        }
+        .img-placeholder.thumbnail::before {
+            content: "📱 Thumbnail";
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -222,7 +332,9 @@
     <div id="sidebarDrawer" class="fixed inset-y-0 left-0 w-80 max-w-[85vw] bg-white text-black z-50 transform -translate-x-full transition-transform duration-300 ease-in-out border-r-4 border-black shadow-[10px_0_0_0_#000000] flex flex-col brutal-border-md rounded-tr-2xl rounded-br-2xl">
         <div class="p-6 bg-[#A3FFD6] border-b-4 border-black flex justify-between items-center shrink-0 rounded-tr-2xl">
             <div class="flex items-center gap-2">
-                <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
                 <h2 class="font-syne font-extrabold text-xl uppercase tracking-tight">MENU UTAMA</h2>
             </div>
             <button onclick="toggleSidebarDrawer()" class="bg-[#4CCD99] text-black border-2 border-black w-9 h-9 flex items-center justify-center font-bold text-lg brutal-shadow-sm active:translate-y-0.5 rounded-full">✕</button>
@@ -235,7 +347,9 @@
                 </button>
                 <div class="border-t-4 border-dashed border-black pt-4">
                     <h3 class="text-xs text-[#2E8B6E] uppercase tracking-widest mb-3 flex items-center gap-1">
-                        <svg class="w-4 h-4 text-[#2E8B6E] shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M16 12V4h1V2H7v2h1v8l-2 2v2h5.2v6h1.6v-6H18v-2l-2-2z"/></svg>
+                        <svg class="w-4 h-4 text-[#2E8B6E] shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M16 12V4h1V2H7v2h1v8l-2 2v2h5.2v6h1.6v-6H18v-2l-2-2z" />
+                        </svg>
                         KATEGORI UTAMA (PINNED)
                     </h3>
                     <div id="pinnedTagsList" class="flex flex-col gap-2"></div>
@@ -248,7 +362,9 @@
                     <h3 class="text-xs text-gray-500 uppercase tracking-widest mb-3">📢 SALURAN RESMI</h3>
                     <div class="grid grid-cols-1 gap-2">
                         <a href="https://whatsapp.com/channel/0029VaUl8HRBqbr8aHIeDW0s" target="_blank" class="flex items-center gap-2 p-2.5 bg-[#4CCD99] text-black border-2 border-black brutal-shadow-sm text-xs uppercase hover:translate-y-0.5 font-extrabold rounded-xl">
-                            <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.62.962 3.21 1.493 4.904 1.495 5.234.002 9.493-4.254 9.495-9.491.002-2.54-1.01-4.922-2.85-6.766-1.841-1.844-4.288-2.86-6.83-2.861-5.241 0-9.503 4.257-9.505 9.496-.001 1.734.502 3.426 1.457 4.912L1.393 21.6l4.63-1.215-.1-.08-.106-.11l-.17-.119zm12.385-6.61c-.333-.167-1.97-.972-2.275-1.083-.306-.113-.528-.167-.75.167-.221.333-.857 1.083-1.05 1.306-.194.222-.389.25-.722.083-.333-.167-1.408-.52-2.681-1.656-.99-.883-1.658-1.973-1.853-2.306-.194-.333-.02-.513.146-.68.15-.15.333-.389.5-.583.167-.195.222-.333.333-.556.111-.222.056-.417-.028-.583-.083-.167-.75-1.807-1.028-2.478-.27-.652-.544-.564-.748-.574-.194-.01-.417-.012-.64-.012-.221 0-.583.083-.888.417-.306.333-1.166 1.139-1.166 2.778 0 1.64 1.194 3.22 1.361 3.444.167.222 2.35 3.589 5.694 5.034.795.343 1.417.549 1.9.704.8.254 1.528.218 2.103.132.64-.096 1.97-.806 2.247-1.583.278-.78.278-1.445.194-1.583-.083-.139-.306-.222-.639-.389z"/></svg>
+                            <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.62.962 3.21 1.493 4.904 1.495 5.234.002 9.493-4.254 9.495-9.491.002-2.54-1.01-4.922-2.85-6.766-1.841-1.844-4.288-2.86-6.83-2.861-5.241 0-9.503 4.257-9.505 9.496-.001 1.734.502 3.426 1.457 4.912L1.393 21.6l4.63-1.215-.1-.08-.106-.11l-.17-.119zm12.385-6.61c-.333-.167-1.97-.972-2.275-1.083-.306-.113-.528-.167-.75.167-.221.333-.857 1.083-1.05 1.306-.194.222-.389.25-.722.083-.333-.167-1.408-.52-2.681-1.656-.99-.883-1.658-1.973-1.853-2.306-.194-.333-.02-.513.146-.68.15-.15.333-.389.5-.583.167-.195.222-.333.333-.556.111-.222.056-.417-.028-.583-.083-.167-.75-1.807-1.028-2.478-.27-.652-.544-.564-.748-.574-.194-.01-.417-.012-.64-.012-.221 0-.583.083-.888.417-.306.333-1.166 1.139-1.166 2.778 0 1.64 1.194 3.22 1.361 3.444.167.222 2.35 3.589 5.694 5.034.795.343 1.417.549 1.9.704.8.254 1.528.218 2.103.132.64-.096 1.97-.806 2.247-1.583.278-.78.278-1.445.194-1.583-.083-.139-.306-.222-.639-.389z" />
+                            </svg>
                             <span>SALURAN WA</span>
                         </a>
                         <a href="https://youtube.com/@axelufey?si=Z5fOumfvWbfhpXP7" target="_blank" class="flex items-center gap-2 p-2.5 bg-black text-[#A3FFD6] border-2 border-black brutal-shadow-sm text-xs uppercase hover:translate-y-0.5 font-extrabold rounded-xl">🎥 YOUTUBE UTAMA</a>
@@ -325,7 +441,7 @@
         </div>
         <div class="flex items-center gap-2">
             <div class="relative w-10 h-10 shrink-0">
-                <img id="navLogoMin" class="w-full h-full bg-[#4CCD99] brutal-border-sm rounded-full object-cover" src="https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?auto=format&fit=crop&q=80&w=200" alt="Logo">
+                <img id="navLogoMin" class="w-full h-full bg-[#4CCD99] brutal-border-sm rounded-full object-cover" src="https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?auto=format&fit=crop&q=80&w=200" alt="Logo" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect width=%22100%22 height=%22100%22 fill=%22%234CCD99%22/%3E%3Ctext x=%2250%22 y=%2255%22 font-size=%2230%22 text-anchor=%22middle%22 fill=%22white%22%3EA%3C/text%3E%3C/svg%3E'; this.classList.add('img-placeholder','profile');">
             </div>
         </div>
     </nav>
@@ -335,11 +451,11 @@
         <!-- PROFILE SECTION -->
         <div class="w-full bg-white brutal-border brutal-shadow mb-8 overflow-hidden">
             <div id="webBannerWrapper" class="relative w-full h-48 sm:h-64 bg-zinc-900 border-b-4 border-black overflow-hidden flex items-center justify-center">
-                <img id="webBannerImage" src="https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?auto=format&fit=crop&q=1200" alt="Banner YouTube" class="w-full h-full object-cover select-none">
+                <img id="webBannerImage" src="https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?auto=format&fit=crop&q=1200" alt="Banner YouTube" class="w-full h-full object-cover select-none" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%221200%22 height=%22300%22%3E%3Crect width=%221200%22 height=%22300%22 fill=%22%232E8B6E%22/%3E%3Ctext x=%22600%22 y=%22170%22 font-size=%2240%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22sans-serif%22%3EAXELUF PORTAL%3C/text%3E%3C/svg%3E'; this.classList.add('img-placeholder','banner');">
             </div>
             <div id="headerProfileContainer" class="p-6 pt-0 relative flex flex-col items-start text-left gap-4">
                 <div class="relative -mt-16 sm:-mt-20 z-10">
-                    <img id="mainLogo" class="w-28 h-28 sm:w-36 sm:h-36 bg-[#4CCD99] brutal-border brutal-shadow rounded-full object-cover" src="https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?auto=format&fit=crop&q=80&w=200" alt="Logo">
+                    <img id="mainLogo" class="w-28 h-28 sm:w-36 sm:h-36 bg-[#4CCD99] brutal-border brutal-shadow rounded-full object-cover" src="https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?auto=format&fit=crop&q=80&w=200" alt="Logo" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Ccircle cx=%22100%22 cy=%22100%22 r=%2290%22 fill=%22%234CCD99%22/%3E%3Ctext x=%22100%22 y=%22120%22 font-size=%2280%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22sans-serif%22%3EA%3C/text%3E%3C/svg%3E'; this.classList.add('img-placeholder','profile');">
                 </div>
                 <div class="w-full">
                     <h1 id="mainTitleText" class="font-syne font-extrabold text-3xl sm:text-4xl tracking-tight uppercase text-black leading-tight">AXELUF</h1>
@@ -522,7 +638,9 @@
         <main class="text-black">
             <div id="activeFilterBadge" class="hidden bg-black text-white p-4 mb-6 brutal-border brutal-shadow-sm flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                    <svg class="w-5 h-5 text-[#A3FFD6]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707-.707"/></svg>
+                    <svg class="w-5 h-5 text-[#A3FFD6]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707-.707" />
+                    </svg>
                     <span class="font-extrabold text-sm uppercase">Kategori Aktif: <span id="activeFilterLabel" class="text-[#A3FFD6] underline">GAME</span></span>
                 </div>
                 <button onclick="selectCategoryFilter('')" class="bg-[#4CCD99] text-black brutal-border-sm hover:bg-[#3dbd8c] font-extrabold text-xs px-3 py-1 uppercase active:translate-y-0.5 rounded-xl">Tampilkan Semua ✕</button>
@@ -534,7 +652,9 @@
                 </div>
             </section>
             <div class="bg-[#4CCD99] brutal-border brutal-shadow-sm p-4 mb-8 font-bold flex gap-3 items-center">
-                <svg class="w-6 h-6 text-black shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                <svg class="w-6 h-6 text-black shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
                 <p class="text-xs sm:text-sm text-black">Bila download gagal atau file error, silakan tinggalkan komentar di video YouTube terbaru agar segera diperbarui oleh Axeluf!</p>
             </div>
             <div id="linkContainer" class="space-y-8"></div>
@@ -805,13 +925,11 @@
         // DATA LOADER (dengan progress berdasarkan jumlah query selesai)
         // ======================================================================
         async function loadAllDataFromDB() {
-            // Tampilkan loading
             const overlay = document.getElementById('loadingOverlay');
             overlay.classList.remove('hidden');
             overlay.style.opacity = '1';
             updateLoadingProgress(0);
 
-            // Daftar semua key yang akan diambil beserta default-nya
             const queries = [
                 { key: "web_title", default: "AXELUF" },
                 { key: "web_subtitle", default: "🔥 LINK MOD BERSIH & NO SCAM 🔥" },
@@ -821,16 +939,35 @@
                 { key: "web_banner_image", default: "https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?auto=format&fit=crop&q=1200" },
                 { key: "web_broadcast_text", default: "📢 PENGUMUMAN RESMI: Pastikan selalu mengunduh link modifikasi di portal resmi AXELUF untuk menghindari malware! | 🔥 UPDATE: Semua MLBB Skin & Radar Map Mod aktif untuk patch musim terbaru 2026!" },
                 { key: "web_safelink_time", default: "5" },
-                { key: "web_custom_presets_db", default: [{ label: "Cara Pasang", url: "https://youtube.com/@axelufey", iconType: "video" }, { label: "Grup WA Mabar", url: "https://chat.whatsapp.com", iconType: "chat" }] },
+                { key: "web_custom_presets_db", default: [{ label: "Cara Pasang", url: "https://youtube.com/@axelufey",
+                        iconType: "video" }, { label: "Grup WA Mabar", url: "https://chat.whatsapp.com",
+                        iconType: "chat" }] },
                 { key: _0x4f12._0x0f, default: ["MLBB", "GAME", "APK"] },
-                { key: _0x4f12._0x0e, default: [{ platform: "WhatsApp", handle: "Saluran Resmi", url: "https://whatsapp.com/channel/0029VaUl8HRBqbr8aHIeDW0s", color: "#4CCD99" }, { platform: "YouTube", handle: "@axelufey", url: "https://youtube.com/@axelufey?si=Z5fOumfvWbfhpXP7", color: "#2E8B6E" }, { platform: "Instagram", handle: "@maxl3rd", url: "https://www.instagram.com/maxl3rd?igsh=MTFjbXpnZTN0aDB1bA==", color: "#A3FFD6" }] },
-                { key: _0x4f12._0x0d, default: [{ name: "Mobile Legends Mod Skin & Radar Map", tag: "MLBB, GAME, SKIN", desc: "Unlock semua skin hero favoritmu secara aman, anti banned lengkap dengan radar map di pojok kiri atas. Patch Terbaru!", url: encodeSafe("https://www.mediafire.com/example-mlbb-mod"), password: encodeSafe("Password ada di menit ke-3 video!"), image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=800", imageRatio: "aspect-video object-cover", views: 384, likes: 120, comments: [{ name: "Rian_Slayer", text: "Mantap bang langsung work di akun smurf gua!" }, { name: "BocilMaju", text: "Password dapet di menit ke 4 guys, tonton dlu!" }], customButtons: [{ label: "Cara Pasang", url: "https://youtube.com/@axelufey", iconType: "video" }, { label: "Grup WA Mabar", url: "https://chat.whatsapp.com", iconType: "chat" }] }] }
+                { key: _0x4f12._0x0e, default: [{ platform: "WhatsApp", handle: "Saluran Resmi",
+                        url: "https://whatsapp.com/channel/0029VaUl8HRBqbr8aHIeDW0s", color: "#4CCD99" },
+                    { platform: "YouTube", handle: "@axelufey",
+                        url: "https://youtube.com/@axelufey?si=Z5fOumfvWbfhpXP7", color: "#2E8B6E" },
+                    { platform: "Instagram", handle: "@maxl3rd",
+                        url: "https://www.instagram.com/maxl3rd?igsh=MTFjbXpnZTN0aDB1bA==", color: "#A3FFD6" }
+                ] },
+                { key: _0x4f12._0x0d, default: [{ name: "Mobile Legends Mod Skin & Radar Map", tag: "MLBB, GAME, SKIN",
+                        desc: "Unlock semua skin hero favoritmu secara aman, anti banned lengkap dengan radar map di pojok kiri atas. Patch Terbaru!",
+                        url: encodeSafe("https://www.mediafire.com/example-mlbb-mod"),
+                        password: encodeSafe("Password ada di menit ke-3 video!"),
+                        image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=800",
+                        imageRatio: "aspect-video object-cover", views: 384, likes: 120,
+                        comments: [{ name: "Rian_Slayer", text: "Mantap bang langsung work di akun smurf gua!" },
+                        { name: "BocilMaju", text: "Password dapet di menit ke 4 guys, tonton dlu!" }],
+                        customButtons: [{ label: "Cara Pasang", url: "https://youtube.com/@axelufey",
+                            iconType: "video" }, { label: "Grup WA Mabar", url: "https://chat.whatsapp.com",
+                            iconType: "chat" }]
+                    }]
+                }
             ];
 
             const totalQueries = queries.length;
             let completed = 0;
 
-            // Fungsi untuk menjalankan query dan update progress
             async function runQuery(q) {
                 try {
                     const result = await cloudGet(q.key, q.default);
@@ -843,20 +980,33 @@
             }
 
             try {
-                // Jalankan semua query paralel dengan Promise.all
                 const results = await Promise.all(queries.map(q => runQuery(q)));
 
-                // Ekstrak hasil
-                const [title, subtitle, logo, alignment, bgImg, bannerImg, rawBroadcast, safelinkTime, presets, pinned, creditData, linkData] = results;
+                const [title, subtitle, logo, alignment, bgImg, bannerImg, rawBroadcast, safelinkTime, presets, pinned,
+                    creditData, linkData
+                ] = results;
 
-                // Terapkan data ke DOM
                 document.getElementById('mainTitleText').innerText = title;
                 document.getElementById('setMainTitle').value = title;
                 document.getElementById('mainSubtitleText').innerText = subtitle;
                 document.getElementById('setMainSubtitle').value = subtitle;
 
-                document.getElementById('mainLogo').src = logo;
-                document.getElementById('navLogoMin').src = logo;
+                const logoImg = document.getElementById('mainLogo');
+                logoImg.src = logo;
+                logoImg.onerror = function() {
+                    this.onerror = null;
+                    this.src =
+                        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Ccircle cx='100' cy='100' r='90' fill='%234CCD99'/%3E%3Ctext x='100' y='120' font-size='80' text-anchor='middle' fill='white' font-family='sans-serif'%3EA%3C/text%3E%3C/svg%3E";
+                    this.classList.add('img-placeholder', 'profile');
+                };
+                const navLogo = document.getElementById('navLogoMin');
+                navLogo.src = logo;
+                navLogo.onerror = function() {
+                    this.onerror = null;
+                    this.src =
+                        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100' height='100' fill='%234CCD99'/%3E%3Ctext x='50' y='55' font-size='30' text-anchor='middle' fill='white'%3EA%3C/text%3E%3C/svg%3E";
+                    this.classList.add('img-placeholder', 'profile');
+                };
                 document.getElementById('setMainLogoUrl').value = logo;
 
                 const profileContainer = document.getElementById('headerProfileContainer');
@@ -868,7 +1018,14 @@
                     document.getElementById('setBackgroundUrl').value = bgImg;
                 }
 
-                document.getElementById('webBannerImage').src = bannerImg;
+                const bannerImgEl = document.getElementById('webBannerImage');
+                bannerImgEl.src = bannerImg;
+                bannerImgEl.onerror = function() {
+                    this.onerror = null;
+                    this.src =
+                        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='300'%3E%3Crect width='1200' height='300' fill='%232E8B6E'/%3E%3Ctext x='600' y='170' font-size='40' text-anchor='middle' fill='white' font-family='sans-serif'%3EAXELUF PORTAL%3C/text%3E%3C/svg%3E";
+                    this.classList.add('img-placeholder', 'banner');
+                };
                 document.getElementById('setBannerUrl').value = bannerImg;
 
                 document.getElementById('setBroadcastText').value = rawBroadcast;
@@ -893,19 +1050,17 @@
                     setAdminState(true);
                 }
 
-                // Sembunyikan loading setelah semua selesai
                 hideLoading();
 
             } catch (err) {
                 console.error("Gagal memuat data dari Supabase:", err);
                 showToast("Terjadi kesalahan saat sinkronisasi data.", "error");
-                // Tetap hilangkan loading walau error
                 hideLoading();
             }
         }
 
         // ======================================================================
-        // FUNGSI LAINNYA (render, admin, CRUD, dll) - SAMA SEPERTI SEBELUMNYA
+        // FUNGSI LAINNYA (render, admin, CRUD, dll)
         // ======================================================================
         function updateBroadcastBanner(rawText) {
             const container = document.getElementById('broadcastTextContainer');
@@ -1033,7 +1188,7 @@
         }
 
         // ======================================================================
-        // ADMIN & CRUD FUNCTIONS (disingkat karena sama)
+        // ADMIN & CRUD FUNCTIONS
         // ======================================================================
         function toggleAdminPanel() {
             playSynth('click');
@@ -1460,7 +1615,7 @@
                 const tr = document.createElement('tr');
                 tr.className = "border-b border-black hover:bg-gray-50 text-black";
                 tr.innerHTML = `
-                    <td class="p-3 border-r border-black w-20"><img src="${imageSrc}" class="w-12 h-12 object-cover brutal-border rounded-xl" alt="Thumb"></td>
+                    <td class="p-3 border-r border-black w-20"><img src="${imageSrc}" class="w-12 h-12 object-cover brutal-border rounded-xl" alt="Thumb" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect width=%22100%22 height=%22100%22 fill=%22%23e5e7eb%22/%3E%3Ctext x=%2250%22 y=%2255%22 font-size=%2220%22 text-anchor=%22middle%22 fill=%22%236b7280%22%3ENo Image%3C/text%3E%3C/svg%3E'; this.classList.add('img-placeholder','thumbnail');"></td>
                     <td class="p-3 border-r border-black font-bold text-xs sm:text-sm text-black">${item.name}</td>
                     <td class="p-3 border-r border-black"><div class="flex flex-wrap gap-1">${pills}</div></td>
                     <td class="p-3"><div class="flex flex-col sm:flex-row gap-1.5"><button onclick="editMod(${index})" class="bg-[#2E8B6E] brutal-border brutal-shadow-sm brutal-btn-sm py-1 px-3.5 text-xs uppercase text-white font-bold rounded-xl">Edit</button><button onclick="triggerDelete(${index})" class="bg-red-500 brutal-border brutal-shadow-sm brutal-btn-sm py-1 px-3.5 text-xs uppercase text-white font-bold rounded-xl">Hapus</button></div></td>
@@ -1689,7 +1844,7 @@
                     </div>
                     <div class="p-6 flex flex-col lg:flex-row gap-6 items-stretch">
                       <div class="w-full lg:w-72 shrink-0 brutal-border bg-zinc-100 overflow-hidden rounded-xl shadow-inner flex items-center justify-center">
-                        <img src="${imageSrc}" alt="Screenshot Mod" class="w-full ${ratioClass} transition-transform duration-200 hover:scale-[1.03] rounded-xl">
+                        <img src="${imageSrc}" alt="Screenshot Mod" class="w-full ${ratioClass} transition-transform duration-200 hover:scale-[1.03] rounded-xl" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22400%22%3E%3Crect width=%22400%22 height=%22400%22 fill=%22%23e5e7eb%22/%3E%3Ctext x=%22200%22 y=%22200%22 font-size=%2230%22 text-anchor=%22middle%22 fill=%22%236b7280%22 font-family=%22sans-serif%22%3E📱 Mod%3C/text%3E%3C/svg%3E'; this.classList.add('img-placeholder','thumbnail');">
                       </div>
                       <div class="flex-1 flex flex-col justify-between">
                         <div>
