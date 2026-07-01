@@ -181,8 +181,7 @@
         #sidebarDrawer { border-top-right-radius: var(--border-radius-lg); border-bottom-right-radius: var(--border-radius-lg); }
         #banScreen .brutal-border,
         #confirmModal .brutal-border,
-        #loginSection .brutal-border,
-        #safelinkModal .brutal-border { border-radius: var(--border-radius-lg); }
+        #loginSection .brutal-border { border-radius: var(--border-radius-lg); }
         .admin-table-rounded { border-radius: var(--border-radius-md); overflow: hidden; }
         .rounded-full-brutal { border-radius: 9999px; border: 4px solid var(--border-color); }
         .theme-dot { border-radius: 9999px; border: 2px solid var(--border-color); transition: transform 0.15s ease; cursor: pointer; }
@@ -295,24 +294,6 @@
             <div class="flex gap-4">
                 <button id="btnConfirmYes" class="flex-1 bg-[#2E8B6E] text-white font-bold uppercase py-3 brutal-border brutal-shadow-sm brutal-btn text-sm rounded-xl">YA, LAKUKAN! 🔥</button>
                 <button onclick="closeConfirmModal()" class="flex-1 bg-gray-200 font-bold uppercase py-3 brutal-border brutal-shadow-sm brutal-btn text-sm rounded-xl">BATAL</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- SAFELINK MODAL -->
-    <div id="safelinkModal" class="hidden fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
-        <div class="bg-white text-black brutal-border brutal-shadow-lg w-full max-w-md p-6 text-center relative">
-            <button onclick="closeSafelinkModal()" class="absolute top-3 right-3 bg-[#2E8B6E] text-white brutal-border-sm w-8 h-8 flex items-center justify-center font-bold rounded-full">✕</button>
-            <div class="mb-4"><span class="text-5xl animate-bounce inline-block">🛡️</span></div>
-            <h3 class="font-syne font-extrabold text-2xl uppercase mb-1">MEMINDAI KEAMANAN FILE</h3>
-            <p class="text-xs font-bold text-[#2E8B6E] mb-4 bg-[#A3FFD6] py-1 brutal-border-sm rounded-xl">SYSTEM ANTIVIRUS & ANTI-MALWARE ACTIVE</p>
-            <div class="w-full bg-gray-200 brutal-border-sm h-6 mb-4 relative overflow-hidden rounded-xl">
-                <div id="safelinkProgress" class="bg-[#4CCD99] h-full transition-all duration-100" style="width: 0%"></div>
-                <div class="absolute inset-0 flex items-center justify-center text-xs font-extrabold" id="safelinkProgressText">0%</div>
-            </div>
-            <p class="text-sm font-bold text-gray-700 mb-6" id="safelinkStatusText">Harap tunggu, server sedang menyiapkan tautan bersih...</p>
-            <div id="safelinkButtonArea" class="hidden">
-                <a id="btnRealDownload" href="#" target="_blank" onclick="closeSafelinkModal()" class="block w-full bg-[#4CCD99] text-black font-extrabold text-center uppercase py-3.5 brutal-border brutal-shadow-sm brutal-btn text-sm rounded-xl">KLIK UNTUK DOWNLOAD FILE SEKARANG ⚡</a>
             </div>
         </div>
     </div>
@@ -812,7 +793,6 @@
             overlay.style.opacity = '1';
             loadingProgress = 0;
             updateLoadingProgress(0);
-            // Animasi progress sampai 90% (sisanya akan diisi saat data selesai)
             if (loadingInterval) clearInterval(loadingInterval);
             loadingInterval = setInterval(() => {
                 if (loadingProgress < 90) {
@@ -836,7 +816,6 @@
                 clearInterval(loadingInterval);
                 loadingInterval = null;
             }
-            // Set ke 100%
             updateLoadingProgress(100);
             const overlay = document.getElementById('loadingOverlay');
             setTimeout(() => {
@@ -852,10 +831,7 @@
         // ======================================================================
         async function loadAllDataFromDB() {
             try {
-                // Tampilkan loading
                 showLoading();
-
-                // Jalankan semua query paralel
                 const [
                     title, subtitle, logo, alignment, bgImg, bannerImg,
                     rawBroadcast, safelinkTime, presets, pinned, creditData, linkData
@@ -906,7 +882,6 @@
                     }])
                 ]);
 
-                // Terapkan data
                 document.getElementById('mainTitleText').innerText = title;
                 document.getElementById('setMainTitle').value = title;
                 document.getElementById('mainSubtitleText').innerText = subtitle;
@@ -950,14 +925,12 @@
                     setAdminState(true);
                 }
 
-                // Data selesai, hilangkan loading
                 isDataLoaded = true;
                 hideLoading();
 
             } catch (err) {
                 console.error("Gagal memuat data dari Supabase:", err);
                 showToast("Terjadi kesalahan saat sinkronisasi data.", "error");
-                // Tetap hilangkan loading walau error
                 isDataLoaded = true;
                 hideLoading();
             }
@@ -1671,47 +1644,9 @@
             }
         }
 
-        // --- Safelink ---
-        let safelinkInterval = null;
-
-        function openSafelinkModal(targetUrl) {
-            playSynth('success');
-            const modal = document.getElementById('safelinkModal');
-            const progress = document.getElementById('safelinkProgress');
-            const progressText = document.getElementById('safelinkProgressText');
-            const statusText = document.getElementById('safelinkStatusText');
-            const buttonArea = document.getElementById('safelinkButtonArea');
-            const downloadBtn = document.getElementById('btnRealDownload');
-            modal.classList.remove('hidden');
-            buttonArea.classList.add('hidden');
-            progress.style.width = '0%';
-            progressText.innerText = '0%';
-            statusText.innerText = 'Menghubungkan ke server cloud premium, mengamankan tautan...';
-            let count = 0;
-            const stepTime = (safelinkTimerValue * 1000) / 100;
-            if (safelinkInterval) clearInterval(safelinkInterval);
-            safelinkInterval = setInterval(() => {
-                count++;
-                progress.style.width = `${count}%`;
-                progressText.innerText = `${count}%`;
-                if (count === 30) statusText.innerText = 'Memindai dari ancaman malware, virus, dan bot spam...';
-                else if (count === 70) statusText.innerText = 'Verifikasi berkas berhasil, mendekripsi alamat tujuan...';
-                if (count >= 100) {
-                    clearInterval(safelinkInterval);
-                    statusText.innerText = 'Selesai! Link Modifikasi kamu aman untuk diunduh.';
-                    buttonArea.classList.remove('hidden');
-                    downloadBtn.href = targetUrl;
-                    playSynth('success');
-                }
-            }, stepTime);
-        }
-
-        function closeSafelinkModal() {
-            if (safelinkInterval) clearInterval(safelinkInterval);
-            document.getElementById('safelinkModal').classList.add('hidden');
-        }
-
-        // --- Render Public Links ---
+        // ======================================================================
+        // RENDER PUBLIC LINKS (Direct Download - Tanpa Safelink)
+        // ======================================================================
         function renderPublicLinks() {
             const linkContainer = document.getElementById('linkContainer');
             const searchQuery = document.getElementById('searchBar').value.toLowerCase();
@@ -1836,7 +1771,7 @@
             });
         }
 
-        // --- Interactions ---
+        // --- Interactions (Tanpa Safelink) ---
         async function handleActionClick(index, targetUrl, isMainDownload = false) {
             playSynth('success');
             if (!links[index].views) links[index].views = 0;
@@ -1845,10 +1780,14 @@
             if (viewCounterEl) viewCounterEl.innerText = links[index].views;
             await cloudSet(_0x4f12._0x0d, links);
             if (isMainDownload) {
+                // Anti-spam tetap aktif
                 antiSpamCounter++;
                 if (antiSpamCounter > 6) { triggerBanScreen(); return; }
                 setTimeout(() => { if (antiSpamCounter > 0) antiSpamCounter--; }, 5000);
-                openSafelinkModal(targetUrl);
+                // LANGSUNG BUKA URL tanpa modal
+                if (targetUrl) {
+                    window.open(targetUrl, '_blank');
+                }
             } else {
                 if (targetUrl) window.open(targetUrl, '_blank');
             }
