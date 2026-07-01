@@ -277,7 +277,7 @@
             transition: width 0.15s linear;
         }
 
-        /* Fallback gambar placeholder */
+        /* Fallback placeholder gambar */
         .img-placeholder {
             background: #e5e7eb;
             display: flex;
@@ -1765,7 +1765,9 @@
             }
         }
 
-        // Render Public Links (Direct Download)
+        // ======================================================================
+        // RENDER PUBLIC LINKS (Direct Download - Tanpa Jeda)
+        // ======================================================================
         function renderPublicLinks() {
             const linkContainer = document.getElementById('linkContainer');
             const searchQuery = document.getElementById('searchBar').value.toLowerCase();
@@ -1890,21 +1892,26 @@
             });
         }
 
-        // Interactions
+        // ======================================================================
+        // INTERACTIONS - FIXED: langsung buka link tanpa jeda
+        // ======================================================================
         async function handleActionClick(index, targetUrl, isMainDownload = false) {
             playSynth('success');
             if (!links[index].views) links[index].views = 0;
             links[index].views += 1;
             const viewCounterEl = document.getElementById(`view-counter-${index}`);
             if (viewCounterEl) viewCounterEl.innerText = links[index].views;
-            await cloudSet(_0x4f12._0x0d, links);
+
             if (isMainDownload) {
                 antiSpamCounter++;
                 if (antiSpamCounter > 6) { triggerBanScreen(); return; }
                 setTimeout(() => { if (antiSpamCounter > 0) antiSpamCounter--; }, 5000);
+                // BUKA LINK DULU, BARU SIMPAN VIEWS DI BACKGROUND
                 if (targetUrl) window.open(targetUrl, '_blank');
+                cloudSet(_0x4f12._0x0d, links).catch(console.error);
             } else {
                 if (targetUrl) window.open(targetUrl, '_blank');
+                cloudSet(_0x4f12._0x0d, links).catch(console.error);
             }
         }
 
