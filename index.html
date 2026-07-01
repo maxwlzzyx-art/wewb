@@ -193,7 +193,7 @@
         .text-hitam { color: #000000; }
         .border-hitam { border-color: #000000; }
         #loadingOverlay { transition: opacity 0.5s ease; z-index: 9999; }
-        #loadingProgress { transition: width 0.2s linear; }
+        #loadingProgress { transition: width 0.15s linear; }
     </style>
 </head>
 <body>
@@ -203,7 +203,7 @@
         <div class="bg-white brutal-border brutal-shadow p-8 max-w-md w-full text-black">
             <h2 class="font-syne font-extrabold text-2xl uppercase tracking-tight">LOADING PAGE</h2>
             <div class="w-full bg-gray-200 brutal-border-sm h-6 mt-4 relative overflow-hidden rounded-xl">
-                <div id="loadingProgress" class="bg-[#4CCD99] h-full transition-all duration-200" style="width: 0%"></div>
+                <div id="loadingProgress" class="bg-[#4CCD99] h-full transition-all duration-150" style="width: 0%"></div>
                 <div class="absolute inset-0 flex items-center justify-center text-xs font-extrabold" id="loadingProgressText">0%</div>
             </div>
             <p class="text-xs font-bold mt-4 text-gray-600">Menyiapkan data dari Supabase...</p>
@@ -780,42 +780,17 @@
         }
 
         // ======================================================================
-        // LOADING SCREEN CONTROLLER (menunggu data selesai)
+        // LOADING SCREEN CONTROLLER (berbasis progres query)
         // ======================================================================
-        let loadingResolve = null;
-        let loadingProgress = 0;
-        let loadingInterval = null;
-        let isDataLoaded = false;
-
-        function showLoading() {
-            const overlay = document.getElementById('loadingOverlay');
-            overlay.classList.remove('hidden');
-            overlay.style.opacity = '1';
-            loadingProgress = 0;
-            updateLoadingProgress(0);
-            if (loadingInterval) clearInterval(loadingInterval);
-            loadingInterval = setInterval(() => {
-                if (loadingProgress < 90) {
-                    loadingProgress += Math.random() * 2 + 0.5;
-                    if (loadingProgress > 90) loadingProgress = 90;
-                    updateLoadingProgress(loadingProgress);
-                }
-            }, 150);
-        }
-
         function updateLoadingProgress(value) {
             const bar = document.getElementById('loadingProgress');
             const text = document.getElementById('loadingProgressText');
-            const rounded = Math.round(value);
+            const rounded = Math.min(100, Math.round(value));
             bar.style.width = rounded + '%';
             text.innerText = rounded + '%';
         }
 
         function hideLoading() {
-            if (loadingInterval) {
-                clearInterval(loadingInterval);
-                loadingInterval = null;
-            }
             updateLoadingProgress(100);
             const overlay = document.getElementById('loadingOverlay');
             setTimeout(() => {
@@ -827,61 +802,54 @@
         }
 
         // ======================================================================
-        // DATA LOADER (dengan loading screen yang menunggu data)
+        // DATA LOADER (dengan progress berdasarkan jumlah query selesai)
         // ======================================================================
         async function loadAllDataFromDB() {
-            try {
-                showLoading();
-                const [
-                    title, subtitle, logo, alignment, bgImg, bannerImg,
-                    rawBroadcast, safelinkTime, presets, pinned, creditData, linkData
-                ] = await Promise.all([
-                    cloudGet("web_title", "AXELUF"),
-                    cloudGet("web_subtitle", "🔥 LINK MOD BERSIH & NO SCAM 🔥"),
-                    cloudGet("web_logo",
-                        "https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?auto=format&fit=crop&q=80&w=200"),
-                    cloudGet("profile_alignment", "items-start text-left"),
-                    cloudGet("web_background_image", "none"),
-                    cloudGet("web_banner_image",
-                        "https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?auto=format&fit=crop&q=1200"),
-                    cloudGet("web_broadcast_text",
-                        "📢 PENGUMUMAN RESMI: Pastikan selalu mengunduh link modifikasi di portal resmi AXELUF untuk menghindari malware! | 🔥 UPDATE: Semua MLBB Skin & Radar Map Mod aktif untuk patch musim terbaru 2026!"
-                        ),
-                    cloudGet("web_safelink_time", "5"),
-                    cloudGet("web_custom_presets_db", [
-                        { label: "Cara Pasang", url: "https://youtube.com/@axelufey", iconType: "video" },
-                        { label: "Grup WA Mabar", url: "https://chat.whatsapp.com", iconType: "chat" }
-                    ]),
-                    cloudGet(_0x4f12._0x0f, ["MLBB", "GAME", "APK"]),
-                    cloudGet(_0x4f12._0x0e, [
-                        { platform: "WhatsApp", handle: "Saluran Resmi",
-                            url: "https://whatsapp.com/channel/0029VaUl8HRBqbr8aHIeDW0s", color: "#4CCD99" },
-                        { platform: "YouTube", handle: "@axelufey",
-                            url: "https://youtube.com/@axelufey?si=Z5fOumfvWbfhpXP7", color: "#2E8B6E" },
-                        { platform: "Instagram", handle: "@maxl3rd",
-                            url: "https://www.instagram.com/maxl3rd?igsh=MTFjbXpnZTN0aDB1bA==", color: "#A3FFD6" }
-                    ]),
-                    cloudGet(_0x4f12._0x0d, [{
-                        name: "Mobile Legends Mod Skin & Radar Map",
-                        tag: "MLBB, GAME, SKIN",
-                        desc: "Unlock semua skin hero favoritmu secara aman, anti banned lengkap dengan radar map di pojok kiri atas. Patch Terbaru!",
-                        url: encodeSafe("https://www.mediafire.com/example-mlbb-mod"),
-                        password: encodeSafe("Password ada di menit ke-3 video!"),
-                        image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=800",
-                        imageRatio: "aspect-video object-cover",
-                        views: 384,
-                        likes: 120,
-                        comments: [
-                            { name: "Rian_Slayer", text: "Mantap bang langsung work di akun smurf gua!" },
-                            { name: "BocilMaju", text: "Password dapet di menit ke 4 guys, tonton dlu!" }
-                        ],
-                        customButtons: [
-                            { label: "Cara Pasang", url: "https://youtube.com/@axelufey", iconType: "video" },
-                            { label: "Grup WA Mabar", url: "https://chat.whatsapp.com", iconType: "chat" }
-                        ]
-                    }])
-                ]);
+            // Tampilkan loading
+            const overlay = document.getElementById('loadingOverlay');
+            overlay.classList.remove('hidden');
+            overlay.style.opacity = '1';
+            updateLoadingProgress(0);
 
+            // Daftar semua key yang akan diambil beserta default-nya
+            const queries = [
+                { key: "web_title", default: "AXELUF" },
+                { key: "web_subtitle", default: "🔥 LINK MOD BERSIH & NO SCAM 🔥" },
+                { key: "web_logo", default: "https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?auto=format&fit=crop&q=80&w=200" },
+                { key: "profile_alignment", default: "items-start text-left" },
+                { key: "web_background_image", default: "none" },
+                { key: "web_banner_image", default: "https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?auto=format&fit=crop&q=1200" },
+                { key: "web_broadcast_text", default: "📢 PENGUMUMAN RESMI: Pastikan selalu mengunduh link modifikasi di portal resmi AXELUF untuk menghindari malware! | 🔥 UPDATE: Semua MLBB Skin & Radar Map Mod aktif untuk patch musim terbaru 2026!" },
+                { key: "web_safelink_time", default: "5" },
+                { key: "web_custom_presets_db", default: [{ label: "Cara Pasang", url: "https://youtube.com/@axelufey", iconType: "video" }, { label: "Grup WA Mabar", url: "https://chat.whatsapp.com", iconType: "chat" }] },
+                { key: _0x4f12._0x0f, default: ["MLBB", "GAME", "APK"] },
+                { key: _0x4f12._0x0e, default: [{ platform: "WhatsApp", handle: "Saluran Resmi", url: "https://whatsapp.com/channel/0029VaUl8HRBqbr8aHIeDW0s", color: "#4CCD99" }, { platform: "YouTube", handle: "@axelufey", url: "https://youtube.com/@axelufey?si=Z5fOumfvWbfhpXP7", color: "#2E8B6E" }, { platform: "Instagram", handle: "@maxl3rd", url: "https://www.instagram.com/maxl3rd?igsh=MTFjbXpnZTN0aDB1bA==", color: "#A3FFD6" }] },
+                { key: _0x4f12._0x0d, default: [{ name: "Mobile Legends Mod Skin & Radar Map", tag: "MLBB, GAME, SKIN", desc: "Unlock semua skin hero favoritmu secara aman, anti banned lengkap dengan radar map di pojok kiri atas. Patch Terbaru!", url: encodeSafe("https://www.mediafire.com/example-mlbb-mod"), password: encodeSafe("Password ada di menit ke-3 video!"), image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=800", imageRatio: "aspect-video object-cover", views: 384, likes: 120, comments: [{ name: "Rian_Slayer", text: "Mantap bang langsung work di akun smurf gua!" }, { name: "BocilMaju", text: "Password dapet di menit ke 4 guys, tonton dlu!" }], customButtons: [{ label: "Cara Pasang", url: "https://youtube.com/@axelufey", iconType: "video" }, { label: "Grup WA Mabar", url: "https://chat.whatsapp.com", iconType: "chat" }] }] }
+            ];
+
+            const totalQueries = queries.length;
+            let completed = 0;
+
+            // Fungsi untuk menjalankan query dan update progress
+            async function runQuery(q) {
+                try {
+                    const result = await cloudGet(q.key, q.default);
+                    return result;
+                } finally {
+                    completed++;
+                    const progress = (completed / totalQueries) * 100;
+                    updateLoadingProgress(progress);
+                }
+            }
+
+            try {
+                // Jalankan semua query paralel dengan Promise.all
+                const results = await Promise.all(queries.map(q => runQuery(q)));
+
+                // Ekstrak hasil
+                const [title, subtitle, logo, alignment, bgImg, bannerImg, rawBroadcast, safelinkTime, presets, pinned, creditData, linkData] = results;
+
+                // Terapkan data ke DOM
                 document.getElementById('mainTitleText').innerText = title;
                 document.getElementById('setMainTitle').value = title;
                 document.getElementById('mainSubtitleText').innerText = subtitle;
@@ -925,21 +893,20 @@
                     setAdminState(true);
                 }
 
-                isDataLoaded = true;
+                // Sembunyikan loading setelah semua selesai
                 hideLoading();
 
             } catch (err) {
                 console.error("Gagal memuat data dari Supabase:", err);
                 showToast("Terjadi kesalahan saat sinkronisasi data.", "error");
-                isDataLoaded = true;
+                // Tetap hilangkan loading walau error
                 hideLoading();
             }
         }
 
         // ======================================================================
-        // FUNGSI LAINNYA (render, admin, CRUD, dll)
+        // FUNGSI LAINNYA (render, admin, CRUD, dll) - SAMA SEPERTI SEBELUMNYA
         // ======================================================================
-
         function updateBroadcastBanner(rawText) {
             const container = document.getElementById('broadcastTextContainer');
             container.innerHTML = '';
@@ -1066,9 +1033,8 @@
         }
 
         // ======================================================================
-        // ADMIN & CRUD FUNCTIONS (semua fungsi yang dibutuhkan)
+        // ADMIN & CRUD FUNCTIONS (disingkat karena sama)
         // ======================================================================
-
         function toggleAdminPanel() {
             playSynth('click');
             if (isAdmin) {
@@ -1165,7 +1131,7 @@
             }
         }
 
-        // --- Custom Links ---
+        // Custom Links
         function addCustomLinkField(label = "", url = "", iconType = "video") {
             const container = document.getElementById('customLinksContainer');
             const currentFields = container.getElementsByClassName('custom-link-row');
@@ -1211,7 +1177,7 @@
             }
         }
 
-        // --- Custom Presets ---
+        // Custom Presets
         async function saveCustomPreset() {
             const label = document.getElementById('presetLabel').value.trim();
             const url = document.getElementById('presetUrl').value.trim();
@@ -1307,7 +1273,7 @@
             showToast(`Tombol "${label}" ditambahkan ke form kustomisasi!`, 'success');
         }
 
-        // --- Save Mod ---
+        // Save Mod
         async function saveMod() {
             const name = document.getElementById('modName').value.trim();
             const tag = document.getElementById('modTag').value.trim();
@@ -1412,7 +1378,7 @@
             document.getElementById('formTitle').classList.remove('text-blue-600');
         }
 
-        // --- Credits ---
+        // Credits
         async function addCredit() {
             const platform = document.getElementById('credPlatform').value.trim();
             const handle = document.getElementById('credHandle').value.trim();
@@ -1477,7 +1443,7 @@
             });
         }
 
-        // --- Admin Table ---
+        // Admin Table
         function renderAdminTable() {
             const tbody = document.getElementById('adminTableBody');
             tbody.innerHTML = '';
@@ -1533,7 +1499,7 @@
             }
         });
 
-        // --- Branding & Background ---
+        // Branding & Background
         async function saveBranding() {
             playSynth('success');
             const title = document.getElementById('setMainTitle').value.trim();
@@ -1617,7 +1583,7 @@
             }
         }
 
-        // --- Ban ---
+        // Ban
         function triggerBanScreen() {
             playSynth('ban');
             localStorage.setItem('banned_client_status', 'true');
@@ -1644,9 +1610,7 @@
             }
         }
 
-        // ======================================================================
-        // RENDER PUBLIC LINKS (Direct Download - Tanpa Safelink)
-        // ======================================================================
+        // Render Public Links (Direct Download)
         function renderPublicLinks() {
             const linkContainer = document.getElementById('linkContainer');
             const searchQuery = document.getElementById('searchBar').value.toLowerCase();
@@ -1771,7 +1735,7 @@
             });
         }
 
-        // --- Interactions (Tanpa Safelink) ---
+        // Interactions
         async function handleActionClick(index, targetUrl, isMainDownload = false) {
             playSynth('success');
             if (!links[index].views) links[index].views = 0;
@@ -1780,14 +1744,10 @@
             if (viewCounterEl) viewCounterEl.innerText = links[index].views;
             await cloudSet(_0x4f12._0x0d, links);
             if (isMainDownload) {
-                // Anti-spam tetap aktif
                 antiSpamCounter++;
                 if (antiSpamCounter > 6) { triggerBanScreen(); return; }
                 setTimeout(() => { if (antiSpamCounter > 0) antiSpamCounter--; }, 5000);
-                // LANGSUNG BUKA URL tanpa modal
-                if (targetUrl) {
-                    window.open(targetUrl, '_blank');
-                }
+                if (targetUrl) window.open(targetUrl, '_blank');
             } else {
                 if (targetUrl) window.open(targetUrl, '_blank');
             }
